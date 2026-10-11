@@ -72,7 +72,7 @@ jobs:
       - name: Replay videos through the app on an emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 33
+          api-level: 30
           arch: x86_64
           target: google_apis
           ram-size: 4096M

@@ -16,6 +16,7 @@ adb shell am instrument -w -r -e class com.spinecare.app.VideoReplayTest -e maxF
   com.spinecare.app.test/androidx.test.runner.AndroidJUnitRunner | tee "$OUT/instrument.txt"
 adb logcat -d -s VideoReplayTest:* AndroidRuntime:E > "$OUT/logcat.txt" || true
 pull_app_dir() {  # app-private output (debuggable build): stream it out with run-as
+  adb shell run-as com.spinecare.app ls "files/$1" > /dev/null 2>&1 || { echo "no app output in files/$1"; return; }
   adb exec-out run-as com.spinecare.app tar cf - -C files "$1" | tar xf - -C "$2" --strip-components=1 || true
 }
 pull_app_dir replay "$OUT"
@@ -43,5 +44,5 @@ sleep 6
 adb exec-out screencap -p > "$OUT/app_home.png" || true
 adb shell getprop ro.product.cpu.abi > "$OUT/abi.txt" || true
 # am instrument exits 0 even when the test fails: decide from its output
-grep -q "^OK (" "$OUT/instrument.txt"
-[ -z "$IN_APP" ] || grep -q "^OK (" "$OUT/instrument_in_app.txt"
+grep -q "^OK (" "$OUT/instrument.txt" || { echo "VideoReplayTest failed"; exit 1; }
+[ -z "$IN_APP" ] || grep -q "^OK (" "$OUT/instrument_in_app.txt" || { echo "VideoAnalysisScreenTest failed"; exit 1; }
