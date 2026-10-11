@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "notes": "Hands-free commands for exercise sessions, shared by the Android and iOS apps. Phrases are matched as whole words after lower-casing and removing diacritics, in both languages regardless of the app language. When several commands match, the earlier one in 'priority' wins, so safety-relevant commands (stop, pause) always win over start.",
+  "priority": ["stop", "pause", "resume", "skip", "recalibrate", "flip", "status", "repeat", "help", "start"],
+  "commands": {
+    "stop": {
+      "en": ["stop", "finish", "end session", "save session", "i'm done", "im done", "that's enough"],
+      "ro": ["stop", "opreste", "gata", "termina", "terminat", "am terminat", "salveaza"]
+    },
+    "pause": {
+      "en": ["pause", "hold on", "wait"],
+      "ro": ["pauza", "asteapta", "stai"]
+    },
+    "resume": {
+      "en": ["resume", "continue", "go on", "carry on"],
+      "ro": ["continua", "reia", "mai departe"]
+    },
+    "skip": {
+      "en": ["skip", "no thanks", "not now", "later"],
+      "ro": ["sari peste", "sari", "omite", "nu acum", "mai tarziu"]
+    },
+    "recalibrate": {
+      "en": ["recalibrate", "calibrate", "reset"],
+      "ro": ["recalibreaza", "calibreaza", "calibrare", "reseteaza"]
+    },
+    "flip": {
+      "en": ["switch camera", "flip camera", "flip", "other camera", "change camera"],
+      "ro": ["schimba camera", "intoarce camera", "cealalta camera"]
+    },
+    "status": {
+      "en": ["how many", "count", "status", "progress", "how am i doing"],
+      "ro": ["cate", "cate repetari", "numar", "status", "progres", "cum ma descurc"]
+    },
+    "repeat": {
+      "en": ["repeat", "say again", "say that again", "pardon"],
+      "ro": ["repeta", "inca o data", "ce ai spus", "poftim"]
+    },
+    "help": {
+      "en": ["help", "commands", "what can i say"],
+      "ro": ["ajutor", "comenzi", "ce pot spune"]
+    },
+    "start": {
+      "en": ["start", "begin", "let's go", "lets go", "go"],
+      "ro": ["start", "incepe", "porneste", "hai", "sa incepem"]
+    }
+  }
+}

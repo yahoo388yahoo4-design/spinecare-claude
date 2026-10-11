@@ -23,10 +23,12 @@ object OverlayRenderer {
 
     /** Draws skeleton + HUD. [lms] are in pixels of a [frameW]x[frameH] camera
      *  frame, mapped with the same center-crop the camera preview uses.
-     *  [mirror] flips x for front-camera WYSIWYG display/recording. */
+     *  [mirror] flips x for front-camera WYSIWYG display/recording. [areaW]x[areaH]
+     *  is the drawing area from the canvas origin (session replay letterboxes it). */
     fun draw(canvas: Canvas, lms: Map<String, Metrics.P>?, frameW: Int, frameH: Int, missing: List<String>,
-             ready: Boolean, metricsLine: String, cue: String, repsText: String, mirror: Boolean) {
-        val w = canvas.width.toFloat(); val h = canvas.height.toFloat()
+             ready: Boolean, metricsLine: String, cue: String, repsText: String, mirror: Boolean,
+             areaW: Float = canvas.width.toFloat(), areaH: Float = canvas.height.toFloat()) {
+        val w = areaW; val h = areaH
         if (lms != null && frameW > 0 && frameH > 0) {
             val s = max(w / frameW, h / frameH)
             val ox = (w - frameW * s) / 2f; val oy = (h - frameH * s) / 2f

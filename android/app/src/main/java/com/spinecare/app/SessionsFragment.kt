@@ -7,15 +7,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.spinecare.app.I18n.t
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import java.io.File
 
-/** Progress: saved sessions (with burned-in overlay recordings), symptom
- *  check-ins, CSV export through the share sheet, and clearing local history. */
+/** Progress: saved sessions with a preview thumbnail that opens the in-app
+ *  replay (video and/or sensor timeline with overlay), symptom check-ins, CSV
+ *  export through the share sheet, and clearing local history. */
 class SessionsFragment : Fragment() {
     private var box: FrameLayout? = null
 
@@ -45,7 +53,29 @@ class SessionsFragment : Fragment() {
         ui.h(t("saved_sessions"))
         if (sessions.isEmpty()) ui.p(t("no_sessions_long"))
         for (row in sessions.take(50)) {
-            val card = ui.card()
+            val outer = ui.card()
+            val video = store.videoFile(row)?.takeIf { it.exists() }
+            val tlFile = store.timelineFile(row)?.takeIf { it.exists() }
+            val canReplay = video != null || tlFile != null
+            val line = ui.row(outer)
+            if (canReplay) {
+                val dp = ctx.resources.displayMetrics.density
+                val thumb = ImageView(ctx).apply {
+                    scaleType = ImageView.ScaleType.CENTER_CROP; setBackgroundColor(Ui.BG)
+                    contentDescription = t("replay_open")
+                    layoutParams = LinearLayout.LayoutParams((96 * dp).toInt(), (72 * dp).toInt()).apply { rightMargin = (12 * dp).toInt() }
+                }
+                line.addView(thumb)
+                viewLifecycleOwner.lifecycleScope.launch {
+                    val bmp = withContext(Dispatchers.IO) { SessionPreview.thumbnail(video, tlFile) }
+                    if (bmp != null) thumb.setImageBitmap(bmp)
+                }
+                outer.setOnClickListener { openReplay(ctx, row) }
+            }
+            val card = ui.add(LinearLayout(ctx).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+            }, line)
             val ex = Plan.byId(ctx, row.optString("exercise"))
             ui.p("${row.optString("date")}  ${ex?.name(I18n.lang) ?: row.optString("exercise")}", Ui.TEXT, 14f, card)
             val dur = row.optLong("duration_s")
@@ -55,10 +85,8 @@ class SessionsFragment : Fragment() {
                 val keys = avg.keys().asSequence().toList()
                 if (keys.isNotEmpty()) ui.muted(keys.joinToString("  ") { k -> "$k=${"%.2f".format(avg.optDouble(k))}" }, card)
             }
-            store.videoFile(row)?.let { f ->
-                if (f.exists()) ui.button(t("review_recording").format(row.optInt("recorded_frames")), card) { play(ctx, f) }
-                else ui.p(t("recording_missing"), Ui.BAD, 12f, card)
-            }
+            if (canReplay) ui.button(t("replay_open"), outer) { openReplay(ctx, row) }
+            if (store.videoFile(row) != null && video == null) ui.p(t("recording_missing"), Ui.BAD, 12f, outer)
         }
 
         ui.h(t("checkins"))
@@ -84,14 +112,8 @@ class SessionsFragment : Fragment() {
 
     private fun uriFor(ctx: Context, f: File) = FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", f)
 
-    private fun play(ctx: Context, f: File) {
-        val uri = uriFor(ctx, f)
-        val view = Intent(Intent.ACTION_VIEW).setDataAndType(uri, "video/mp4").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        runCatching { startActivity(view) }.onFailure {
-            val share = Intent(Intent.ACTION_SEND).setType("video/mp4").putExtra(Intent.EXTRA_STREAM, uri)
-                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            runCatching { startActivity(Intent.createChooser(share, t("review"))) }
-        }
+    private fun openReplay(ctx: Context, row: JSONObject) {
+        startActivity(Intent(ctx, SessionReplayActivity::class.java).putExtra("ts", row.optLong("ts")))
     }
 
     private fun export(ctx: Context, store: LocalStore) {
