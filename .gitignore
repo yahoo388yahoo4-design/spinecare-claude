@@ -1,0 +1,17 @@
+*.pyc
+__pycache__/
+.pytest_cache/
+server/sessions.db
+android/.gradle/
+android/**/build/
+android/local.properties
+*.iml
+.idea/
+.DS_Store
+ios/SpineCare.xcodeproj/
+ios/build/
+ios/Payload/
+*.ipa
+*.apk
+firmware/**/.pio/
+.venv/

@@ -1,0 +1,757 @@
+{
+ "tolerance": 0.001,
+ "cases": [
+  {
+   "name": "front_upright",
+   "landmarks": {
+    "nose": {
+     "x": 320,
+     "y": 100,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 300,
+     "y": 110,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 340,
+     "y": 110,
+     "conf": 0.9
+    },
+    "lsho": {
+     "x": 270,
+     "y": 160,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 370,
+     "y": 160,
+     "conf": 0.9
+    },
+    "lelb": {
+     "x": 255,
+     "y": 230,
+     "conf": 0.8
+    },
+    "relb": {
+     "x": 385,
+     "y": 230,
+     "conf": 0.8
+    },
+    "lwri": {
+     "x": 250,
+     "y": 300,
+     "conf": 0.8
+    },
+    "rwri": {
+     "x": 390,
+     "y": 300,
+     "conf": 0.8
+    },
+    "lhip": {
+     "x": 285,
+     "y": 300,
+     "conf": 0.9
+    },
+    "rhip": {
+     "x": 355,
+     "y": 300,
+     "conf": 0.9
+    },
+    "lknee": {
+     "x": 283,
+     "y": 380,
+     "conf": 0.9
+    },
+    "rknee": {
+     "x": 357,
+     "y": 380,
+     "conf": 0.9
+    },
+    "lank": {
+     "x": 282,
+     "y": 450,
+     "conf": 0.9
+    },
+    "rank": {
+     "x": 358,
+     "y": 450,
+     "conf": 0.9
+    }
+   },
+   "expected": {
+    "cervical_sag_proxy": 147.528808,
+    "cervical_tilt": 0.0,
+    "head_forward_proxy": 0.213066,
+    "neck_yaw_est": 0.0,
+    "shoulder_line_tilt": 0.0,
+    "shoulder_width_ratio": 0.714286,
+    "trunk_lean_sagittal": 6.115504,
+    "trunk_tilt_frontal": 0.0
+   }
+  },
+  {
+   "name": "front_trunk_lean",
+   "landmarks": {
+    "nose": {
+     "x": 320,
+     "y": 100,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 300,
+     "y": 110,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 340,
+     "y": 110,
+     "conf": 0.9
+    },
+    "lsho": {
+     "x": 270,
+     "y": 160,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 370,
+     "y": 160,
+     "conf": 0.9
+    },
+    "lelb": {
+     "x": 255,
+     "y": 230,
+     "conf": 0.8
+    },
+    "relb": {
+     "x": 385,
+     "y": 230,
+     "conf": 0.8
+    },
+    "lwri": {
+     "x": 250,
+     "y": 300,
+     "conf": 0.8
+    },
+    "rwri": {
+     "x": 390,
+     "y": 300,
+     "conf": 0.8
+    },
+    "lhip": {
+     "x": 345,
+     "y": 300,
+     "conf": 0.9
+    },
+    "rhip": {
+     "x": 415,
+     "y": 300,
+     "conf": 0.9
+    },
+    "lknee": {
+     "x": 283,
+     "y": 380,
+     "conf": 0.9
+    },
+    "rknee": {
+     "x": 357,
+     "y": 380,
+     "conf": 0.9
+    },
+    "lank": {
+     "x": 282,
+     "y": 450,
+     "conf": 0.9
+    },
+    "rank": {
+     "x": 358,
+     "y": 450,
+     "conf": 0.9
+    }
+   },
+   "expected": {
+    "cervical_sag_proxy": 147.528808,
+    "cervical_tilt": 0.0,
+    "head_forward_proxy": 0.188889,
+    "neck_yaw_est": 0.0,
+    "shoulder_line_tilt": 0.0,
+    "shoulder_width_ratio": 0.656532,
+    "trunk_lean_sagittal": 28.17859,
+    "trunk_tilt_frontal": 23.198591
+   }
+  },
+  {
+   "name": "front_head_right",
+   "landmarks": {
+    "nose": {
+     "x": 336,
+     "y": 100,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 300,
+     "y": 110,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 340,
+     "y": 110,
+     "conf": 0.9
+    },
+    "lsho": {
+     "x": 270,
+     "y": 160,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 370,
+     "y": 160,
+     "conf": 0.9
+    },
+    "lelb": {
+     "x": 255,
+     "y": 230,
+     "conf": 0.8
+    },
+    "relb": {
+     "x": 385,
+     "y": 230,
+     "conf": 0.8
+    },
+    "lwri": {
+     "x": 250,
+     "y": 300,
+     "conf": 0.8
+    },
+    "rwri": {
+     "x": 390,
+     "y": 300,
+     "conf": 0.8
+    },
+    "lhip": {
+     "x": 285,
+     "y": 300,
+     "conf": 0.9
+    },
+    "rhip": {
+     "x": 355,
+     "y": 300,
+     "conf": 0.9
+    },
+    "lknee": {
+     "x": 283,
+     "y": 380,
+     "conf": 0.9
+    },
+    "rknee": {
+     "x": 357,
+     "y": 380,
+     "conf": 0.9
+    },
+    "lank": {
+     "x": 282,
+     "y": 450,
+     "conf": 0.9
+    },
+    "rank": {
+     "x": 358,
+     "y": 450,
+     "conf": 0.9
+    }
+   },
+   "expected": {
+    "cervical_sag_proxy": 136.487868,
+    "cervical_tilt": 0.0,
+    "head_forward_proxy": 0.213066,
+    "neck_yaw_est": 34.849905,
+    "shoulder_line_tilt": 0.0,
+    "shoulder_width_ratio": 0.714286,
+    "trunk_lean_sagittal": 6.115504,
+    "trunk_tilt_frontal": 0.0
+   }
+  },
+  {
+   "name": "front_head_left_ears_occluded",
+   "landmarks": {
+    "nose": {
+     "x": 304,
+     "y": 100,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 300,
+     "y": 110,
+     "conf": 0.1
+    },
+    "rear": {
+     "x": 322,
+     "y": 110,
+     "conf": 0.1
+    },
+    "lsho": {
+     "x": 270,
+     "y": 160,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 370,
+     "y": 160,
+     "conf": 0.9
+    },
+    "lelb": {
+     "x": 255,
+     "y": 230,
+     "conf": 0.8
+    },
+    "relb": {
+     "x": 385,
+     "y": 230,
+     "conf": 0.8
+    },
+    "lwri": {
+     "x": 250,
+     "y": 300,
+     "conf": 0.8
+    },
+    "rwri": {
+     "x": 390,
+     "y": 300,
+     "conf": 0.8
+    },
+    "lhip": {
+     "x": 285,
+     "y": 300,
+     "conf": 0.9
+    },
+    "rhip": {
+     "x": 355,
+     "y": 300,
+     "conf": 0.9
+    },
+    "lknee": {
+     "x": 283,
+     "y": 380,
+     "conf": 0.9
+    },
+    "rknee": {
+     "x": 357,
+     "y": 380,
+     "conf": 0.9
+    },
+    "lank": {
+     "x": 282,
+     "y": 450,
+     "conf": 0.9
+    },
+    "rank": {
+     "x": 358,
+     "y": 450,
+     "conf": 0.9
+    }
+   },
+   "expected": {
+    "neck_yaw_est": -34.849905,
+    "shoulder_line_tilt": 0.0,
+    "shoulder_width_ratio": 0.714286,
+    "trunk_tilt_frontal": 0.0
+   }
+  },
+  {
+   "name": "front_shoulder_raised",
+   "landmarks": {
+    "nose": {
+     "x": 320,
+     "y": 100,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 300,
+     "y": 110,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 340,
+     "y": 110,
+     "conf": 0.9
+    },
+    "lsho": {
+     "x": 270,
+     "y": 160,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 370,
+     "y": 148,
+     "conf": 0.9
+    },
+    "lelb": {
+     "x": 255,
+     "y": 230,
+     "conf": 0.8
+    },
+    "relb": {
+     "x": 385,
+     "y": 230,
+     "conf": 0.8
+    },
+    "lwri": {
+     "x": 250,
+     "y": 300,
+     "conf": 0.8
+    },
+    "rwri": {
+     "x": 390,
+     "y": 300,
+     "conf": 0.8
+    },
+    "lhip": {
+     "x": 285,
+     "y": 300,
+     "conf": 0.9
+    },
+    "rhip": {
+     "x": 355,
+     "y": 300,
+     "conf": 0.9
+    },
+    "lknee": {
+     "x": 283,
+     "y": 380,
+     "conf": 0.9
+    },
+    "rknee": {
+     "x": 357,
+     "y": 380,
+     "conf": 0.9
+    },
+    "lank": {
+     "x": 282,
+     "y": 450,
+     "conf": 0.9
+    },
+    "rank": {
+     "x": 358,
+     "y": 450,
+     "conf": 0.9
+    }
+   },
+   "expected": {
+    "cervical_sag_proxy": 147.528808,
+    "cervical_tilt": 0.0,
+    "head_forward_proxy": 0.213066,
+    "neck_yaw_est": 0.0,
+    "shoulder_line_tilt": -6.842773,
+    "shoulder_width_ratio": 0.689845,
+    "trunk_lean_sagittal": 6.115504,
+    "trunk_tilt_frontal": 0.0
+   }
+  },
+  {
+   "name": "side_facing_right",
+   "landmarks": {
+    "nose": {
+     "x": 352,
+     "y": 102,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 318,
+     "y": 108,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 318,
+     "y": 108,
+     "conf": 0.2
+    },
+    "lsho": {
+     "x": 305,
+     "y": 165,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 305,
+     "y": 165,
+     "conf": 0.3
+    },
+    "lhip": {
+     "x": 300,
+     "y": 305,
+     "conf": 0.9
+    },
+    "rhip": {
+     "x": 300,
+     "y": 305,
+     "conf": 0.3
+    },
+    "lknee": {
+     "x": 350,
+     "y": 330,
+     "conf": 0.9
+    },
+    "rknee": {
+     "x": 350,
+     "y": 330,
+     "conf": 0.3
+    }
+   },
+   "expected": {
+    "cervical_sag_proxy": 112.855685,
+    "head_forward_proxy": 0.092798,
+    "trunk_lean_sagittal": -2.045408
+   }
+  },
+  {
+   "name": "side_facing_left",
+   "landmarks": {
+    "nose": {
+     "x": 288,
+     "y": 102,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 322,
+     "y": 108,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 322,
+     "y": 108,
+     "conf": 0.2
+    },
+    "lsho": {
+     "x": 335,
+     "y": 165,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 335,
+     "y": 165,
+     "conf": 0.3
+    },
+    "lhip": {
+     "x": 340,
+     "y": 305,
+     "conf": 0.9
+    },
+    "rhip": {
+     "x": 340,
+     "y": 305,
+     "conf": 0.3
+    },
+    "lknee": {
+     "x": 290,
+     "y": 330,
+     "conf": 0.9
+    },
+    "rknee": {
+     "x": 290,
+     "y": 330,
+     "conf": 0.3
+    }
+   },
+   "expected": {
+    "cervical_sag_proxy": 112.855685,
+    "head_forward_proxy": 0.092798,
+    "trunk_lean_sagittal": -2.045408
+   }
+  },
+  {
+   "name": "side_head_forward",
+   "landmarks": {
+    "nose": {
+     "x": 368,
+     "y": 106,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 335,
+     "y": 110,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 318,
+     "y": 108,
+     "conf": 0.2
+    },
+    "lsho": {
+     "x": 305,
+     "y": 165,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 305,
+     "y": 165,
+     "conf": 0.3
+    },
+    "lhip": {
+     "x": 300,
+     "y": 305,
+     "conf": 0.9
+    },
+    "rhip": {
+     "x": 300,
+     "y": 305,
+     "conf": 0.3
+    },
+    "lknee": {
+     "x": 350,
+     "y": 330,
+     "conf": 0.9
+    },
+    "rknee": {
+     "x": 350,
+     "y": 330,
+     "conf": 0.3
+    }
+   },
+   "expected": {
+    "cervical_sag_proxy": 125.521687,
+    "head_forward_proxy": 0.214149,
+    "trunk_lean_sagittal": -2.045408
+   }
+  },
+  {
+   "name": "side_leaning_back",
+   "landmarks": {
+    "nose": {
+     "x": 332,
+     "y": 100,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 298,
+     "y": 108,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 318,
+     "y": 108,
+     "conf": 0.2
+    },
+    "lsho": {
+     "x": 285,
+     "y": 166,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 305,
+     "y": 165,
+     "conf": 0.3
+    },
+    "lhip": {
+     "x": 300,
+     "y": 305,
+     "conf": 0.9
+    },
+    "rhip": {
+     "x": 300,
+     "y": 305,
+     "conf": 0.3
+    },
+    "lknee": {
+     "x": 350,
+     "y": 330,
+     "conf": 0.9
+    },
+    "rknee": {
+     "x": 350,
+     "y": 330,
+     "conf": 0.3
+    }
+   },
+   "expected": {
+    "cervical_sag_proxy": 115.873882,
+    "head_forward_proxy": 0.092985,
+    "trunk_lean_sagittal": 6.159163
+   }
+  },
+  {
+   "name": "back_retracted",
+   "landmarks": {
+    "nose": {
+     "x": 320,
+     "y": 100,
+     "conf": 0.1
+    },
+    "lear": {
+     "x": 300,
+     "y": 110,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 340,
+     "y": 110,
+     "conf": 0.9
+    },
+    "lsho": {
+     "x": 276,
+     "y": 160,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 364,
+     "y": 160,
+     "conf": 0.9
+    },
+    "lelb": {
+     "x": 255,
+     "y": 230,
+     "conf": 0.8
+    },
+    "relb": {
+     "x": 385,
+     "y": 230,
+     "conf": 0.8
+    },
+    "lwri": {
+     "x": 250,
+     "y": 300,
+     "conf": 0.8
+    },
+    "rwri": {
+     "x": 390,
+     "y": 300,
+     "conf": 0.8
+    },
+    "lhip": {
+     "x": 285,
+     "y": 300,
+     "conf": 0.9
+    },
+    "rhip": {
+     "x": 355,
+     "y": 300,
+     "conf": 0.9
+    },
+    "lknee": {
+     "x": 283,
+     "y": 380,
+     "conf": 0.9
+    },
+    "rknee": {
+     "x": 357,
+     "y": 380,
+     "conf": 0.9
+    },
+    "lank": {
+     "x": 282,
+     "y": 450,
+     "conf": 0.9
+    },
+    "rank": {
+     "x": 358,
+     "y": 450,
+     "conf": 0.9
+    }
+   },
+   "expected": {
+    "cervical_tilt": 0.0,
+    "shoulder_line_tilt": 0.0,
+    "shoulder_width_ratio": 0.628571,
+    "trunk_tilt_frontal": 0.0
+   }
+  }
+ ]
+}

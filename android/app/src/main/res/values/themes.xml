@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.SpineCare" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/sc_primary</item>
+        <item name="android:colorBackground">@color/sc_bg</item>
+        <item name="colorSurface">@color/sc_surface</item>
+        <item name="android:statusBarColor">@color/sc_bg</item>
+    </style>
+</resources>
