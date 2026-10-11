@@ -182,3 +182,101 @@ def test_exercise_plan_is_consistent():
         assert set(ex["name"]) == {"en", "ro"}
         for rule in ex["form_rules"]:
             assert set(rule["cue"]) == {"en", "ro"}
+
+
+# ---- neck-only and upper-body-only programmes: nothing below the shoulders in view
+
+NECK_FRONT = {"nose": (320, 150, 0.9), "lear": (270, 165, 0.9), "rear": (370, 165, 0.9),
+              "lsho": (170, 330, 0.9), "rsho": (470, 330, 0.9)}
+NECK_SIDE = {"nose": (400, 150, 0.9), "lear": (320, 165, 0.9), "rear": (320, 165, 0.2),
+             "lsho": (300, 330, 0.9), "rsho": (300, 330, 0.3)}
+UPPER_FRONT = {"nose": (320, 90, 0.9), "lear": (295, 100, 0.9), "rear": (345, 100, 0.9),
+               "lsho": (250, 170, 0.9), "rsho": (390, 170, 0.9),
+               "lelb": (240, 280, 0.9), "relb": (400, 280, 0.9)}
+UPPER_SIDE = {"nose": (360, 95, 0.9), "lear": (322, 102, 0.9), "rear": (322, 102, 0.2),
+              "lsho": (310, 180, 0.9), "rsho": (310, 180, 0.3),
+              "lelb": (312, 290, 0.9), "relb": (312, 290, 0.3)}
+PARTIAL_POSES = {("neck", "front"): NECK_FRONT, ("neck", "side"): NECK_SIDE,
+                 ("upper_body", "front"): UPPER_FRONT, ("upper_body", "side"): UPPER_SIDE}
+# Metrics that need the hips; a rule on one of them simply stays quiet when the hips are out of view.
+HIP_METRICS = {"trunk_tilt_frontal", "shoulder_width_ratio", "head_forward_proxy",
+               "trunk_lean_sagittal", "cervical_sag_proxy"}
+PARTIAL = [e for e in EXERCISES.values() if e["program"] in ("neck", "upper_body")]
+
+
+def test_every_exercise_has_a_programme():
+    assert {e["program"] for e in EXERCISES.values()} == {"full", "upper_body", "neck"}
+    assert sum(e["program"] == "neck" for e in EXERCISES.values()) >= 3
+    assert sum(e["program"] == "upper_body" for e in EXERCISES.values()) >= 3
+
+
+@pytest.mark.parametrize("ex", PARTIAL, ids=lambda e: e["id"])
+def test_partial_programmes_track_without_hips(ex):
+    lower = ("hip", "knee", "ank")
+    assert not any(r.endswith(lower) for r in ex["required_landmarks"])
+    pose = PersonPose(dict(PARTIAL_POSES[(ex["program"], ex["view"])]))
+    assert framing_check(pose, ex["required_landmarks"], ex["min_conf"], 640, 480)["ready"]
+    m = compute_metrics(pose)
+    assert ex["signal"].removeprefix("abs:") in m
+    assert ex["signal"].removeprefix("abs:") not in HIP_METRICS
+    rules = [r["metric"] for r in ex["form_rules"]]
+    assert any(r in m for r in rules), "at least one form check must work without hips"
+    for r in rules:
+        assert r in m or r in HIP_METRICS, r
+
+
+def _drive(ex, start, moved, reps=3):
+    """Calibrate on `start`, then move start -> moved -> start `reps` times."""
+    tr = ExerciseTracker(ex, calibration_s=0.3)
+    t, out = 0.0, None
+    for _ in range(5):
+        out = tr.update(compute_metrics(PersonPose(dict(start))), True, t)
+        t += 0.1
+    for _ in range(reps):
+        for k in range(11):  # 0..1..0 in 0.2 steps, holding at the end of range
+            a = 1 - abs(k - 5) / 5 if k not in (4, 5, 6) else 1.0
+            pose = {n: (start[n][0] + (moved[n][0] - start[n][0]) * a,
+                        start[n][1] + (moved[n][1] - start[n][1]) * a, start[n][2]) for n in start}
+            out = tr.update(compute_metrics(PersonPose(pose)), True, t)
+            t += 0.2
+    return out
+
+
+def _with(base, **kw):
+    d = dict(base)
+    d.update(kw)
+    return d
+
+
+@pytest.mark.parametrize("ex_id,start,moved", [
+    ("chin_tuck_neck", NECK_SIDE, _with(NECK_SIDE, lear=(300, 165, 0.9), nose=(380, 152, 0.9))),
+    ("neck_flexion_rom", NECK_SIDE, _with(NECK_SIDE, nose=(385, 215, 0.9))),
+    ("neck_side_bend", NECK_FRONT, _with(NECK_FRONT, lear=(278, 140, 0.9), rear=(362, 190, 0.9), nose=(322, 152, 0.9))),
+    ("cervical_rotation_rom", NECK_FRONT, _with(NECK_FRONT, nose=(400, 150, 0.9))),
+    ("shoulder_shrug", NECK_FRONT, _with(NECK_FRONT, lsho=(170, 300, 0.9), rsho=(470, 300, 0.9))),
+    ("side_arm_raise", UPPER_FRONT, _with(UPPER_FRONT, lelb=(150, 220, 0.9), relb=(490, 220, 0.9))),
+    ("scapular_squeeze_side", UPPER_SIDE, _with(UPPER_SIDE, lelb=(285, 285, 0.9))),
+])
+def test_partial_programmes_count_clean_reps(ex_id, start, moved):
+    out = _drive(EXERCISES[ex_id], start, moved)
+    assert out["reps"] == 3
+    assert out["cues"] == []
+
+
+def test_neck_side_bend_cues_shoulder_hike():
+    tr = ExerciseTracker(EXERCISES["neck_side_bend"], calibration_s=0.2)
+    for i in range(4):
+        tr.update(compute_metrics(PersonPose(dict(NECK_FRONT))), True, i * 0.1)
+    hike = _with(NECK_FRONT, lear=(278, 140, 0.9), rear=(362, 190, 0.9), rsho=(470, 280, 0.9))
+    out = tr.update(compute_metrics(PersonPose(hike)), True, 1.0)
+    assert [c["metric"] for c in out["cues"]] == ["shoulder_line_tilt"]
+
+
+def test_side_arm_raise_cues_uneven_arms():
+    ex = EXERCISES["side_arm_raise"]
+    tr = ExerciseTracker(ex, calibration_s=0.2)
+    for i in range(4):
+        tr.update(compute_metrics(PersonPose(dict(UPPER_FRONT))), True, i * 0.1)
+    uneven = _with(UPPER_FRONT, lelb=(150, 220, 0.9), relb=(420, 285, 0.9))  # left up, right still down
+    out = tr.update(compute_metrics(PersonPose(uneven)), True, 1.0)
+    assert [c["metric"] for c in out["cues"]] == ["arm_elev_asym"]

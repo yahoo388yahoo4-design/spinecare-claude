@@ -30,9 +30,12 @@ struct Exercise: Codable, Identifiable, Hashable {
     let clinicianApproved: Bool
     var custom: Bool?
     var videoUrl: String?
+    /// full | upper_body | neck: how much of the body must be in view. Custom entries have none.
+    var program: String?
 
     var cameraTracked: Bool { (tracking ?? "camera") == "camera" }
     var isCustom: Bool { custom ?? false }
+    var programId: String { program ?? (isCustom ? "custom" : "full") }
     func title(_ lang: String) -> String { name[lang] ?? name["en"] ?? id }
     func details(_ lang: String) -> String { description[lang] ?? description["en"] ?? "" }
     func stops(_ lang: String) -> [String] { stopConditions[lang] ?? stopConditions["en"] ?? [] }
@@ -66,7 +69,12 @@ enum Plan {
         return plan
     }()
 
+    /// Built-in programmes, from the most to the least of the body that must be in view.
+    static let programs = ["full", "upper_body", "neck"]
     static var builtIn: [Exercise] { file.exercises }
+    static func builtIn(in program: String) -> [Exercise] {
+        program == "all" ? builtIn : builtIn.filter { $0.programId == program }
+    }
     static var calibrationSeconds: Double { file.calibrationS ?? 1.5 }
     static var all: [Exercise] { builtIn + SessionStore.shared.customExercises }
     static func byId(_ id: String) -> Exercise? { all.first { $0.id == id } }

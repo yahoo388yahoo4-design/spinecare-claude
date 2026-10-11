@@ -103,6 +103,15 @@ def best_side(pose: PersonPose):
     return s if score(s) >= VIS else None
 
 
+def best_side_upper(pose: PersonPose):
+    """Side ('l' or 'r') whose ear/shoulder pair is most visible, or None.
+    Used by head-and-shoulders and waist-up exercises where the hips are out of view."""
+    def score(s):
+        return min(pose.p(s + "ear")[2], pose.p(s + "sho")[2])
+    s = "l" if score("l") >= score("r") else "r"
+    return s if score(s) >= VIS else None
+
+
 def compute_metrics(pose: PersonPose) -> dict:
     """Visible-segment metrics. Angles in degrees; offsets normalized by torso length."""
     m: dict[str, float] = {}
@@ -151,6 +160,39 @@ def compute_metrics(pose: PersonPose) -> dict:
         ang = _ang_between((nose[0] - ear[0], nose[1] - ear[1]), (sho[0] - ear[0], sho[1] - ear[1]))
         if ang is not None:
             m["cervical_sag_proxy"] = ang
+
+    # Upper-body-only metrics: nothing below the shoulders is needed, so they
+    # work with a head-and-shoulders (neck programme) or waist-up framing.
+    if v("lear") and v("rear"):
+        # Head roll from the ear line; + = right ear lower in the image.
+        deg = math.degrees(math.atan2(rear[1] - lear[1], rear[0] - lear[0]))
+        m["head_roll"] = (deg + 90.0) % 180.0 - 90.0
+        if both_sho and sho_w > 1e-6:
+            # Ear-to-shoulder height over shoulder width; shrinks on a shrug.
+            m["shoulder_elev"] = ((lsho[1] - lear[1]) + (rsho[1] - rear[1])) / 2.0 / sho_w
+    for s in ("l", "r"):
+        if v(s + "sho") and v(s + "elb"):
+            # Upper-arm angle from hanging straight down (0) toward overhead (180).
+            a = _ang_from_vertical(pose.p(s + "sho"), pose.p(s + "elb"))
+            if a is not None:
+                m["arm_elev_" + s] = a
+    if "arm_elev_l" in m and "arm_elev_r" in m:
+        m["arm_elevation"] = min(m["arm_elev_l"], m["arm_elev_r"])
+        m["arm_elev_asym"] = m["arm_elev_l"] - m["arm_elev_r"]
+    up = best_side_upper(pose)
+    if up and v("nose"):
+        ear, sho = pose.p(up + "ear"), pose.p(up + "sho")
+        facing = 1.0 if nose[0] >= ear[0] else -1.0
+        neck = _dist(ear, sho)
+        if neck > 1e-6:
+            # + = ear ahead of the shoulder, normalized by ear-shoulder distance
+            m["head_forward_neck"] = (ear[0] - sho[0]) * facing / neck
+        # + = nose below the ear line (head nodding down / neck flexion)
+        m["head_pitch_side"] = math.degrees(math.atan2(nose[1] - ear[1], (nose[0] - ear[0]) * facing))
+        if v(up + "elb"):
+            elb = pose.p(up + "elb")
+            # + = elbow drawn behind the shoulder (scapular retraction, side view)
+            m["arm_ext_side"] = math.degrees(math.atan2((sho[0] - elb[0]) * facing, elb[1] - sho[1]))
     return {k: val for k, val in m.items() if val is not None}
 
 
