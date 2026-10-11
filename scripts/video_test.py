@@ -39,24 +39,23 @@ def load_font(size=16):
     return ImageFont.load_default()
 
 
-CONNECTIONS = [(0, 1), (0, 2), (1, 3), (2, 4), (5, 6), (5, 7), (7, 9), (6, 8),
-               (8, 10), (5, 11), (6, 12), (11, 12), (11, 13), (13, 15),
-               (12, 14), (14, 16)]  # COCO-17 topology (YOLO pose)
+CONNECTIONS = [("lsho", "rsho"), ("lsho", "lelb"), ("lelb", "lwri"), ("rsho", "relb"),
+               ("relb", "rwri"), ("lsho", "lhip"), ("rsho", "rhip"), ("lhip", "rhip"),
+               ("lhip", "lknee"), ("lknee", "lank"), ("rhip", "rknee"), ("rknee", "rank"),
+               ("nose", "lear"), ("nose", "rear")]  # by name: the server replies with named points
 
 
 def annotate(img_path: Path, pose: dict, out_path: Path, idx: int, total: int):
     img = Image.open(img_path).convert("RGB")
     d = ImageDraw.Draw(img)
     W, H = img.size
-    lm = pose.get("landmarks") or []
-    # server returns pixel coords; normalize by the frame the frame was sent at
+    # server returns pixel coords of the frame it was sent
+    lm = {p["name"]: p for p in (pose.get("landmarks") or []) if "name" in p}
     for a, b in CONNECTIONS:
-        if a < len(lm) and b < len(lm):
-            pa, pb = lm[a], lm[b]
-            if pa.get("visibility", 0) > 0.4 and pb.get("visibility", 0) > 0.4:
-                d.line([(pa["x"], pa["y"]), (pb["x"], pb["y"])],
-                       fill=(0, 255, 140), width=3)
-    for p in lm:
+        pa, pb = lm.get(a), lm.get(b)
+        if pa and pb and pa.get("visibility", 0) > 0.4 and pb.get("visibility", 0) > 0.4:
+            d.line([(pa["x"], pa["y"]), (pb["x"], pb["y"])], fill=(0, 255, 140), width=3)
+    for p in lm.values():
         if p.get("visibility", 0) > 0.4:
             x, y = p["x"], p["y"]
             d.ellipse([x - 4, y - 4, x + 4, y + 4], fill=(255, 80, 80))

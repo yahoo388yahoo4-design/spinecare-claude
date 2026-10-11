@@ -1,0 +1,32 @@
+{
+  "notes": [
+    "Demo videos used to exercise the detection pipelines in CI (scripts/fetch_demo_videos.py).",
+    "Videos are NOT stored in the repo: they are downloaded at CI time from Wikimedia Commons, and only",
+    "files whose license allows redistribution and derivatives (public domain, CC0, CC BY, CC BY-SA) are used.",
+    "Each run records title, author, license and source page in sources.json next to the downloaded files.",
+    "'commons_file' pins an exact file; 'commons_search' takes the best licensed matches of a search.",
+    "'exercise_id' is the tracker the clip is replayed against; it is our mapping, not a clinical label."
+  ],
+  "allowed_licenses": ["public domain", "pd", "cc0", "cc-by", "cc by", "cc-by-sa", "cc by-sa", "attribution"],
+  "max_seconds": 45,
+  "fps": 6,
+  "width": 640,
+  "videos": [
+    {"id": "neck_rotation", "exercise_id": "cervical_rotation_rom", "commons_search": "neck rotation exercise", "pick": 1},
+    {"id": "head_turn", "exercise_id": "cervical_rotation_rom", "commons_search": "head rotation", "pick": 1},
+    {"id": "neck_side_bend", "exercise_id": "neck_side_bend", "commons_search": "neck stretch", "pick": 1},
+    {"id": "neck_flexion", "exercise_id": "neck_flexion_rom", "commons_search": "neck flexion", "pick": 1},
+    {"id": "chin_tuck", "exercise_id": "chin_tuck_neck", "commons_search": "chin tuck", "pick": 1},
+    {"id": "shoulder_shrug", "exercise_id": "shoulder_shrug", "commons_search": "shoulder shrug", "pick": 1},
+    {"id": "arm_raise", "exercise_id": "side_arm_raise", "commons_search": "lateral raise exercise", "pick": 1},
+    {"id": "jumping_jack", "exercise_id": "side_arm_raise", "commons_search": "jumping jacks", "pick": 1},
+    {"id": "shoulder_exercise", "exercise_id": "side_arm_raise", "commons_search": "shoulder exercise", "pick": 1},
+    {"id": "back_extension", "exercise_id": "thoracic_extension", "commons_search": "back extension exercise", "pick": 1},
+    {"id": "rowing", "exercise_id": "scapular_retraction", "commons_search": "physical therapy exercise", "pick": 1}
+  ],
+  "discovery_queries": [
+    "neck exercise", "neck mobility", "cervical spine exercise", "physiotherapy", "stretching exercise",
+    "calisthenics", "exercise demonstration", "aerobics", "gymnastics warm up", "yoga neck", "posture exercise",
+    "dumbbell exercise", "arm circles", "shoulder rotation", "tai chi"
+  ]
+}

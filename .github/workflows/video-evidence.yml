@@ -1,0 +1,191 @@
+name: Video replay evidence
+
+# Downloads openly licensed exercise demo videos (scripts/fetch_demo_videos.py) and
+# replays them through every detection path, uploading overlay videos, contact
+# sheets, per-frame logs and REPORT.md as the "video-evidence" artifact:
+#   android: the app's on-device pipeline on an Android emulator (VideoReplayTest)
+#   ios:     the iOS app's PoseTracker/Engines code with Apple Vision on macOS
+#   server:  the coaching server over the app's WebSocket protocol (CPU)
+
+on:
+  push:
+    branches: [ "claude/**" ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: video-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fetch-videos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Download licensed demo videos from Wikimedia Commons
+        run: python scripts/fetch_demo_videos.py videos
+      - name: List sources and other candidates
+        run: |
+          echo "## Demo videos used" >> "$GITHUB_STEP_SUMMARY"
+          python -c "import json;[print(f\"- {v['id']} -> {v['exercise_id']}: [{v['title']}]({v['page']}) ({v['license']}, {v['frames']} frames)\") for v in json.load(open('videos/sources.json'))['videos']]" >> "$GITHUB_STEP_SUMMARY"
+          echo "<details><summary>All search candidates</summary>" >> "$GITHUB_STEP_SUMMARY"
+          echo >> "$GITHUB_STEP_SUMMARY"; cat videos/candidates.md >> "$GITHUB_STEP_SUMMARY"
+          echo "</details>" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: demo-videos
+          path: |
+            videos/*.mp4
+            videos/sources.json
+            videos/candidates.md
+
+  android-emulator:
+    needs: fetch-videos
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: demo-videos
+          path: android/app/src/androidTest/assets/videos
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: "8.7"
+      - name: Build app and instrumented test APKs
+        working-directory: android
+        run: gradle --no-daemon assembleDebug assembleDebugAndroidTest
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Replay videos through the app on an emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: x86_64
+          target: google_apis
+          ram-size: 4096M
+          disk-size: 6G
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none -camera-front none
+          script: bash scripts/ci_android_replay.sh evidence/android 270
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: replay-android
+          path: evidence/android
+
+  ios-engine:
+    needs: fetch-videos
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: demo-videos
+          path: videos
+      - name: Build the replay tool from the iOS app's Core sources
+        run: |
+          swiftc -O -target "$(uname -m)-apple-macos14" -o ios_replay scripts/ios_replay/main.swift \
+            ios/SpineCare/Core/PoseTracker.swift ios/SpineCare/Core/Engines.swift ios/SpineCare/Core/Plan.swift \
+            ios/SpineCare/Core/Strings.swift ios/SpineCare/Core/SessionStore.swift
+      - name: Replay videos through Apple Vision + the iOS engines
+        run: ./ios_replay videos shared/exercises.json evidence/ios 270
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: replay-ios
+          path: evidence/ios
+
+  server:
+    needs: fetch-videos
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: demo-videos
+          path: videos
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+      - name: Install server with CPU pose model
+        run: |
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install -r server/requirements-dev.txt ultralytics
+      - name: Start server
+        working-directory: server
+        env:
+          SPINECARE_ALLOW_NO_AUTH: "1"
+          SPINECARE_DB: /tmp/sessions.db
+        run: |
+          nohup python main.py > /tmp/server.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://127.0.0.1:8300/health && break; sleep 2; done
+      - name: Replay videos over the app's WebSocket protocol
+        run: |
+          python - <<'EOF'
+          import json, subprocess, sys
+          for v in json.load(open("videos/sources.json"))["videos"]:
+              r = subprocess.run([sys.executable, "scripts/video_test.py", f"videos/{v['file']}", v["exercise_id"],
+                                  f"evidence/server/{v['id']}"])
+              print(v["id"], "exit", r.returncode)
+          EOF
+          cp /tmp/server.log evidence/server/ || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: replay-server
+          path: evidence/server
+
+  report:
+    needs: [ fetch-videos, android-emulator, ios-engine, server ]
+    if: always() && needs.fetch-videos.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg && pip install pillow
+      - uses: actions/download-artifact@v4
+        with:
+          name: demo-videos
+          path: video-out
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: replay-android
+          path: video-out/android
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: replay-ios
+          path: video-out/ios
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: replay-server
+          path: video-out/server
+      - name: Stitch overlay videos and write REPORT.md
+        run: |
+          rm -f video-out/*.mp4   # the source clips are already in the demo-videos artifact
+          python scripts/video_evidence_report.py video-out
+          cat video-out/REPORT.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: video-evidence
+          path: video-out

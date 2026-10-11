@@ -13,6 +13,8 @@ android {
         targetSdk = 34
         versionCode = 2
         versionName = "0.2.0"
+        // Instrumented video-replay test (src/androidTest), run on an emulator by .github/workflows/video-evidence.yml
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     // The exercise plan is shared with the server and iOS app (repo-root shared/).
     sourceSets["main"].assets.srcDirs("src/main/assets", "../../shared")
@@ -67,4 +69,6 @@ dependencies {
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.json:json:20240303")  // real org.json for JVM tests (android.jar has stubs)
+    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
 }
