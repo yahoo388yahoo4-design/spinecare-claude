@@ -12,6 +12,8 @@ object I18n {
             ?: if (java.util.Locale.getDefault().language == "ro") "ro" else "en"
     }
 
+    val LANGS = listOf("en", "ro")
+
     fun set(c: Context, l: String) {
         lang = if (l == "ro") "ro" else "en"
         c.getSharedPreferences("spinecare", Context.MODE_PRIVATE).edit().putString("lang", lang).apply()
@@ -23,6 +25,10 @@ object I18n {
 
     val EN: Map<String, String> = mapOf(
         "lang_switch" to "Română",
+        "language" to "Language", "lang_en" to "English", "lang_ro" to "Română",
+        "disclaimer" to "Guidance tool for a clinician-approved plan. Not a medical device. Sensors estimate body-segment movement, never vertebral positions or nerve compression.",
+        "export_subject" to "SpineCare export",
+        "err_unknown_exercise" to "The server does not know this exercise; coaching continues on the device.",
         "tab_home" to "Today", "tab_plan" to "Plan", "tab_progress" to "Progress", "tab_sensors" to "Sensors", "tab_settings" to "Settings",
         "status_prototype" to "Prototype • not for unsupervised rehabilitation",
         "welcome" to "Move with guidance, not guesswork.",
@@ -174,6 +180,10 @@ object I18n {
 
     val RO: Map<String, String> = mapOf(
         "lang_switch" to "English",
+        "language" to "Limba", "lang_en" to "English", "lang_ro" to "Română",
+        "disclaimer" to "Instrument de ghidare pentru un plan aprobat de clinician. Nu este un dispozitiv medical. Senzorii estimează mișcarea segmentelor corpului, niciodată poziția vertebrelor sau compresia nervilor.",
+        "export_subject" to "Export SpineCare",
+        "err_unknown_exercise" to "Serverul nu cunoaște acest exercițiu; ghidarea continuă pe dispozitiv.",
         "tab_home" to "Astăzi", "tab_plan" to "Plan", "tab_progress" to "Progres", "tab_sensors" to "Senzori", "tab_settings" to "Setări",
         "status_prototype" to "Prototip • nu este destinat recuperării nesupravegheate",
         "welcome" to "Mișcare ghidată, cu grijă.",
@@ -286,13 +296,13 @@ object I18n {
         "record" to "Înregistrează sesiunile cu suprapunerea senzorilor (MP4 local)",
         "record_privacy" to "Înregistrările conțin imagini cu tine. Rămân în aplicație până le ștergi sau golești istoricul.",
         "save_settings" to "Salvează setările", "settings_saved" to "Setări salvate pe acest dispozitiv.",
-        "start" to "Start", "stop_save" to "Oprește și salvează", "flip" to "Schimbă camera", "recalibrate" to "Recalibrează",
+        "start" to "Pornește", "stop_save" to "Oprește și salvează", "flip" to "Schimbă camera", "recalibrate" to "Recalibrează",
         "rec_on" to "Înregistrare: da", "rec_off" to "Înregistrare: nu",
         "mode_btn_auto" to "Mod: automat", "mode_btn_device" to "Mod: dispozitiv", "mode_btn_server" to "Mod: server",
         "camera_needed" to "Permisiunea pentru cameră este necesară pentru sesiunile ghidate.",
         "no_camera" to "Nicio cameră disponibilă.", "no_other_camera" to "Dispozitivul nu are altă cameră.",
         "pose_unavailable" to "Detecția poziției nu a putut porni pe acest dispozitiv.",
-        "position_camera" to "Poziționează camera pentru o vedere %s, apoi apasă Start.",
+        "position_camera" to "Poziționează camera pentru o vedere %s, apoi apasă Pornește.",
         "calibrate_hint" to "Menține postura neutră cât timp aplicația se calibrează. Oprește-te dacă: %s",
         "calibrating" to "Calibrare: menține postura neutră…",
         "rep_done" to "Repetarea %d/%d ✓",

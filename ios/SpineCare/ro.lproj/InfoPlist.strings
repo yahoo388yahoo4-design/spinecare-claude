@@ -1,0 +1,4 @@
+/* Permission prompts are shown by iOS in the system language, not the in-app one. */
+"NSCameraUsageDescription" = "SpineCare folosește camera pentru a ghida și urmări exercițiile de recuperare. Video-ul nu părăsește dispozitivul; în modul server se trimit doar punctele de poziție ale corpului, dacă nu alegi trimiterea cadrelor.";
+"NSBluetoothAlwaysUsageDescription" = "SpineCare se conectează prin Bluetooth la senzorii opționali de postură SpineCare (noduri ESP32 pentru cap și trunchi).";
+"NSMotionUsageDescription" = "Folosit pentru contextul posturii în timpul exercițiilor.";

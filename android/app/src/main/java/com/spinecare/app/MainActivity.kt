@@ -37,8 +37,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** In-app English/Romanian switch (independent of the system language). */
-    fun toggleLanguage() {
-        I18n.set(this, if (I18n.lang == "en") "ro" else "en")
+    fun toggleLanguage() = setLanguage(if (I18n.lang == "en") "ro" else "en")
+
+    fun setLanguage(l: String) {
+        if (l == I18n.lang) return
+        I18n.set(this, l)
         labelTabs()
         show(fragmentFor(b.bottomNav.selectedItemId))
     }

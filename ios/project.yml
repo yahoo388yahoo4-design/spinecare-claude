@@ -23,6 +23,8 @@ targets:
       path: SpineCare/Info.plist
       properties:
         CFBundleDisplayName: SpineCare
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, ro]
         NSCameraUsageDescription: "SpineCare uses the camera to guide and monitor your rehabilitation exercises. Video never leaves the device; in server mode only body landmarks are sent unless you choose frame streaming."
         NSBluetoothAlwaysUsageDescription: "SpineCare connects to optional SpineCare posture sensors (ESP32 head/trunk nodes) over Bluetooth."
         NSMotionUsageDescription: "Used for posture context during exercises."

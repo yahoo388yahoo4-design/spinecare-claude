@@ -11,13 +11,21 @@ final class L: ObservableObject {
             ?? (Locale.current.language.languageCode?.identifier == "ro" ? "ro" : "en")
     }
 
+    static let langs = ["en", "ro"]
     static var lang: String { shared.lang }
-    static func toggle() { shared.lang = shared.lang == "en" ? "ro" : "en" }
+    static func toggle() { set(shared.lang == "en" ? "ro" : "en") }
+    static func set(_ l: String) { if shared.lang != l { shared.lang = l == "ro" ? "ro" : "en" } }
     static func t(_ key: String) -> String { (shared.lang == "ro" ? ro[key] : nil) ?? en[key] ?? key }
     static func f(_ key: String, _ args: CVarArg...) -> String { String(format: t(key), arguments: args) }
 
     static let en: [String: String] = [
         "lang_switch": "Română",
+        "language": "Language",
+        "lang_en": "English",
+        "lang_ro": "Română",
+        "disclaimer": "Guidance tool for a clinician-approved plan. Not a medical device. Sensors estimate body-segment movement, never vertebral positions or nerve compression.",
+        "export_subject": "SpineCare export",
+        "err_unknown_exercise": "The server does not know this exercise; coaching continues on the device.",
         "tab_home": "Today",
         "tab_plan": "Plan",
         "tab_progress": "Progress",
@@ -237,6 +245,12 @@ final class L: ObservableObject {
 
     static let ro: [String: String] = [
         "lang_switch": "English",
+        "language": "Limba",
+        "lang_en": "English",
+        "lang_ro": "Română",
+        "disclaimer": "Instrument de ghidare pentru un plan aprobat de clinician. Nu este un dispozitiv medical. Senzorii estimează mișcarea segmentelor corpului, niciodată poziția vertebrelor sau compresia nervilor.",
+        "export_subject": "Export SpineCare",
+        "err_unknown_exercise": "Serverul nu cunoaște acest exercițiu; ghidarea continuă pe dispozitiv.",
         "tab_home": "Astăzi",
         "tab_plan": "Plan",
         "tab_progress": "Progres",
@@ -401,7 +415,7 @@ final class L: ObservableObject {
         "record_privacy": "Înregistrările conțin imagini cu tine. Rămân în aplicație până le ștergi sau golești istoricul.",
         "save_settings": "Salvează setările",
         "settings_saved": "Setări salvate pe acest dispozitiv.",
-        "start": "Start",
+        "start": "Pornește",
         "stop_save": "Oprește și salvează",
         "flip": "Schimbă camera",
         "recalibrate": "Recalibrează",
@@ -414,7 +428,7 @@ final class L: ObservableObject {
         "no_camera": "Nicio cameră disponibilă.",
         "no_other_camera": "Dispozitivul nu are altă cameră.",
         "pose_unavailable": "Detecția poziției nu a putut porni pe acest dispozitiv.",
-        "position_camera": "Poziționează camera pentru o vedere %@, apoi apasă Start.",
+        "position_camera": "Poziționează camera pentru o vedere %@, apoi apasă Pornește.",
         "calibrate_hint": "Menține postura neutră cât timp aplicația se calibrează. Oprește-te dacă: %@",
         "calibrating": "Calibrare: menține postura neutră…",
         "rep_done": "Repetarea %ld/%ld ✓",

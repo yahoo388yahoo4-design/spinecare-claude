@@ -1,0 +1,4 @@
+/* Permission prompts are shown by iOS in the system language, not the in-app one. */
+"NSCameraUsageDescription" = "SpineCare uses the camera to guide and monitor your rehabilitation exercises. Video never leaves the device; in server mode only body landmarks are sent unless you choose frame streaming.";
+"NSBluetoothAlwaysUsageDescription" = "SpineCare connects to optional SpineCare posture sensors (ESP32 head/trunk nodes) over Bluetooth.";
+"NSMotionUsageDescription" = "Used for posture context during exercises.";

@@ -99,7 +99,7 @@ class SessionsFragment : Fragment() {
             val f = store.exportCsv()
             val share = Intent(Intent.ACTION_SEND).setType("text/csv")
                 .putExtra(Intent.EXTRA_STREAM, uriFor(ctx, f))
-                .putExtra(Intent.EXTRA_SUBJECT, "SpineCare export")
+                .putExtra(Intent.EXTRA_SUBJECT, t("export_subject"))
                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             startActivity(Intent.createChooser(share, t("export_title")))
         }.onFailure { Toast.makeText(ctx, t("export_failed"), Toast.LENGTH_LONG).show() }

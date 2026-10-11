@@ -8,14 +8,15 @@ struct SpineCareApp: App {
 
 struct RootView: View {
     @ObservedObject private var lang = L.shared   // re-render everything on language switch
+    @State private var tab = 0                     // kept across the re-render, so Settings stays open
 
     var body: some View {
-        TabView {
-            HomeView().tabItem { Label(L.t("tab_home"), systemImage: "house") }
-            ExercisesView().tabItem { Label(L.t("tab_plan"), systemImage: "figure.walk") }
-            SessionsView().tabItem { Label(L.t("tab_progress"), systemImage: "chart.line.uptrend.xyaxis") }
-            SensorsView().tabItem { Label(L.t("tab_sensors"), systemImage: "dot.radiowaves.left.and.right") }
-            SettingsView().tabItem { Label(L.t("tab_settings"), systemImage: "gearshape") }
+        TabView(selection: $tab) {
+            HomeView().tabItem { Label(L.t("tab_home"), systemImage: "house") }.tag(0)
+            ExercisesView().tabItem { Label(L.t("tab_plan"), systemImage: "figure.walk") }.tag(1)
+            SessionsView().tabItem { Label(L.t("tab_progress"), systemImage: "chart.line.uptrend.xyaxis") }.tag(2)
+            SensorsView().tabItem { Label(L.t("tab_sensors"), systemImage: "dot.radiowaves.left.and.right") }.tag(3)
+            SettingsView().tabItem { Label(L.t("tab_settings"), systemImage: "gearshape") }.tag(4)
         }
         .id(lang.lang)
     }
