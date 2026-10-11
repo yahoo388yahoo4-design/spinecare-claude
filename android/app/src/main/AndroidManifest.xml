@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <!-- Optional hands-free voice commands during exercise sessions; nothing is recorded or stored -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-feature android:name="android.hardware.microphone" android:required="false"/>
 
     <!-- BLE posture nodes: Android 12+ runtime permissions; older versions need location for scans -->
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation"/>
@@ -40,6 +43,7 @@
         <activity android:name=".GuideActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".SetupCheckActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".VideoAnalysisActivity" android:exported="false"/>
+        <activity android:name=".SessionReplayActivity" android:exported="false" android:screenOrientation="portrait"/>
 
         <!-- Privacy policy; Health Connect opens it to explain the permission request -->
         <activity android:name=".PrivacyActivity" android:exported="true">
@@ -74,6 +78,13 @@
         <intent>
             <action android:name="android.intent.action.VIEW"/>
             <data android:scheme="https"/>
+        </intent>
+        <!-- Android 11+ package visibility: text-to-speech engines and speech recognizers -->
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE"/>
+        </intent>
+        <intent>
+            <action android:name="android.speech.RecognitionService"/>
         </intent>
     </queries>
 </manifest>

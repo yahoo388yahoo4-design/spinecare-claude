@@ -78,6 +78,10 @@ object ServerConfig {
     fun audioCues(c: Context) = p(c).getBoolean("audio_cues", false)
     fun setAudioCues(c: Context, v: Boolean) = p(c).edit().putBoolean("audio_cues", v).apply()
 
+    /** Hands-free voice commands on the exercise screen (needs the microphone). */
+    fun voiceControl(c: Context) = p(c).getBoolean("voice_control", false)
+    fun setVoiceControl(c: Context, v: Boolean) = p(c).edit().putBoolean("voice_control", v).apply()
+
     /** Record sessions with the sensor overlay burned in (local MP4). */
     fun recordSessions(c: Context) = p(c).getBoolean("record_sessions", false)
     fun setRecordSessions(c: Context, v: Boolean) = p(c).edit().putBoolean("record_sessions", v).apply()

@@ -92,7 +92,10 @@ struct SettingsView: View {
                 }
                 Section(L.t("feedback_title")) {
                     Toggle(L.t("haptics"), isOn: $cfg.haptics)
-                    Toggle(L.t("audio"), isOn: $cfg.audioCues)
+                    Toggle(L.t("voice_guidance"), isOn: $cfg.audioCues)
+                    Text(L.t("voice_guidance_body")).font(.caption)
+                    Toggle(L.t("voice_control"), isOn: $cfg.voiceControl)
+                    Text(L.t("voice_control_body")).font(.caption)
                     Toggle(L.t("record"), isOn: $cfg.recordSessions)
                     Text(L.t("record_privacy")).font(.caption)
                 }

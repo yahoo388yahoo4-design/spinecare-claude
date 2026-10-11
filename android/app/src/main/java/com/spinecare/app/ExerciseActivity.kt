@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
-import android.speech.tts.TextToSpeech
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,7 +24,6 @@ import com.spinecare.app.I18n.t
 import com.spinecare.app.databinding.ActivityExerciseBinding
 import org.json.JSONObject
 import java.io.File
-import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -33,7 +31,11 @@ import java.util.concurrent.Executors
  *  calibrated signal -> reps + form cues, always running so coaching never
  *  depends on the network. When a coaching server is configured and reachable
  *  its results take over the display (landmarks-only by default; frames only
- *  if the user chose that), and on-device coaching resumes instantly if it drops. */
+ *  if the user chose that), and on-device coaching resumes instantly if it drops.
+ *
+ *  Every session also saves a sensor timeline for in-app replay. Optional
+ *  voice guidance speaks setup, calibration, cues and rep counts; optional
+ *  voice control takes hands-free commands (start, pause, stop, ...). */
 class ExerciseActivity : AppCompatActivity() {
     private lateinit var b: ActivityExerciseBinding
     private lateinit var exercise: Exercise
@@ -41,13 +43,22 @@ class ExerciseActivity : AppCompatActivity() {
     private lateinit var store: LocalStore
     private var tracker: ExerciseTracker? = null
     private var server: ServerClient? = null
-    private var tts: TextToSpeech? = null
+    private var coach: VoiceCoach? = null
+    private var voice: VoiceControl? = null
+    private var voiceOn = false
+    private var voiceAnnounced = false
+    private var voiceHeard: String? = null
+    private var voiceListening = false
+    private var pendingDialog: AlertDialog? = null
     private val analysisExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
     @Volatile private var running = false
+    @Volatile private var paused = false
     @Volatile private var serverPose: JSONObject? = null
     @Volatile private var lastCue = ""
-    private var lastSpokenAt = 0L
+    private var lastReadyAnnounce = 0L
+    private var wasCalibrating = true
+    private var lastRepsAnnounced = 0
     private var lastFrameT = 0L
     private var lastServerSend = 0L
     private var startedAt = 0L
@@ -65,9 +76,16 @@ class ExerciseActivity : AppCompatActivity() {
     private var recorder: SessionRecorder? = null
     private var recordEnabled = false
     private var recordFile: File? = null
+    private var sessionBase = ""
+    private var timeline: SessionTimeline.Writer? = null
 
     private val permLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
         if (granted) startCamera() else Toast.makeText(this, t("camera_needed"), Toast.LENGTH_LONG).show()
+        requestMicIfNeeded()
+    }
+
+    private val micLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) startVoice() else { Toast.makeText(this, t("mic_needed"), Toast.LENGTH_LONG).show(); labelVoice() }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,7 +108,7 @@ class ExerciseActivity : AppCompatActivity() {
         b.tvReps.text = "0/${exercise.targetReps}"
         b.btnStart.text = t("start"); b.btnStop.text = t("stop_save"); b.btnFlip.text = t("flip")
         b.btnCalib.text = t("recalibrate")
-        b.btnStart.setOnClickListener { askSymptoms("before") { startSession() } }
+        b.btnStart.setOnClickListener { if (running) setPaused(!paused) else askSymptoms("before") { startSession() } }
         b.btnStop.setOnClickListener { stopAndSave(askAfter = true) }
         b.btnMode.setOnClickListener {
             if (running) return@setOnClickListener
@@ -107,14 +125,98 @@ class ExerciseActivity : AppCompatActivity() {
         }
         recordEnabled = ServerConfig.recordSessions(this)
         labelButtons()
+        voiceOn = ServerConfig.voiceControl(this)
+        if (ServerConfig.audioCues(this) || voiceOn) ensureCoach()
+        coach?.guide("${exercise.name(I18n.lang)}. ${guide.headline}. ${t("vg_setup")}")
         postCue(t("position_camera").format(t("view_" + exercise.view)))
+        b.tvVoice.setOnClickListener { toggleVoice() }
+        labelVoice()
 
-        if (ServerConfig.audioCues(this)) tts = TextToSpeech(this) { st ->
-            if (st == TextToSpeech.SUCCESS) tts?.language = if (I18n.lang == "ro") Locale("ro", "RO") else Locale.US
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            startCamera(); requestMicIfNeeded()
+        } else permLauncher.launch(Manifest.permission.CAMERA)
+    }
+
+    // ------------------------------------------------------------------ voice
+
+    private fun ensureCoach(): VoiceCoach =
+        coach ?: VoiceCoach(this, ServerConfig.audioCues(this)) { speaking -> voice?.hold(speaking) }.also { coach = it }
+
+    private fun micGranted() =
+        ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+
+    private fun requestMicIfNeeded() {
+        if (!voiceOn) return
+        if (micGranted()) startVoice() else micLauncher.launch(Manifest.permission.RECORD_AUDIO)
+    }
+
+    private fun startVoice() {
+        if (!voiceOn || !micGranted()) return
+        val vc = voice ?: VoiceControl(this, VoiceCommands.load(this), ::onVoiceCommand) { listening, heard ->
+            voiceListening = listening
+            if (!heard.isNullOrBlank()) voiceHeard = heard
+            labelVoice()
+        }.also { voice = it }
+        if (!vc.available) {
+            Toast.makeText(this, t("voice_unavailable"), Toast.LENGTH_LONG).show()
+            voiceOn = false; labelVoice(); return
         }
+        vc.start()
+        if (!voiceAnnounced) { voiceAnnounced = true; ensureCoach().speak(t("vg_listening")) }
+        labelVoice()
+    }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) startCamera()
-        else permLauncher.launch(Manifest.permission.CAMERA)
+    private fun toggleVoice() {
+        voiceOn = !voiceOn
+        ServerConfig.setVoiceControl(this, voiceOn)
+        if (voiceOn) { ensureCoach(); voiceAnnounced = false; requestMicIfNeeded() }
+        else { voice?.stop(); voiceListening = false }
+        labelVoice()
+    }
+
+    private fun labelVoice() {
+        b.tvVoice.text = when {
+            !voiceOn -> "🎤 " + t("voice_off")
+            else -> "🎤 " + (if (voiceListening) t("voice_listening") else t("voice_on")) +
+                (voiceHeard?.let { "\n" + t("voice_heard").format(it) } ?: "")
+        }
+        b.tvVoice.setTextColor(if (voiceOn) Ui.OK else Ui.MUTED)
+    }
+
+    private fun onVoiceCommand(cmd: VoiceCommands.Cmd, heard: String) {
+        voiceHeard = heard; labelVoice()
+        val c = ensureCoach()
+        when (cmd) {
+            VoiceCommands.Cmd.START -> when {
+                pendingDialog != null -> {}
+                running && paused -> setPaused(false)
+                !running -> b.btnStart.performClick()
+            }
+            VoiceCommands.Cmd.SKIP -> pendingDialog?.cancel()
+            VoiceCommands.Cmd.STOP -> if (running) stopAndSave(askAfter = true) else pendingDialog?.cancel()
+            VoiceCommands.Cmd.PAUSE -> if (running) setPaused(true)
+            VoiceCommands.Cmd.RESUME -> if (running) setPaused(false)
+            VoiceCommands.Cmd.RECALIBRATE -> if (running) b.btnCalib.performClick()
+            VoiceCommands.Cmd.FLIP -> if (!running) flipCamera() else c.speak(t("vg_flip_running"), flush = true)
+            VoiceCommands.Cmd.STATUS -> c.speak(
+                if (running) t("vg_status").format(currentReps(), exercise.targetReps) else t("vg_not_started"), flush = true)
+            VoiceCommands.Cmd.REPEAT -> c.speak(c.lastSpoken.ifEmpty { lastCue }, flush = true)
+            VoiceCommands.Cmd.HELP -> c.speak(t("vg_help"), flush = true)
+        }
+    }
+
+    private fun currentReps(): Int {
+        val sp = serverPose
+        return if (server?.connected == true && sp != null) sp.optInt("reps") else tracker?.reps?.reps ?: 0
+    }
+
+    private fun setPaused(p: Boolean) {
+        if (!running || paused == p) return
+        paused = p
+        labelButtons()
+        val msg = if (p) t("vg_paused") else t("vg_resumed")
+        lastCue = msg; b.tvCue.text = msg
+        coach?.speak(msg, flush = true)
     }
 
     private fun labelButtons() {
@@ -124,7 +226,8 @@ class ExerciseActivity : AppCompatActivity() {
             else -> t("mode_btn_auto")
         }
         b.btnRec.text = if (recordEnabled) t("rec_on") else t("rec_off")
-        b.btnStart.isEnabled = !running; b.btnStop.isEnabled = running
+        b.btnStart.text = if (!running) t("start") else if (paused) t("resume") else t("pause")
+        b.btnStop.isEnabled = running
         b.btnMode.isEnabled = !running; b.btnRec.isEnabled = !running
     }
 
@@ -183,10 +286,15 @@ class ExerciseActivity : AppCompatActivity() {
             val named = raw?.let { Metrics.named(it, w, h) }
             val framing = Framing.check(named, exercise.requiredLandmarks, minConf, w.toDouble(), h.toDouble())
             val metrics = named?.let { Metrics.compute(it) } ?: emptyMap()
-            if (!running) {
+            if (!running || paused) {
                 b.overlay.show(OverlayView.Frame(named, w, h, framing.missing, framing.ready))
+                if (!running && framing.ready && now - lastReadyAnnounce > 15_000) {
+                    lastReadyAnnounce = now
+                    runOnUiThread { coach?.guide(t("vg_framing_ok")) }
+                }
                 return
             }
+            val imu = BlePostureClient.snapshot()
             framesProcessed++
             for ((k, v) in metrics) metricSums.getOrPut(k) { DoubleArray(2) }.let { it[0] += v; it[1] += 1.0 }
             val local = tracker?.update(metrics, framing.ready, now)
@@ -195,7 +303,6 @@ class ExerciseActivity : AppCompatActivity() {
             val srv = server
             if (srv != null && srv.connected && now - lastServerSend >= serverIntervalMs) {
                 lastServerSend = now
-                val imu = BlePostureClient.snapshot()
                 if (ServerConfig.streamMode(this) == ServerConfig.STREAM_FRAMES) srv.sendFrame(bmp, now, imu)
                 else if (raw != null) srv.sendLandmarks(raw, w, h, now, imu)
             }
@@ -232,6 +339,14 @@ class ExerciseActivity : AppCompatActivity() {
                 if (local?.repJustDone == true) vibrate()
                 local?.cues?.forEach { c -> cueCounts[c.metric] = (cueCounts[c.metric] ?: 0) + 1 }
             }
+            // voice guidance: calibration finished, then every new rep
+            val calibratingNow = if (sp != null) sp.optBoolean("calibrating") else (local == null || local.calibrating)
+            if (wasCalibrating && !calibratingNow && ready) runOnUiThread { coach?.guide(t("vg_calibrated"), flush = true) }
+            wasCalibrating = calibratingNow
+            if (repsNow > lastRepsAnnounced) {
+                lastRepsAnnounced = repsNow
+                runOnUiThread { coach?.rep(repsNow, exercise.targetReps) }
+            }
             if (cue.isNotEmpty()) postCue(cue)
             val source = if (sp != null) "server ${sp.optInt("latency_ms")}ms" else "on-device ${res.latencyMs}ms"
             val metricsLine = metrics.entries.sortedBy { it.key }.joinToString("  ") { "${it.key}=${"%.2f".format(it.value)}" } +
@@ -240,10 +355,20 @@ class ExerciseActivity : AppCompatActivity() {
             b.overlay.show(OverlayView.Frame(named, w, h, missing, ready))
             runOnUiThread { b.tvReps.text = repsText; b.tvMetrics.text = metricsLine }
 
+            var wroteVideo = false
             if (recordEnabled) {
                 val r = recorder ?: runCatching { newRecorder(w, h) }.getOrNull()
+                val before = r?.framesWritten ?: 0
                 r?.drawFrame(bmp, named, w, h, missing, ready, metricsLine, lastCue, repsText, frontCamera)
+                wroteVideo = (r?.framesWritten ?: 0) > before
             }
+            timeline?.add(SessionTimeline.Sample(
+                t = now - startedAt, frameW = w, frameH = h, mirror = frontCamera,
+                landmarks = named?.mapValues { Metrics.P(it.value.x / w, it.value.y / h, it.value.c) } ?: emptyMap(),
+                metrics = metrics, signal = local?.signal, reps = repsNow, cue = lastCue, ready = ready, video = wroteVideo,
+                head = SessionTimeline.imuTriple(imu?.optJSONObject("head")),
+                trunk = SessionTimeline.imuTriple(imu?.optJSONObject("trunk")),
+            ))
         } catch (e: Exception) {
             // keep the loop alive on transient frame errors
         } finally {
@@ -253,7 +378,7 @@ class ExerciseActivity : AppCompatActivity() {
 
     private fun newRecorder(w: Int, h: Int): SessionRecorder {
         val dir = File(filesDir, "recordings").apply { mkdirs() }
-        val f = File(dir, "session_${exercise.id}_${System.currentTimeMillis()}.mp4")
+        val f = File(dir, "$sessionBase.mp4")
         return SessionRecorder(f, w, h).also { recorder = it; recordFile = f }
     }
 
@@ -268,6 +393,12 @@ class ExerciseActivity : AppCompatActivity() {
         minConf = ServerConfig.minConfidence(this).toDouble()
         framesProcessed = 0; metricSums.clear(); cueCounts.clear(); serverUsed = false; serverPose = null
         startedAt = System.currentTimeMillis()
+        sessionBase = "session_${exercise.id}_$startedAt"
+        timeline = runCatching {
+            SessionTimeline.Writer(store.newTimelineFile(sessionBase),
+                SessionTimeline.header(exercise.id, exercise.signal.removePrefix("abs:"), exercise.targetReps, startedAt))
+        }.getOrNull()
+        paused = false; wasCalibrating = true; lastRepsAnnounced = 0
         connectServerIfConfigured()
         running = true
         labelButtons()
@@ -304,13 +435,18 @@ class ExerciseActivity : AppCompatActivity() {
         running = false
         val t0 = System.currentTimeMillis()
         // finish recording on the analysis thread so no frame is drawn mid-stop
-        val recFuture = analysisExecutor.submit<Int> {
+        val tlWriter = timeline
+        val recFuture = analysisExecutor.submit<Pair<Int, Int>> {
             val r = recorder; recorder = null
             val n = r?.framesWritten ?: 0
             runCatching { r?.stop() }
-            n
+            timeline = null
+            n to (tlWriter?.close() ?: 0)
         }
-        val recordedFrames = runCatching { recFuture.get() }.getOrDefault(0)
+        val (recordedFrames, timelineSamples) = runCatching { recFuture.get() }.getOrElse { 0 to (tlWriter?.count ?: 0) }
+        val timelinePath = tlWriter?.file?.takeIf { timelineSamples > 0 && it.exists() }?.absolutePath
+        if (timelineSamples == 0) tlWriter?.file?.delete()
+        paused = false
         val videoPath = recordFile?.takeIf { recordedFrames > 0 && it.exists() }?.absolutePath
         if (recordedFrames == 0) recordFile?.delete()
         recordFile = null
@@ -323,8 +459,9 @@ class ExerciseActivity : AppCompatActivity() {
 
         val avg = metricSums.mapValues { it.value[0] / it.value[1].coerceAtLeast(1.0) }
         store.saveSession(exercise.id, reps, 1, (t0 - startedAt) / 1000, avg, cueCounts, framesProcessed,
-            if (serverUsed) "server+on-device" else "on-device", videoPath, recordedFrames)
+            if (serverUsed) "server+on-device" else "on-device", videoPath, recordedFrames, timelinePath, timelineSamples)
         labelButtons()
+        coach?.guide(t("vg_saved").format(reps), flush = true)
         Toast.makeText(this, t("session_saved").format(reps) + if (videoPath != null) " · " + t("video_saved") else "",
             Toast.LENGTH_SHORT).show()
         if (askAfter) askSymptoms("after") {}
@@ -337,22 +474,20 @@ class ExerciseActivity : AppCompatActivity() {
         val neck = ui.scale(t("neck_pain"), 0)
         val arm = ui.scale(t("arm_symptoms"), 0)
         ui.warn(t("pain_warning"))
-        AlertDialog.Builder(this).setTitle(t("phase_$phase")).setView(ui.root)
+        val dlg = AlertDialog.Builder(this).setTitle(t("phase_$phase")).setView(ui.root)
             .setPositiveButton(t("save_checkin")) { _, _ -> store.saveCheckin(phase, neck.progress, arm.progress, null, ""); then() }
             .setNegativeButton(t("skip")) { _, _ -> then() }
             .setOnCancelListener { then() }
             .show()
+        pendingDialog = dlg
+        dlg.setOnDismissListener { if (pendingDialog === dlg) pendingDialog = null }
+        if (voiceOn) coach?.speak(t("vg_checkin"))
     }
 
     private fun postCue(text: String) {
         if (text == lastCue) return
         lastCue = text
-        runOnUiThread { b.tvCue.text = text }
-        val now = System.currentTimeMillis()
-        if (tts != null && now - lastSpokenAt > 2500) {
-            lastSpokenAt = now
-            tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "cue")
-        }
+        runOnUiThread { b.tvCue.text = text; coach?.cue(text) }
     }
 
     private fun vibrate() {
@@ -364,6 +499,11 @@ class ExerciseActivity : AppCompatActivity() {
 
     private fun fmt(v: Double?) = if (v == null || v.isNaN()) "-" else "%.2f".format(v)
 
+    override fun onResume() { super.onResume(); if (voiceOn && micGranted() && voice != null) startVoice() }
+
+    // never listen in the background
+    override fun onPause() { voice?.stop(); voiceListening = false; super.onPause() }
+
     override fun onDestroy() {
         if (running && isFinishing) stopAndSave(askAfter = false)   // back pressed mid-session: keep the data
         running = false
@@ -371,7 +511,9 @@ class ExerciseActivity : AppCompatActivity() {
         poseEngine?.close()
         server?.close()
         recorder?.let { runCatching { it.stop() } }
-        tts?.shutdown()
+        timeline?.close()
+        voice?.stop()
+        coach?.shutdown()
         super.onDestroy()
     }
 }

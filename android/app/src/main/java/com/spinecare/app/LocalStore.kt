@@ -27,7 +27,8 @@ class LocalStore(context: Context) {
 
     fun saveSession(exId: String, reps: Int, sets: Int, durationS: Long, avg: Map<String, Double>,
                     cues: Map<String, Int>, frames: Int, source: String,
-                    videoPath: String? = null, recordedFrames: Int = 0) = synchronized(LOCK) {
+                    videoPath: String? = null, recordedFrames: Int = 0,
+                    timelinePath: String? = null, timelineSamples: Int = 0) = synchronized(LOCK) {
         val o = JSONObject()
             .put("ts", System.currentTimeMillis())
             .put("date", today())
@@ -36,6 +37,7 @@ class LocalStore(context: Context) {
             .put("cues", JSONObject(cues as Map<*, *>))
             .put("frames", frames).put("source", source)
         if (videoPath != null) o.put("video", File(videoPath).name).put("recorded_frames", recordedFrames)
+        if (timelinePath != null) o.put("timeline", File(timelinePath).name).put("timeline_samples", timelineSamples)
         sessions.appendText(o.toString() + "\n")
     }
 
@@ -47,6 +49,16 @@ class LocalStore(context: Context) {
         if (v.isEmpty() || v == "null") return null
         return File(recordings, File(v).name)
     }
+
+    /** Sensor timeline for a session row (see SessionTimeline), stored next to recordings. */
+    fun timelineFile(row: JSONObject): File? {
+        val v = row.optString("timeline", "")
+        if (v.isEmpty() || v == "null") return null
+        return File(recordings, File(v).name)
+    }
+
+    /** Where a new session's timeline is written. */
+    fun newTimelineFile(base: String): File = File(recordings.apply { mkdirs() }, "$base.timeline.jsonl")
 
     // ---- symptom check-ins (daily, or before/after a session)
 

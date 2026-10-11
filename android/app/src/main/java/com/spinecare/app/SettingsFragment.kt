@@ -71,7 +71,10 @@ class SettingsFragment : Fragment() {
 
         ui.h(t("feedback_title"))
         val haptics = switch(t("haptics"), ServerConfig.haptics(ctx))
-        val audio = switch(t("audio"), ServerConfig.audioCues(ctx))
+        val audio = switch(t("voice_guidance"), ServerConfig.audioCues(ctx))
+        ui.muted(t("voice_guidance_body"))
+        val voice = switch(t("voice_control"), ServerConfig.voiceControl(ctx))
+        ui.muted(t("voice_control_body"))
         val record = switch(t("record"), ServerConfig.recordSessions(ctx))
         ui.muted(t("record_privacy"))
 
@@ -82,6 +85,7 @@ class SettingsFragment : Fragment() {
             ServerConfig.setMinConfidence(ctx, minConf.text.toString().toFloatOrNull() ?: 0.5f)
             ServerConfig.setHaptics(ctx, haptics.isChecked)
             ServerConfig.setAudioCues(ctx, audio.isChecked)
+            ServerConfig.setVoiceControl(ctx, voice.isChecked)
             ServerConfig.setRecordSessions(ctx, record.isChecked)
             Toast.makeText(ctx, t("settings_saved"), Toast.LENGTH_SHORT).show()
         }
