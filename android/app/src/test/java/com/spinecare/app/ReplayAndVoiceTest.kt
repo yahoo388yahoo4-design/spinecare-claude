@@ -1,5 +1,6 @@
 package com.spinecare.app
 
+import com.spinecare.app.VoiceCommands.Cmd
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -12,43 +13,42 @@ import java.io.File
  *  and the session timeline format used by the in-app replay. */
 class ReplayAndVoiceTest {
     private val cmds = VoiceCommands(File("../../shared/voice_commands.json").readText())
-    private val C = VoiceCommands.Cmd
 
     @Test fun englishCommands() {
-        assertEquals(C.START, cmds.parse("Start"))
-        assertEquals(C.START, cmds.parse("ok let's go"))
-        assertEquals(C.STOP, cmds.parse("stop please"))
-        assertEquals(C.STOP, cmds.parse("I'm done"))
-        assertEquals(C.PAUSE, cmds.parse("pause"))
-        assertEquals(C.RESUME, cmds.parse("go on"))          // resume outranks "go" (start)
-        assertEquals(C.FLIP, cmds.parse("switch camera"))
-        assertEquals(C.STATUS, cmds.parse("how many have I done"))
-        assertEquals(C.HELP, cmds.parse("what can I say?"))
-        assertEquals(C.SKIP, cmds.parse("skip"))
-        assertEquals(C.RECALIBRATE, cmds.parse("recalibrate"))
+        assertEquals(Cmd.START, cmds.parse("Start"))
+        assertEquals(Cmd.START, cmds.parse("ok let's go"))
+        assertEquals(Cmd.STOP, cmds.parse("stop please"))
+        assertEquals(Cmd.STOP, cmds.parse("I'm done"))
+        assertEquals(Cmd.PAUSE, cmds.parse("pause"))
+        assertEquals(Cmd.RESUME, cmds.parse("go on"))          // resume outranks "go" (start)
+        assertEquals(Cmd.FLIP, cmds.parse("switch camera"))
+        assertEquals(Cmd.STATUS, cmds.parse("how many have I done"))
+        assertEquals(Cmd.HELP, cmds.parse("what can I say?"))
+        assertEquals(Cmd.SKIP, cmds.parse("skip"))
+        assertEquals(Cmd.RECALIBRATE, cmds.parse("recalibrate"))
     }
 
     @Test fun romanianCommandsWithAndWithoutDiacritics() {
-        assertEquals(C.START, cmds.parse("Începe"))
-        assertEquals(C.START, cmds.parse("incepe"))
-        assertEquals(C.STOP, cmds.parse("Oprește"))
-        assertEquals(C.STOP, cmds.parse("opreşte"))           // cedilla variant
-        assertEquals(C.PAUSE, cmds.parse("pauză"))
-        assertEquals(C.RESUME, cmds.parse("continuă"))
-        assertEquals(C.FLIP, cmds.parse("schimbă camera"))
-        assertEquals(C.STATUS, cmds.parse("câte repetări am făcut"))
-        assertEquals(C.SKIP, cmds.parse("sari peste"))
-        assertEquals(C.RECALIBRATE, cmds.parse("recalibrează"))
-        assertEquals(C.HELP, cmds.parse("ajutor"))
+        assertEquals(Cmd.START, cmds.parse("Începe"))
+        assertEquals(Cmd.START, cmds.parse("incepe"))
+        assertEquals(Cmd.STOP, cmds.parse("Oprește"))
+        assertEquals(Cmd.STOP, cmds.parse("opreşte"))           // cedilla variant
+        assertEquals(Cmd.PAUSE, cmds.parse("pauză"))
+        assertEquals(Cmd.RESUME, cmds.parse("continuă"))
+        assertEquals(Cmd.FLIP, cmds.parse("schimbă camera"))
+        assertEquals(Cmd.STATUS, cmds.parse("câte repetări am făcut"))
+        assertEquals(Cmd.SKIP, cmds.parse("sari peste"))
+        assertEquals(Cmd.RECALIBRATE, cmds.parse("recalibrează"))
+        assertEquals(Cmd.HELP, cmds.parse("ajutor"))
     }
 
     @Test fun safetyCommandsWinAndWordsMustMatchWhole() {
-        assertEquals("stop always beats start", C.STOP, cmds.parse("start stop"))
+        assertEquals("stop always beats start", Cmd.STOP, cmds.parse("start stop"))
         assertNull(cmds.parse("restart"))
         assertNull(cmds.parse("gone"))
         assertNull(cmds.parse(""))
         assertNull(cmds.parse("the weather is nice"))
-        assertEquals(C.STOP to "stop", cmds.parseAny(listOf("top", "stop")))
+        assertEquals(Cmd.STOP to "stop", cmds.parseAny(listOf("top", "stop")))
     }
 
     @Test fun timelineRoundTrip() {

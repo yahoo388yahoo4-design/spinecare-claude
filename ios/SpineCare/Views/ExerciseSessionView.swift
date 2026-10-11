@@ -1,5 +1,6 @@
 import SwiftUI
 import AVFoundation
+import Combine
 import CoreImage
 import UIKit
 
@@ -7,6 +8,9 @@ import UIKit
 /// pose -> framing gate -> calibrated signal -> reps + form cues, always on the
 /// phone. A configured, reachable server takes over the display (landmarks-only
 /// by default) and on-device coaching continues instantly if it drops.
+/// Every session also saves a sensor timeline for replay; optional voice
+/// guidance speaks setup, cues and rep counts, and optional voice control
+/// takes hands-free commands (published on `commands` for the view).
 final class SessionController: ObservableObject {
     struct UIState {
         var landmarks: [String: Metrics.LM] = [:]
@@ -20,12 +24,17 @@ final class SessionController: ObservableObject {
 
     @Published var ui = UIState()
     @Published var running = false
+    @Published var paused = false
+    @Published var voiceListening = false
+    @Published var voiceHeard: String?
+    let commands = PassthroughSubject<VoiceCommands.Cmd, Never>()
+    let coach = VoiceCoach(guidance: ServerConfig.shared.audioCues)
+    private var voice: VoiceControl?
 
     let exercise: Exercise
     private let pose = PoseTracker()
     private let client = ServerClient()
     private let ciContext = CIContext()
-    private let speech = AVSpeechSynthesizer()
     private let haptic = UINotificationFeedbackGenerator()
     private let queue = DispatchQueue(label: "spinecare.session")   // guards the state below
 
@@ -42,21 +51,68 @@ final class SessionController: ObservableObject {
     private var sums: [String: (Double, Int)] = [:]
     private var cueCounts: [String: Int] = [:]
     private var lastCue = ""
-    private var lastSpoken = Date.distantPast
+    private var timeline: SessionTimeline.Writer?
+    private var lastReadyAnnounce: TimeInterval = 0
+    private var wasCalibrating = true
+    private var lastRepsAnnounced = 0
     private var cfg = ServerConfig.shared
 
-    init(exercise: Exercise) { self.exercise = exercise }
+    init(exercise: Exercise) {
+        self.exercise = exercise
+        coach.onSpeaking = { [weak self] speaking in self?.voice?.hold(speaking) }
+    }
+
+    // MARK: voice (main thread)
+
+    func startVoice() {
+        if voice == nil {
+            let v = VoiceControl(lang: L.lang)
+            v.onState = { [weak self] listening, heard in
+                self?.voiceListening = listening
+                if let heard, !heard.isEmpty { self?.voiceHeard = heard }
+            }
+            v.onCommand = { [weak self] cmd, heard in self?.voiceHeard = heard; self?.commands.send(cmd) }
+            voice = v
+        }
+        voice?.start()
+    }
+
+    func stopVoice() { voice?.stop(); voiceListening = false }
+
+    var voiceAvailable: Bool { voice?.available ?? VoiceControl(lang: L.lang).available }
+
+    func setPaused(_ p: Bool) {
+        guard running, paused != p else { return }
+        queue.sync { paused = p }
+        let msg = L.t(p ? "vg_paused" : "vg_resumed")
+        lastCue = msg; ui.cue = msg
+        coach.speak(msg, flush: true)
+    }
+
+    var currentReps: Int {
+        queue.sync {
+            let fresh = useServer && client.connected && Date().timeIntervalSince1970 - client.lastPoseAt < 2
+            return fresh ? (serverPose?["reps"] as? Int ?? 0) : (tracker?.reps.reps ?? 0)
+        }
+    }
 
     // MARK: control (main thread)
 
     func start(record: Bool) {
         guard !running else { return }
         let lang = L.lang
+        coach.guidance = cfg.audioCues
         queue.sync {
             tracker = ExerciseTracker(exercise, calibration: Plan.calibrationSeconds, lang: lang)
             frames = 0; sums = [:]; cueCounts = [:]; serverPose = nil; serverUsed = false; startedAt = Date()
-            videoURL = record ? SessionStore.shared.recordingsDir
-                .appendingPathComponent("session_\(exercise.id)_\(Int(Date().timeIntervalSince1970)).mp4") : nil
+            paused = false; wasCalibrating = true; lastRepsAnnounced = 0
+            let startedMs = Int(startedAt.timeIntervalSince1970 * 1000)
+            let base = "session_\(exercise.id)_\(startedMs)"
+            let metric = exercise.signal.hasPrefix("abs:") ? String(exercise.signal.dropFirst(4)) : exercise.signal
+            timeline = SessionTimeline.Writer(url: SessionStore.shared.newTimelineURL(base),
+                                              header: SessionTimeline.header(exercise: exercise.id, metric: metric,
+                                                                             target: exercise.targetReps, started: startedMs))
+            videoURL = record ? SessionStore.shared.recordingsDir.appendingPathComponent("\(base).mp4") : nil
             recorder = nil
             useServer = cfg.serverUsable
         }
@@ -84,6 +140,7 @@ final class SessionController: ObservableObject {
     func stop(_ done: @escaping (Int) -> Void) {
         guard running else { return }
         running = false
+        paused = false
         queue.async {
             let poseFresh = self.useServer && self.client.connected && Date().timeIntervalSince1970 - self.client.lastPoseAt < 2
             let reps = poseFresh ? (self.serverPose?["reps"] as? Int ?? 0) : (self.tracker?.reps.reps ?? 0)
@@ -92,11 +149,15 @@ final class SessionController: ObservableObject {
             let duration = Int(Date().timeIntervalSince(self.startedAt))
             let source = self.serverUsed ? "server+on-device" : "on-device"
             let frames = self.frames, cues = self.cueCounts
+            let tl = self.timeline; self.timeline = nil
+            let samples = tl?.close() ?? 0
+            if samples == 0, let u = tl?.url { try? FileManager.default.removeItem(at: u) }
             let save: (URL?, Int) -> Void = { url, n in
                 SessionStore.shared.saveSession(exerciseId: self.exercise.id, reps: reps, sets: 1, durationS: duration,
                                                 metrics: avg, cues: cues, frames: frames, source: source,
-                                                videoURL: url, recordedFrames: n)
-                DispatchQueue.main.async { done(reps) }
+                                                videoURL: url, recordedFrames: n,
+                                                timelineURL: samples > 0 ? tl?.url : nil, timelineSamples: samples)
+                DispatchQueue.main.async { self.coach.guide(L.f("vg_saved", reps), flush: true); done(reps) }
             }
             if let rec = self.recorder, let url = self.videoURL {
                 self.recorder = nil
@@ -129,17 +190,23 @@ final class SessionController: ObservableObject {
         var state = UIState(landmarks: r.normalized, frame: CGSize(width: w, height: h),
                             ready: framing.ready, missing: Set(framing.missing.map { Framing.resolve(px, $0) }),
                             reps: tracker?.reps.reps ?? 0)
-        guard running, let tracker else { publish(state); return }
+        guard running, !paused, let tracker else {
+            if !running, framing.ready, now - lastReadyAnnounce > 15 {
+                lastReadyAnnounce = now
+                coach.guide(L.t("vg_framing_ok"))
+            }
+            publish(state); return
+        }
 
         frames += 1
         let metrics = Metrics.compute(px)
         for (k, v) in metrics { let s = sums[k] ?? (0, 0); sums[k] = (s.0 + v, s.1 + 1) }
         let local = tracker.update(metrics, ready: framing.ready, t: now)
 
+        let imu = BlePostureClient.shared.snapshot()
         // optional server enhancement; never blocks on-device coaching
         if useServer, client.connected, now - lastSend >= Double(cfg.serverFrameIntervalMs) / 1000 {
             lastSend = now
-            let imu = BlePostureClient.shared.snapshot()
             if cfg.stream == .frames, let jpeg = jpegData(pb) { client.sendFrame(jpeg: jpeg, tMs: Int(now * 1000), imu: imu) }
             else if !r.normalized.isEmpty { client.sendLandmarks(r.normalized, w: r.width, h: r.height, tMs: Int(now * 1000), imu: imu) }
         }
@@ -170,17 +237,33 @@ final class SessionController: ObservableObject {
             if local.repJustDone { repFeedback() }
             for c in local.cues { cueCounts[c.metric, default: 0] += 1 }
         }
+        // voice guidance: calibration finished, then every new rep
+        let calibratingNow = sp.map { $0["calibrating"] as? Bool ?? false } ?? local.calibrating
+        if wasCalibrating && !calibratingNow && state.ready { coach.guide(L.t("vg_calibrated"), flush: true) }
+        wasCalibrating = calibratingNow
+        if state.reps > lastRepsAnnounced {
+            lastRepsAnnounced = state.reps
+            coach.rep(state.reps, target: exercise.targetReps)
+        }
         if !cue.isEmpty { setCue(cue) }
         let sig = local.signal.map { String(format: "%.2f", $0) } ?? "-"
         state.metrics = metrics.sorted { $0.key < $1.key }.map { "\($0.key)=\(String(format: "%.2f", $0.value))" }
             .joined(separator: "  ") + "\nsignal=\(sig) " + (sp != nil ? "server" : "on-device \(Int(r.ms))ms") + " frames=\(frames)"
         state.cue = lastCue
 
+        var wroteVideo = false
         if let url = videoURL {
             if recorder == nil { recorder = SessionRecorder(url: url, width: r.width, height: r.height) }
+            let before = recorder?.framesWritten ?? 0
             recorder?.append(pb, landmarks: r.normalized, ready: state.ready, cue: lastCue, metrics: state.metrics,
                              reps: "\(state.reps)/\(exercise.targetReps)", timestamp: CMSampleBufferGetPresentationTimeStamp(buf))
+            wroteVideo = (recorder?.framesWritten ?? 0) > before
         }
+        timeline?.add(TimelineSample(
+            t: Int((now - startedAt.timeIntervalSince1970) * 1000), frameW: r.width, frameH: r.height, mirror: false,
+            landmarks: r.normalized, metrics: metrics, signal: local.signal, reps: state.reps, cue: lastCue,
+            ready: state.ready, video: wroteVideo,
+            head: SessionTimeline.imuTriple(imu?["head"]), trunk: SessionTimeline.imuTriple(imu?["trunk"])))
         publish(state)
     }
 
@@ -196,12 +279,7 @@ final class SessionController: ObservableObject {
     private func setCue(_ text: String) {
         guard text != lastCue else { return }
         lastCue = text
-        if cfg.audioCues, Date().timeIntervalSince(lastSpoken) > 2.5 {
-            lastSpoken = Date()
-            let u = AVSpeechUtterance(string: text)
-            u.voice = AVSpeechSynthesisVoice(language: L.lang == "ro" ? "ro-RO" : "en-US")
-            speech.stopSpeaking(at: .immediate); speech.speak(u)
-        }
+        coach.cue(text)
         DispatchQueue.main.async { self.ui.cue = text }
     }
 
@@ -222,6 +300,7 @@ struct ExerciseSessionView: View {
     @State private var neck = 0.0
     @State private var arm = 0.0
     @State private var savedText = ""
+    @Environment(\.scenePhase) private var scenePhase
 
     init(exercise: Exercise) {
         self.exercise = exercise
@@ -244,6 +323,11 @@ struct ExerciseSessionView: View {
                 Text("\(exercise.title(lang))\n\(guide)")
                     .font(.callout).padding(8).frame(maxWidth: .infinity, alignment: .leading)
                     .background(.black.opacity(0.6)).foregroundStyle(.white)
+                Button(action: toggleVoice) {
+                    Text(voiceLabel).font(.caption).multilineTextAlignment(.leading).padding(8)
+                        .background(.black.opacity(0.7)).foregroundStyle(cfg.voiceControl ? .green : .gray)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 8)
                 Spacer()
                 if !session.ui.cue.isEmpty {
                     Text(session.ui.cue).font(.subheadline).padding(8).frame(maxWidth: .infinity)
@@ -257,10 +341,12 @@ struct ExerciseSessionView: View {
                 if !savedText.isEmpty { Text(savedText).font(.caption).foregroundStyle(.green) }
                 HStack {
                     Button(session.running ? L.t("stop_save") : L.t("start")) {
-                        if session.running {
-                            session.stop { reps in savedText = L.f("session_saved", reps); askPhase = "after" }
-                        } else { askPhase = "before" }
+                        if session.running { stopSession() } else { ask("before") }
                     }.buttonStyle(.borderedProminent)
+                    if session.running {
+                        Button(session.paused ? L.t("resume") : L.t("pause")) { session.setPaused(!session.paused) }
+                            .buttonStyle(.bordered)
+                    }
                     Button(L.t("flip")) { frontCamera.toggle() }.buttonStyle(.bordered)
                     Button(L.t("recalibrate")) { session.recalibrate() }.buttonStyle(.bordered).disabled(!session.running)
                 }
@@ -282,18 +368,88 @@ struct ExerciseSessionView: View {
         }
         .navigationTitle(exercise.title(lang))
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
+        .onAppear {
+            UIApplication.shared.isIdleTimerDisabled = true
+            session.coach.guidance = cfg.audioCues
+            session.coach.guide("\(exercise.title(lang)). \(guide.replacingOccurrences(of: "\n", with: ". ")). \(L.t("vg_setup"))")
+            if cfg.voiceControl { startVoice(announce: true) }
+        }
         .onDisappear {
             UIApplication.shared.isIdleTimerDisabled = false
+            session.stopVoice()
+            session.coach.stop()
             if session.running { session.stop { _ in } }   // leaving mid-session keeps the data
             cfg.save()
         }
+        .onChange(of: scenePhase) { phase in
+            // never listen in the background
+            if phase == .active { if cfg.voiceControl { startVoice(announce: false) } } else { session.stopVoice() }
+        }
+        .onReceive(session.commands) { handle($0) }
         .sheet(item: Binding(get: { askPhase.map { PhaseItem(id: $0) } }, set: { askPhase = $0?.id })) { item in
-            SymptomSheet(phase: item.id, neck: $neck, arm: $arm) { save in
-                if save { SessionStore.shared.saveCheckin(phase: item.id, neckPain: Int(neck), armSymptoms: Int(arm), sleepQuality: nil, note: "") }
-                if item.id == "before" { cfg.save(); session.start(record: cfg.recordSessions) }
-                askPhase = nil
-            }
+            SymptomSheet(phase: item.id, neck: $neck, arm: $arm) { save in finishCheckin(item.id, save: save) }
+        }
+    }
+
+    // MARK: actions shared by buttons and voice commands
+
+    private func ask(_ phase: String) {
+        askPhase = phase
+        if cfg.voiceControl { session.coach.speak(L.t("vg_checkin")) }
+    }
+
+    private func finishCheckin(_ phase: String, save: Bool) {
+        if save { SessionStore.shared.saveCheckin(phase: phase, neckPain: Int(neck), armSymptoms: Int(arm), sleepQuality: nil, note: "") }
+        if phase == "before" { cfg.save(); session.start(record: cfg.recordSessions) }
+        askPhase = nil
+    }
+
+    private func stopSession() {
+        session.stop { reps in savedText = L.f("session_saved", reps); ask("after") }
+    }
+
+    private var voiceLabel: String {
+        guard cfg.voiceControl else { return "🎤 " + L.t("voice_off") }
+        var s = "🎤 " + L.t(session.voiceListening ? "voice_listening" : "voice_on")
+        if let h = session.voiceHeard { s += "\n" + L.f("voice_heard", h) }
+        return s
+    }
+
+    private func toggleVoice() {
+        cfg.voiceControl.toggle(); cfg.save()
+        if cfg.voiceControl { startVoice(announce: true) } else { session.stopVoice() }
+    }
+
+    private func startVoice(announce: Bool) {
+        VoiceControl.requestAccess { ok in
+            guard ok else { savedText = L.t("mic_needed"); cfg.voiceControl = false; return }
+            guard session.voiceAvailable else { savedText = L.t("voice_unavailable"); cfg.voiceControl = false; return }
+            session.startVoice()
+            if announce { session.coach.speak(L.t("vg_listening")) }
+        }
+    }
+
+    private func handle(_ cmd: VoiceCommands.Cmd) {
+        let coach = session.coach
+        switch cmd {
+        case .start:
+            if askPhase != nil { break }
+            if session.running { if session.paused { session.setPaused(false) } } else { ask("before") }
+        case .skip:
+            if let p = askPhase { finishCheckin(p, save: false) }
+        case .stop:
+            if session.running { stopSession() } else if let p = askPhase { finishCheckin(p, save: false) }
+        case .pause: session.setPaused(true)
+        case .resume: session.setPaused(false)
+        case .recalibrate: if session.running { session.recalibrate() }
+        case .flip:
+            if session.running { coach.speak(L.t("vg_flip_running"), flush: true) } else { frontCamera.toggle() }
+        case .status:
+            coach.speak(session.running ? L.f("vg_status", session.currentReps, exercise.targetReps) : L.t("vg_not_started"), flush: true)
+        case .again:
+            coach.speak(coach.lastSpoken.isEmpty ? session.ui.cue : coach.lastSpoken, flush: true)
+        case .help:
+            coach.speak(L.t("vg_help"), flush: true)
         }
     }
 }

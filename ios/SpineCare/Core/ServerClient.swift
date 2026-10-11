@@ -22,6 +22,7 @@ final class ServerConfig: ObservableObject {
     @Published var haptics: Bool
     @Published var audioCues: Bool
     @Published var recordSessions: Bool
+    @Published var voiceControl: Bool
 
     private let d = UserDefaults.standard
     private init() {
@@ -39,6 +40,7 @@ final class ServerConfig: ObservableObject {
         haptics = d.object(forKey: "haptics") as? Bool ?? true
         audioCues = d.object(forKey: "audio_cues") as? Bool ?? false
         recordSessions = d.object(forKey: "record_sessions") as? Bool ?? false
+        voiceControl = d.object(forKey: "voice_control") as? Bool ?? false
     }
 
     var baseURL: String { url.trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "/")) }
@@ -52,6 +54,7 @@ final class ServerConfig: ObservableObject {
         d.set(min(2000, max(50, serverFrameIntervalMs)), forKey: "server_frame_ms")
         d.set(minConfidence, forKey: "min_conf"); d.set(haptics, forKey: "haptics")
         d.set(audioCues, forKey: "audio_cues"); d.set(recordSessions, forKey: "record_sessions")
+        d.set(voiceControl, forKey: "voice_control")
     }
 
     /// nil when the server may be used, otherwise a string key explaining why not.
