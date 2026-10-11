@@ -1,5 +1,9 @@
 # SpineCare — Test Evidence Report (video-driven, GPU server)
 
+> Note: this evidence was produced by the original spinecare-hermes build, before the combined
+> version added per-user neutral calibration, relative form rules and corrected chin-tuck /
+> scapular signals. Rep counts and cue texts from the current code will differ.
+
 Date: 2026-10-11 · Build: `v0.1.0` · Server: fleet-3090 (2× RTX 3090, YOLOv8n-pose, CUDA)
 
 ## What was tested
