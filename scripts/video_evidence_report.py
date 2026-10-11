@@ -130,6 +130,14 @@ def main():
     L += ["", "Files per clip: `android/<id>/overlay.mp4` (annotated frames from the app's OverlayRenderer), "
           "`android/<id>/app_recorder.mp4` (the app's own SessionRecorder), `ios/<id>/overlay.mp4`, "
           "`server/<id>/overlay.mp4`, a `contact.jpg` sheet and a per-frame `log.json` / `metrics_log.json` for each."]
+    in_app = load(ev / "android" / "in_app" / "summary.json")
+    if in_app:
+        L += ["", "## In the app's \"Analyze a video\" screen (emulator)", "",
+              "The same clips opened in VideoAnalysisActivity as a user would; `android/in_app/screenrecord.mp4` "
+              "records the screen and `android/in_app/<id>/screen_*.png` are screenshots taken while it ran.", "",
+              "| clip | exercise | finished | seconds | screenshots |", "|---|---|---|---|---|"]
+        for c in in_app.get("clips", []):
+            L.append(f"| {c['id']} | {c['exercise_id']} | {c['finished']} | {c['seconds']:.0f} | {c['screenshots']} |")
     report = "\n".join(L) + "\n"
     (ev / "REPORT.md").write_text(report)
     print(report)

@@ -23,8 +23,8 @@ import java.io.File
  *
  *  Videos come from androidTest assets/videos (sources.json + clips), placed there
  *  by CI from scripts/fetch_demo_videos.py; without them the test is skipped.
- *  Output goes to <external files>/replay/<id>/ (annotated frames, recorder MP4,
- *  per-frame log) plus replay/summary.json, and CI pulls it with adb. */
+ *  Output goes to <app files dir>/replay/<id>/ (annotated frames, recorder MP4,
+ *  per-frame log) plus replay/summary.json, and CI pulls it with adb run-as. */
 @RunWith(AndroidJUnit4::class)
 class VideoReplayTest {
     @Test
@@ -38,7 +38,7 @@ class VideoReplayTest {
         val maxFrames = InstrumentationRegistry.getArguments().getString("maxFrames")?.toIntOrNull() ?: 270
 
         I18n.init(app)
-        val outRoot = File(app.getExternalFilesDir(null), "replay").apply { deleteRecursively(); mkdirs() }
+        val outRoot = File(app.filesDir, "replay").apply { deleteRecursively(); mkdirs() }
         val engine = PoseEngine(app)
         val bundle = Plan.bundle(app)
         val minConf = ServerConfig.minConfidence(app).toDouble()
