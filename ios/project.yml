@@ -19,12 +19,17 @@ targets:
       # Exercise plan shared with the server and the Android app.
       - path: ../shared/exercises.json
         buildPhase: resources
+      # Voice command vocabulary shared with the Android app.
+      - path: ../shared/voice_commands.json
+        buildPhase: resources
     info:
       path: SpineCare/Info.plist
       properties:
         CFBundleDisplayName: SpineCare
         NSCameraUsageDescription: "SpineCare uses the camera to guide and monitor your rehabilitation exercises. Video never leaves the device; in server mode only body landmarks are sent unless you choose frame streaming."
         NSBluetoothAlwaysUsageDescription: "SpineCare connects to optional SpineCare posture sensors (ESP32 head/trunk nodes) over Bluetooth."
+        NSMicrophoneUsageDescription: "SpineCare listens for hands-free commands (start, pause, stop, ...) only while an exercise screen is open and voice control is on. Audio is never recorded or stored."
+        NSSpeechRecognitionUsageDescription: "Speech recognition turns your voice commands into actions during exercises. It runs on the device when supported."
         NSMotionUsageDescription: "Used for posture context during exercises."
         UIBackgroundModes: []
         UILaunchScreen: {}

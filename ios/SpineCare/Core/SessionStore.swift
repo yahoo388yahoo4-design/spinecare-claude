@@ -16,6 +16,8 @@ struct SessionRecord: Codable, Identifiable {
     let source: String
     var video: String?
     var recordedFrames: Int?
+    var timeline: String?
+    var timelineSamples: Int?
 }
 
 struct CheckinRecord: Codable, Identifiable {
@@ -86,11 +88,13 @@ final class SessionStore: ObservableObject {
     // MARK: sessions + check-ins
 
     func saveSession(exerciseId: String, reps: Int, sets: Int, durationS: Int, metrics: [String: Double],
-                     cues: [String: Int], frames: Int, source: String, videoURL: URL?, recordedFrames: Int) {
+                     cues: [String: Int], frames: Int, source: String, videoURL: URL?, recordedFrames: Int,
+                     timelineURL: URL? = nil, timelineSamples: Int = 0) {
         var rec = SessionRecord(ts: Int(Date().timeIntervalSince1970 * 1000), date: Self.today(), exercise: exerciseId,
                                 reps: reps, sets: sets, durationS: durationS, avg: metrics.mapValues { ($0 * 1000).rounded() / 1000 },
                                 cues: cues, frames: frames, source: source)
         if let v = videoURL { rec.video = v.lastPathComponent; rec.recordedFrames = recordedFrames }
+        if let t = timelineURL { rec.timeline = t.lastPathComponent; rec.timelineSamples = timelineSamples }
         append(rec, to: sessionsURL)
         DispatchQueue.main.async { self.load() }
     }
@@ -111,6 +115,18 @@ final class SessionStore: ObservableObject {
     func videoExists(_ rec: SessionRecord) -> Bool {
         guard let u = videoURL(rec) else { return false }
         return FileManager.default.fileExists(atPath: u.path)
+    }
+
+    /// Sensor timeline for a session (see SessionTimeline), stored next to recordings.
+    func timelineURL(_ rec: SessionRecord) -> URL? {
+        guard let v = rec.timeline, !v.isEmpty else { return nil }
+        let u = recordingsDir.appendingPathComponent((v as NSString).lastPathComponent)
+        return FileManager.default.fileExists(atPath: u.path) ? u : nil
+    }
+
+    func newTimelineURL(_ base: String) -> URL {
+        try? FileManager.default.createDirectory(at: recordingsDir, withIntermediateDirectories: true)
+        return recordingsDir.appendingPathComponent("\(base).timeline.jsonl")
     }
 
     func clearHistory() {

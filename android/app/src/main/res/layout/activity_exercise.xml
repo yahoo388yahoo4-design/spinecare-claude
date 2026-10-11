@@ -102,6 +102,21 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tvVoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="240dp"
+        android:padding="10dp"
+        android:layout_margin="8dp"
+        android:textColor="@color/sc_muted"
+        android:textSize="13sp"
+        android:background="#CC0B1220"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toBottomOf="@id/tvExercise"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
         android:id="@+id/tvReps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -216,7 +216,7 @@ struct ManualSessionView: View {
     }
 }
 
-/// Progress: sessions (with recordings), check-ins, CSV export and clearing history.
+/// Progress: sessions (thumbnail + in-app replay), check-ins, CSV export and clearing history.
 struct SessionsView: View {
     @ObservedObject var store = SessionStore.shared
     @State private var confirmClear = false
@@ -234,6 +234,9 @@ struct SessionsView: View {
                 Section(L.t("saved_sessions")) {
                     if store.sessions.isEmpty { Text(L.t("no_sessions_long")).font(.callout).foregroundStyle(.secondary) }
                     ForEach(store.sessions) { rec in
+                        let canReplay = store.videoExists(rec) || store.timelineURL(rec) != nil
+                        HStack(alignment: .top, spacing: 10) {
+                        if canReplay { SessionThumb(rec: rec) }
                         VStack(alignment: .leading, spacing: 6) {
                             Text("\(rec.date) · \(Plan.byId(rec.exercise)?.title(L.lang) ?? rec.exercise)").font(.headline)
                             Text("\(L.t("reps"))=\(rec.reps) · \(L.t("sets"))=\(rec.sets ?? 0) · \(L.t("duration"))=\(rec.durationS ?? 0)s · [\(rec.source)]")
@@ -243,11 +246,13 @@ struct SessionsView: View {
                                         .joined(separator: "  "))
                                     .font(.system(.caption2, design: .monospaced)).foregroundStyle(.secondary)
                             }
-                            if let url = store.videoURL(rec), store.videoExists(rec) {
-                                NavigationLink(L.f("review_recording", rec.recordedFrames ?? 0)) { VideoReviewView(url: url) }
-                            } else if rec.video != nil {
+                            if canReplay {
+                                NavigationLink(L.t("replay_open")) { SessionReplayView(rec: rec) }
+                            }
+                            if rec.video != nil && !store.videoExists(rec) {
                                 Text(L.t("recording_missing")).font(.caption).foregroundStyle(.red)
                             }
+                        }
                         }
                     }
                 }
@@ -275,17 +280,5 @@ struct SessionsView: View {
                 Button(L.t("delete"), role: .destructive) { store.clearHistory() }
             }
         }
-    }
-}
-
-struct VideoReviewView: View {
-    let url: URL
-    @State private var player: AVPlayer?
-    var body: some View {
-        VideoPlayer(player: player)
-            .ignoresSafeArea()
-            .navigationTitle(L.t("review"))
-            .onAppear { player = AVPlayer(url: url) }
-            .onDisappear { player?.pause() }
     }
 }
