@@ -419,7 +419,7 @@ class ExerciseActivity : AppCompatActivity() {
         server = ServerClient(ServerConfig.url(this), ServerConfig.user(this), ServerConfig.pass(this)).apply {
             connect(object : ServerClient.Listener {
                 override fun onPose(msg: JSONObject) { serverPose = msg }
-                override fun onError(error: String) { if (error.contains("exercise")) runOnUiThread { postCue(error) } }
+                override fun onError(error: String) { if (error.contains("exercise")) runOnUiThread { postCue(t("err_unknown_exercise")) } }
                 override fun onStatus(connected: Boolean) {
                     runOnUiThread {
                         if (!connected && running) Toast.makeText(this@ExerciseActivity, t("server_dropped"), Toast.LENGTH_SHORT).show()

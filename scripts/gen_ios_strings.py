@@ -36,8 +36,10 @@ final class L: ObservableObject {{
             ?? (Locale.current.language.languageCode?.identifier == "ro" ? "ro" : "en")
     }}
 
+    static let langs = ["en", "ro"]
     static var lang: String {{ shared.lang }}
-    static func toggle() {{ shared.lang = shared.lang == "en" ? "ro" : "en" }}
+    static func toggle() {{ set(shared.lang == "en" ? "ro" : "en") }}
+    static func set(_ l: String) {{ if shared.lang != l {{ shared.lang = l == "ro" ? "ro" : "en" }} }}
     static func t(_ key: String) -> String {{ (shared.lang == "ro" ? ro[key] : nil) ?? en[key] ?? key }}
     static func f(_ key: String, _ args: CVarArg...) -> String {{ String(format: t(key), arguments: args) }}
 

@@ -34,7 +34,10 @@ class SettingsFragment : Fragment() {
         fun switch(text: String, on: Boolean) = ui.add(SwitchCompat(ctx).apply { this.text = text; setTextColor(Ui.TEXT); isChecked = on })
 
         ui.p(t("settings"), Ui.TEXT, 22f)
-        ui.button(t("lang_switch")) { (activity as? MainActivity)?.toggleLanguage() }
+        ui.h(t("language"))
+        val lang = ui.add(RadioGroup(ctx))
+        I18n.LANGS.forEachIndexed { n, l -> radio(lang, 300 + n, t("lang_$l"), I18n.lang == l) }
+        lang.setOnCheckedChangeListener { _, id -> (activity as? MainActivity)?.setLanguage(I18n.LANGS[id - 300]) }
         ui.muted(t("local_status"))
 
         ui.h(t("mode_title"))
@@ -89,7 +92,7 @@ class SettingsFragment : Fragment() {
             ServerConfig.setRecordSessions(ctx, record.isChecked)
             Toast.makeText(ctx, t("settings_saved"), Toast.LENGTH_SHORT).show()
         }
-        ui.muted(getString(R.string.disclaimer))
+        ui.muted(t("disclaimer"))
         return ui.root
     }
 

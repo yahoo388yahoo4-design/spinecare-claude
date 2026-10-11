@@ -47,13 +47,16 @@ struct SensorsView: View {
 
 struct SettingsView: View {
     @ObservedObject var cfg = ServerConfig.shared
+    @ObservedObject private var lang = L.shared
     @State private var status = ""
 
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    Button(L.t("lang_switch")) { L.toggle() }
+                Section(L.t("language")) {
+                    Picker(L.t("language"), selection: Binding(get: { lang.lang }, set: { L.set($0) })) {
+                        ForEach(L.langs, id: \.self) { Text(L.t("lang_" + $0)).tag($0) }
+                    }.pickerStyle(.segmented).labelsHidden()
                     Text(L.t("local_status")).font(.caption)
                 }
                 Section(L.t("mode_title")) {
@@ -102,6 +105,7 @@ struct SettingsView: View {
                 Section {
                     Button(L.t("save_settings")) { cfg.save(); status = L.t("settings_saved") }
                     Text(L.t("mediapipe_metrics")).font(.caption2).foregroundStyle(.secondary)
+                    Text(L.t("disclaimer")).font(.caption2).foregroundStyle(.secondary)
                 }
             }
             .navigationTitle(L.t("settings"))

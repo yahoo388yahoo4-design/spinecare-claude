@@ -172,4 +172,19 @@ class CoreLogicTest {
         assertEquals(I18n.EN.keys, I18n.RO.keys)
         for ((k, v) in I18n.EN) assertEquals("placeholders in $k", v.count { it == '%' }, I18n.RO.getValue(k).count { it == '%' })
     }
+
+    /** Every literal key passed to t(...) in the Android and iOS sources has an English (and so Romanian) entry,
+     *  and every plan text the user sees has a Romanian version. */
+    @Test fun usedKeysAndPlanTextTranslated() {
+        val call = Regex("""(?:\bt|L\.[tf])\(\s*"([a-z0-9_]+)"\s*[,)]""")  // whole literal keys, not "prefix_" + x
+        val sources = (File("src/main/java").walkTopDown() + File("../../ios/SpineCare").walkTopDown())
+            .filter { it.extension in setOf("kt", "swift") && it.name != "I18n.kt" && it.name != "Strings.swift" }
+        val missing = sources.flatMap { f -> call.findAll(f.readText()).map { it.groupValues[1] to f.name } }
+            .filter { (k, _) -> k !in I18n.EN }.toList()
+        assertTrue("untranslated keys: $missing", missing.isEmpty())
+        for (e in bundle.exercises) {
+            assertTrue("${e.id} name", e.name["ro"]?.isNotBlank() == true)
+            assertTrue("${e.id} description", e.description["ro"]?.isNotBlank() == true)
+        }
+    }
 }
