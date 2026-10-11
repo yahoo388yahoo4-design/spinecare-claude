@@ -85,7 +85,7 @@ class ExerciseActivity : AppCompatActivity() {
             Toast.makeText(this, t("pose_unavailable"), Toast.LENGTH_LONG).show(); null
         }
 
-        val guide = FramingGuide.forView(exercise.view)
+        val guide = FramingGuide.forView(exercise.view, exercise.program)
         b.tvExercise.text = "${exercise.name(I18n.lang)}\n${guide.headline}\n• " + guide.steps.joinToString("\n• ")
         b.tvReps.text = "0/${exercise.targetReps}"
         b.btnStart.text = t("start"); b.btnStop.text = t("stop_save"); b.btnFlip.text = t("flip")

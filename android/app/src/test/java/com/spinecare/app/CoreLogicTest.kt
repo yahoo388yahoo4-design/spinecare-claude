@@ -34,12 +34,62 @@ class CoreLogicTest {
     }
 
     @Test fun planLoadsAllExercisesBilingual() {
-        assertEquals(4, bundle.exercises.size)
+        assertEquals(10, bundle.exercises.size)
+        assertEquals(setOf("full", "upper_body", "neck"), bundle.exercises.map { it.program }.toSet())
         for (e in bundle.exercises) {
             assertTrue(e.repLow < e.repHigh)
             assertTrue(e.name.containsKey("ro") && e.name.containsKey("en"))
             assertTrue(e.stops("ro").isNotEmpty())
         }
+    }
+
+    private fun vectorCase(name: String): Map<String, Metrics.P> {
+        val cases = JSONObject(File(shared, "metric_vectors.json").readText()).getJSONArray("cases")
+        val c = (0 until cases.length()).map { cases.getJSONObject(it) }.first { it.getString("name") == name }
+        val l = c.getJSONObject("landmarks")
+        return l.keys().asSequence().associateWith { k ->
+            val o = l.getJSONObject(k); Metrics.P(o.getDouble("x"), o.getDouble("y"), o.getDouble("conf"))
+        }
+    }
+
+    /** Neck-only and upper-body-only exercises: framing passes and the signal is
+     *  measured with nothing below the shoulders in view. */
+    @Test fun partialProgrammesTrackWithoutHips() {
+        val poses = mapOf("neck/front" to "neck_front_neutral", "neck/side" to "neck_side_neutral",
+            "upper_body/front" to "upper_front_arms_down", "upper_body/side" to "upper_side_neutral")
+        val partial = bundle.exercises.filter { it.program == "neck" || it.program == "upper_body" }
+        assertTrue(partial.size >= 6)
+        for (e in partial) {
+            val p = vectorCase(poses.getValue("${e.program}/${e.view}"))
+            assertFalse(p.keys.any { it.endsWith("hip") })
+            assertTrue(e.id, Framing.check(p, e.requiredLandmarks, e.minConf, 640.0, 480.0).ready)
+            val m = Metrics.compute(p)
+            assertTrue(e.id, m.containsKey(e.signal.removePrefix("abs:")))
+            assertTrue(e.id, e.formRules.any { m.containsKey(it.metric) })
+        }
+    }
+
+    @Test fun neckChinTuckCountsFromLandmarks() {
+        val tr = ExerciseTracker(ex("chin_tuck_neck"), 300, "en")
+        val start = vectorCase("neck_side_neutral"); val tucked = vectorCase("neck_side_chin_tuck")
+        var t = 0L
+        repeat(5) { tr.update(Metrics.compute(start), true, t); t += 100 }
+        var s: ExerciseTracker.State? = null
+        repeat(3) {
+            for (p in listOf(start, tucked, tucked, tucked, start)) { s = tr.update(Metrics.compute(p), true, t); t += 300 }
+        }
+        assertEquals(3, s!!.reps)
+        assertTrue(s!!.cues.isEmpty())
+    }
+
+    @Test fun upperBodyArmRaiseCountsFromLandmarks() {
+        val tr = ExerciseTracker(ex("side_arm_raise"), 300, "ro")
+        val down = vectorCase("upper_front_arms_down"); val up = vectorCase("upper_front_arms_raised")
+        var t = 0L
+        repeat(5) { tr.update(Metrics.compute(down), true, t); t += 100 }
+        var s: ExerciseTracker.State? = null
+        repeat(2) { for (p in listOf(down, up, up, up, down)) { s = tr.update(Metrics.compute(p), true, t); t += 300 } }
+        assertEquals(2, s!!.reps)
     }
 
     @Test fun repEngineCountsWithHysteresis() {

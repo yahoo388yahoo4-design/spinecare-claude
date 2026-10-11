@@ -34,9 +34,24 @@ class ExercisesFragment : Fragment() {
         box.removeAllViews(); box.addView(ui.root)
 
         ui.warn("⚠ " + t("approval_warning"))
-        for (ex in Plan.all(ctx)) {
+
+        // Programme filter: full posture, upper body only (waist up) or neck only (head and shoulders)
+        val selected = store.programFilter()
+        ui.muted(t("program_pick"))
+        val chips = ui.row()
+        for (prog in listOf("all") + Plan.PROGRAMS) {
+            ui.button(t("program_short_$prog"), chips) { store.setProgramFilter(prog); render() }.apply {
+                isEnabled = prog != selected
+                layoutParams = android.widget.LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+            }
+        }
+        if (selected != "all") ui.muted(t("program_hint_$selected"))
+
+        val builtIn = Plan.inProgram(Plan.bundle(ctx).exercises, selected)
+        for (ex in builtIn + store.customExercises()) {
             val card = ui.card()
             ui.p(ex.name(lang), Ui.TEXT, 17f, card)
+            ui.p(t("program_${ex.program}"), Ui.PRIMARY, 12f, card)
             val meta = if (ex.cameraTracked) t("meta_camera").format(t("view_" + ex.view), ex.targetReps)
                        else t("meta_manual").format(ex.targetSets, ex.targetReps)
             ui.muted(meta, card)
