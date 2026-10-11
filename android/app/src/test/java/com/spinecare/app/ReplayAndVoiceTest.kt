@@ -52,7 +52,7 @@ class ReplayAndVoiceTest {
     }
 
     @Test fun timelineRoundTrip() {
-        val f = File.createTempFile("tl", ".jsonl")
+        val f = File.createTempFile("timeline", ".jsonl")  // prefix needs 3+ chars
         try {
             val w = SessionTimeline.Writer(f, SessionTimeline.header("chin_tuck", "head_forward_proxy", 10, 1000L))
             for (i in 0 until 20) {
