@@ -4,7 +4,7 @@
   "Videos are NOT stored in the repo: they are downloaded at CI time from Wikimedia Commons, and only",
   "files whose license allows redistribution and derivatives (public domain, CC0, CC BY, CC BY-SA) are used.",
   "Each run records title, author, license and source page in sources.json next to the downloaded files.",
-  "'commons_file' pins an exact file; 'commons_search' takes the best licensed matches of a search.",
+  "'commons_file' pins an exact file (picked from earlier CI candidate lists); 'commons_search' takes the best licensed matches of a search.",
   "'exercise_id' is the tracker the clip is replayed against; it is our mapping, not a clinical label."
  ],
  "allowed_licenses": [
@@ -22,128 +22,84 @@
  "width": 640,
  "videos": [
   {
-   "id": "neck_rotation",
+   "id": "neck_yoga_loosening",
    "exercise_id": "cervical_rotation_rom",
-   "commons_search": "neck rotation exercise",
-   "pick": 1,
-   "require_any": [
-    "neck",
-    "head",
-    "cervical"
-   ]
+   "commons_file": "File:Neck Movement - Loosening Practice - International Day of Yoga Celebration - NCSM - Kolkata 2015-06-21 7300.ogv"
   },
   {
-   "id": "head_turn",
-   "exercise_id": "cervical_rotation_rom",
-   "commons_search": "head rotation",
-   "pick": 1,
-   "require_any": [
-    "head",
-    "neck",
-    "body"
-   ]
-  },
-  {
-   "id": "neck_side_bend",
+   "id": "neck_yoga_loosening_2",
    "exercise_id": "neck_side_bend",
-   "commons_search": "neck stretch",
-   "pick": 1,
-   "require_any": [
-    "neck",
-    "stretch",
-    "exercise"
-   ]
+   "commons_file": "File:Neck Movement - Loosening Practice - International Day of Yoga Celebration - NCSM - Kolkata 2015-06-21 7301.ogv"
   },
   {
-   "id": "neck_flexion",
-   "exercise_id": "neck_flexion_rom",
-   "commons_search": "neck flexion",
-   "pick": 1,
-   "require_any": [
-    "neck",
-    "flexion",
-    "exercise"
-   ]
+   "id": "neck_coordination",
+   "exercise_id": "cervical_rotation_rom",
+   "commons_file": "File:A-novel-method-for-neck-coordination-exercise-–-a-pilot-study-on-persons-with-chronic-non-specific-1743-0003-5-36-S1.ogv"
   },
   {
-   "id": "chin_tuck",
-   "exercise_id": "chin_tuck_neck",
-   "commons_search": "chin tuck",
-   "pick": 1,
-   "require_any": [
-    "chin",
-    "neck",
-    "posture"
-   ]
+   "id": "eye_head_body",
+   "exercise_id": "cervical_rotation_rom",
+   "commons_file": "File:Intersegmental-Eye-Head-Body-Interactions-during-Complex-Whole-Body-Movements-pone.0095450.s005.ogv"
   },
   {
-   "id": "shoulder_shrug",
+   "id": "shoulder_rotations_yoga",
    "exercise_id": "shoulder_shrug",
-   "commons_search": "shoulder shrug",
-   "pick": 1,
-   "require_any": [
-    "shrug",
-    "shoulder",
-    "lat",
-    "exercise"
-   ]
+   "commons_file": "File:Yoga Hast Vinyasas - YOGAnDHARMA - Both Shoulder Rotations.theora.ogv"
   },
   {
-   "id": "arm_raise",
+   "id": "shoulder_press",
    "exercise_id": "side_arm_raise",
-   "commons_search": "lateral raise exercise",
-   "pick": 1,
-   "require_any": [
-    "raise",
-    "arm",
-    "shoulder",
-    "dumbbell"
-   ]
+   "commons_file": "File:Shoulder press - exercise demonstration video.webm"
+  },
+  {
+   "id": "squat_frontal_raise",
+   "exercise_id": "side_arm_raise",
+   "commons_file": "File:Squat and Frontal Raise.webm"
+  },
+  {
+   "id": "jumping_jacks_burpees",
+   "exercise_id": "side_arm_raise",
+   "commons_file": "File:Jumping jacks and burpees.webm"
   },
   {
    "id": "jumping_jack",
    "exercise_id": "side_arm_raise",
-   "commons_search": "jumping jacks",
-   "pick": 1,
-   "require_any": [
-    "jumping",
-    "jack"
-   ]
+   "commons_file": "File:Jumping jack movimiento.ogg"
   },
   {
-   "id": "shoulder_exercise",
+   "id": "radio_calisthenics",
    "exercise_id": "side_arm_raise",
-   "commons_search": "shoulder exercise",
-   "pick": 1,
-   "require_any": [
-    "shoulder",
-    "serratus",
-    "arm"
-   ]
+   "commons_file": "File:Rajiotaiso2013park.ogv"
   },
   {
-   "id": "back_extension",
-   "exercise_id": "thoracic_extension",
-   "commons_search": "back extension exercise",
-   "pick": 1,
-   "require_any": [
-    "extension",
-    "back",
-    "exercise",
-    "superman"
-   ]
+   "id": "aerobic_exercises",
+   "exercise_id": "side_arm_raise",
+   "commons_file": "File:Aerobic Exercises.webm"
   },
   {
-   "id": "rowing",
+   "id": "scapular_winging_back",
    "exercise_id": "scapular_retraction",
-   "commons_search": "physical therapy exercise",
-   "pick": 1,
-   "require_any": [
-    "exercise",
-    "program",
-    "row",
-    "training"
-   ]
+   "commons_file": "File:Scapular Winging in FSHD.webm"
+  },
+  {
+   "id": "bent_over_row",
+   "exercise_id": "scapular_squeeze_side",
+   "commons_file": "File:Bent-over row - exercise demonstration video.webm"
+  },
+  {
+   "id": "serratus_punch",
+   "exercise_id": "scapular_squeeze_side",
+   "commons_file": "File:Serratus punch.webm"
+  },
+  {
+   "id": "squat_side",
+   "exercise_id": "thoracic_extension",
+   "commons_file": "File:Kettlebell Racked Squats (side view).webm"
+  },
+  {
+   "id": "squats",
+   "exercise_id": "thoracic_extension",
+   "commons_file": "File:Squats Wikipedia.webm"
   }
  ],
  "discovery_queries": [
