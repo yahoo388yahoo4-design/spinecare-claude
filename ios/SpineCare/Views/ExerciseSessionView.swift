@@ -309,7 +309,7 @@ struct ExerciseSessionView: View {
 
     var body: some View {
         let lang = L.lang
-        let guide = FramingText.forView(exercise.view)
+        let guide = FramingText.forView(exercise.view, program: exercise.programId)
         ZStack(alignment: .top) {
             CameraPreview(frontCamera: frontCamera) { session.process($0) }
                 .ignoresSafeArea()
@@ -485,7 +485,15 @@ struct SymptomSheet: View {
 }
 
 enum FramingText {
-    static func forView(_ v: String) -> String {
+    /// Neck and upper-body programmes frame closer and never need the hips in view.
+    static func forView(_ v: String, program: String = "full") -> String {
+        switch (program, v) {
+        case ("neck", "front"): return [L.t("guide_neck_front_title"), L.t("guide_neck_1"), L.t("guide_neck_front_2")].joined(separator: "\n")
+        case ("neck", _): return [L.t("guide_neck_side_title"), L.t("guide_neck_1"), L.t("guide_neck_side_2")].joined(separator: "\n")
+        case ("upper_body", "front"): return [L.t("guide_upper_front_title"), L.t("guide_upper_1"), L.t("guide_upper_2")].joined(separator: "\n")
+        case ("upper_body", _): return [L.t("guide_upper_side_title"), L.t("guide_upper_1"), L.t("guide_upper_2")].joined(separator: "\n")
+        default: break
+        }
         switch v {
         case "side": return [L.t("guide_side_title"), L.t("guide_side_3")].joined(separator: "\n")
         case "front": return [L.t("guide_front_title"), L.t("guide_front_1")].joined(separator: "\n")

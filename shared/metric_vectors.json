@@ -81,10 +81,19 @@
     }
    },
    "expected": {
+    "arm_elev_asym": 0.0,
+    "arm_elev_l": 12.094757,
+    "arm_elev_r": 12.094757,
+    "arm_elevation": 12.094757,
+    "arm_ext_side": 12.094757,
     "cervical_sag_proxy": 147.528808,
     "cervical_tilt": 0.0,
+    "head_forward_neck": 0.514496,
     "head_forward_proxy": 0.213066,
+    "head_pitch_side": -26.565051,
+    "head_roll": 0.0,
     "neck_yaw_est": 0.0,
+    "shoulder_elev": 0.5,
     "shoulder_line_tilt": 0.0,
     "shoulder_width_ratio": 0.714286,
     "trunk_lean_sagittal": 6.115504,
@@ -171,10 +180,19 @@
     }
    },
    "expected": {
+    "arm_elev_asym": 0.0,
+    "arm_elev_l": 12.094757,
+    "arm_elev_r": 12.094757,
+    "arm_elevation": 12.094757,
+    "arm_ext_side": 12.094757,
     "cervical_sag_proxy": 147.528808,
     "cervical_tilt": 0.0,
+    "head_forward_neck": 0.514496,
     "head_forward_proxy": 0.188889,
+    "head_pitch_side": -26.565051,
+    "head_roll": 0.0,
     "neck_yaw_est": 0.0,
+    "shoulder_elev": 0.5,
     "shoulder_line_tilt": 0.0,
     "shoulder_width_ratio": 0.656532,
     "trunk_lean_sagittal": 28.17859,
@@ -261,10 +279,19 @@
     }
    },
    "expected": {
+    "arm_elev_asym": 0.0,
+    "arm_elev_l": 12.094757,
+    "arm_elev_r": 12.094757,
+    "arm_elevation": 12.094757,
+    "arm_ext_side": 12.094757,
     "cervical_sag_proxy": 136.487868,
     "cervical_tilt": 0.0,
+    "head_forward_neck": 0.514496,
     "head_forward_proxy": 0.213066,
+    "head_pitch_side": -15.524111,
+    "head_roll": 0.0,
     "neck_yaw_est": 34.849905,
+    "shoulder_elev": 0.5,
     "shoulder_line_tilt": 0.0,
     "shoulder_width_ratio": 0.714286,
     "trunk_lean_sagittal": 6.115504,
@@ -351,6 +378,10 @@
     }
    },
    "expected": {
+    "arm_elev_asym": 0.0,
+    "arm_elev_l": 12.094757,
+    "arm_elev_r": 12.094757,
+    "arm_elevation": 12.094757,
     "neck_yaw_est": -34.849905,
     "shoulder_line_tilt": 0.0,
     "shoulder_width_ratio": 0.714286,
@@ -437,10 +468,19 @@
     }
    },
    "expected": {
+    "arm_elev_asym": 1.728434,
+    "arm_elev_l": 12.094757,
+    "arm_elev_r": 10.366323,
+    "arm_elevation": 10.366323,
+    "arm_ext_side": 12.094757,
     "cervical_sag_proxy": 147.528808,
     "cervical_tilt": 0.0,
+    "head_forward_neck": 0.514496,
     "head_forward_proxy": 0.213066,
+    "head_pitch_side": -26.565051,
+    "head_roll": 0.0,
     "neck_yaw_est": 0.0,
+    "shoulder_elev": 0.436866,
     "shoulder_line_tilt": -6.842773,
     "shoulder_width_ratio": 0.689845,
     "trunk_lean_sagittal": 6.115504,
@@ -498,7 +538,9 @@
    },
    "expected": {
     "cervical_sag_proxy": 112.855685,
+    "head_forward_neck": 0.22236,
     "head_forward_proxy": 0.092798,
+    "head_pitch_side": -10.00798,
     "trunk_lean_sagittal": -2.045408
    }
   },
@@ -553,7 +595,9 @@
    },
    "expected": {
     "cervical_sag_proxy": 112.855685,
+    "head_forward_neck": 0.22236,
     "head_forward_proxy": 0.092798,
+    "head_pitch_side": -10.00798,
     "trunk_lean_sagittal": -2.045408
    }
   },
@@ -608,7 +652,9 @@
    },
    "expected": {
     "cervical_sag_proxy": 125.521687,
+    "head_forward_neck": 0.478852,
     "head_forward_proxy": 0.214149,
+    "head_pitch_side": -6.911227,
     "trunk_lean_sagittal": -2.045408
    }
   },
@@ -663,8 +709,544 @@
    },
    "expected": {
     "cervical_sag_proxy": 115.873882,
+    "head_forward_neck": 0.218711,
     "head_forward_proxy": 0.092985,
+    "head_pitch_side": -13.24052,
     "trunk_lean_sagittal": 6.159163
+   }
+  },
+  {
+   "name": "neck_front_neutral",
+   "landmarks": {
+    "nose": {
+     "x": 320,
+     "y": 150,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 270,
+     "y": 165,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 370,
+     "y": 165,
+     "conf": 0.9
+    },
+    "lsho": {
+     "x": 170,
+     "y": 330,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 470,
+     "y": 330,
+     "conf": 0.9
+    }
+   },
+   "expected": {
+    "cervical_tilt": 0.0,
+    "head_forward_neck": 0.518302,
+    "head_pitch_side": -16.699244,
+    "head_roll": 0.0,
+    "neck_yaw_est": 0.0,
+    "shoulder_elev": 0.55,
+    "shoulder_line_tilt": 0.0
+   }
+  },
+  {
+   "name": "neck_front_side_bend",
+   "landmarks": {
+    "nose": {
+     "x": 330,
+     "y": 160,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 275,
+     "y": 140,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 360,
+     "y": 190,
+     "conf": 0.9
+    },
+    "lsho": {
+     "x": 170,
+     "y": 330,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 470,
+     "y": 330,
+     "conf": 0.9
+    }
+   },
+   "expected": {
+    "cervical_tilt": 0.868051,
+    "head_forward_neck": 0.483686,
+    "head_pitch_side": 19.983107,
+    "head_roll": 30.465545,
+    "neck_yaw_est": 6.837141,
+    "shoulder_elev": 0.55,
+    "shoulder_line_tilt": 0.0
+   }
+  },
+  {
+   "name": "neck_front_shrug",
+   "landmarks": {
+    "nose": {
+     "x": 320,
+     "y": 150,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 270,
+     "y": 165,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 370,
+     "y": 165,
+     "conf": 0.9
+    },
+    "lsho": {
+     "x": 170,
+     "y": 290,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 470,
+     "y": 290,
+     "conf": 0.9
+    }
+   },
+   "expected": {
+    "cervical_tilt": 0.0,
+    "head_forward_neck": 0.624695,
+    "head_pitch_side": -16.699244,
+    "head_roll": 0.0,
+    "neck_yaw_est": 0.0,
+    "shoulder_elev": 0.416667,
+    "shoulder_line_tilt": 0.0
+   }
+  },
+  {
+   "name": "neck_side_neutral",
+   "landmarks": {
+    "nose": {
+     "x": 400,
+     "y": 150,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 320,
+     "y": 165,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 320,
+     "y": 165,
+     "conf": 0.2
+    },
+    "lsho": {
+     "x": 300,
+     "y": 330,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 300,
+     "y": 330,
+     "conf": 0.3
+    }
+   },
+   "expected": {
+    "head_forward_neck": 0.120331,
+    "head_pitch_side": -10.619655
+   }
+  },
+  {
+   "name": "neck_side_chin_tuck",
+   "landmarks": {
+    "nose": {
+     "x": 380,
+     "y": 152,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 300,
+     "y": 165,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 320,
+     "y": 165,
+     "conf": 0.2
+    },
+    "lsho": {
+     "x": 300,
+     "y": 330,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 300,
+     "y": 330,
+     "conf": 0.3
+    }
+   },
+   "expected": {
+    "head_forward_neck": 0.0,
+    "head_pitch_side": -9.229886
+   }
+  },
+  {
+   "name": "neck_side_flexion",
+   "landmarks": {
+    "nose": {
+     "x": 385,
+     "y": 215,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 320,
+     "y": 165,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 320,
+     "y": 165,
+     "conf": 0.2
+    },
+    "lsho": {
+     "x": 300,
+     "y": 330,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 300,
+     "y": 330,
+     "conf": 0.3
+    }
+   },
+   "expected": {
+    "head_forward_neck": 0.120331,
+    "head_pitch_side": 37.568592
+   }
+  },
+  {
+   "name": "neck_side_facing_left",
+   "landmarks": {
+    "nose": {
+     "x": 240,
+     "y": 150,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 320,
+     "y": 165,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 320,
+     "y": 165,
+     "conf": 0.2
+    },
+    "lsho": {
+     "x": 340,
+     "y": 330,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 340,
+     "y": 330,
+     "conf": 0.3
+    }
+   },
+   "expected": {
+    "head_forward_neck": 0.120331,
+    "head_pitch_side": -10.619655
+   }
+  },
+  {
+   "name": "upper_front_arms_down",
+   "landmarks": {
+    "nose": {
+     "x": 320,
+     "y": 90,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 295,
+     "y": 100,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 345,
+     "y": 100,
+     "conf": 0.9
+    },
+    "lsho": {
+     "x": 250,
+     "y": 170,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 390,
+     "y": 170,
+     "conf": 0.9
+    },
+    "lelb": {
+     "x": 240,
+     "y": 280,
+     "conf": 0.9
+    },
+    "relb": {
+     "x": 400,
+     "y": 280,
+     "conf": 0.9
+    },
+    "lwri": {
+     "x": 238,
+     "y": 380,
+     "conf": 0.8
+    },
+    "rwri": {
+     "x": 402,
+     "y": 380,
+     "conf": 0.8
+    }
+   },
+   "expected": {
+    "arm_elev_asym": 0.0,
+    "arm_elev_l": 5.194429,
+    "arm_elev_r": 5.194429,
+    "arm_elevation": 5.194429,
+    "arm_ext_side": 5.194429,
+    "cervical_tilt": 0.0,
+    "head_forward_neck": 0.540758,
+    "head_pitch_side": -21.801409,
+    "head_roll": 0.0,
+    "neck_yaw_est": 0.0,
+    "shoulder_elev": 0.5,
+    "shoulder_line_tilt": 0.0
+   }
+  },
+  {
+   "name": "upper_front_arms_raised",
+   "landmarks": {
+    "nose": {
+     "x": 320,
+     "y": 90,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 295,
+     "y": 100,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 345,
+     "y": 100,
+     "conf": 0.9
+    },
+    "lsho": {
+     "x": 250,
+     "y": 170,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 390,
+     "y": 170,
+     "conf": 0.9
+    },
+    "lelb": {
+     "x": 150,
+     "y": 220,
+     "conf": 0.9
+    },
+    "relb": {
+     "x": 495,
+     "y": 210,
+     "conf": 0.9
+    },
+    "lwri": {
+     "x": 238,
+     "y": 380,
+     "conf": 0.8
+    },
+    "rwri": {
+     "x": 402,
+     "y": 380,
+     "conf": 0.8
+    }
+   },
+   "expected": {
+    "arm_elev_asym": -5.710593,
+    "arm_elev_l": 63.434949,
+    "arm_elev_r": 69.145542,
+    "arm_elevation": 63.434949,
+    "arm_ext_side": 63.434949,
+    "cervical_tilt": 0.0,
+    "head_forward_neck": 0.540758,
+    "head_pitch_side": -21.801409,
+    "head_roll": 0.0,
+    "neck_yaw_est": 0.0,
+    "shoulder_elev": 0.5,
+    "shoulder_line_tilt": 0.0
+   }
+  },
+  {
+   "name": "upper_side_neutral",
+   "landmarks": {
+    "nose": {
+     "x": 360,
+     "y": 95,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 322,
+     "y": 102,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 322,
+     "y": 102,
+     "conf": 0.2
+    },
+    "lsho": {
+     "x": 310,
+     "y": 180,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 310,
+     "y": 180,
+     "conf": 0.3
+    },
+    "lelb": {
+     "x": 312,
+     "y": 290,
+     "conf": 0.9
+    },
+    "relb": {
+     "x": 312,
+     "y": 290,
+     "conf": 0.3
+    },
+    "lwri": {
+     "x": 380,
+     "y": 300,
+     "conf": 0.8
+    }
+   },
+   "expected": {
+    "arm_elev_l": 1.041627,
+    "arm_ext_side": -1.041627,
+    "head_forward_neck": 0.152057,
+    "head_pitch_side": -10.437475
+   }
+  },
+  {
+   "name": "upper_side_retracted",
+   "landmarks": {
+    "nose": {
+     "x": 360,
+     "y": 95,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 322,
+     "y": 102,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 322,
+     "y": 102,
+     "conf": 0.2
+    },
+    "lsho": {
+     "x": 310,
+     "y": 180,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 310,
+     "y": 180,
+     "conf": 0.3
+    },
+    "lelb": {
+     "x": 285,
+     "y": 285,
+     "conf": 0.9
+    },
+    "relb": {
+     "x": 312,
+     "y": 290,
+     "conf": 0.3
+    },
+    "lwri": {
+     "x": 380,
+     "y": 300,
+     "conf": 0.8
+    }
+   },
+   "expected": {
+    "arm_elev_l": 13.392498,
+    "arm_ext_side": 13.392498,
+    "head_forward_neck": 0.152057,
+    "head_pitch_side": -10.437475
+   }
+  },
+  {
+   "name": "upper_side_facing_left_retracted",
+   "landmarks": {
+    "nose": {
+     "x": 280,
+     "y": 95,
+     "conf": 0.9
+    },
+    "lear": {
+     "x": 318,
+     "y": 102,
+     "conf": 0.9
+    },
+    "rear": {
+     "x": 318,
+     "y": 102,
+     "conf": 0.2
+    },
+    "lsho": {
+     "x": 330,
+     "y": 180,
+     "conf": 0.9
+    },
+    "rsho": {
+     "x": 330,
+     "y": 180,
+     "conf": 0.3
+    },
+    "lelb": {
+     "x": 355,
+     "y": 285,
+     "conf": 0.9
+    },
+    "relb": {
+     "x": 328,
+     "y": 290,
+     "conf": 0.3
+    },
+    "lwri": {
+     "x": 260,
+     "y": 300,
+     "conf": 0.8
+    }
+   },
+   "expected": {
+    "arm_elev_l": 13.392498,
+    "arm_ext_side": 13.392498,
+    "head_forward_neck": 0.152057,
+    "head_pitch_side": -10.437475
    }
   },
   {
@@ -747,7 +1329,13 @@
     }
    },
    "expected": {
+    "arm_elev_asym": 0.0,
+    "arm_elev_l": 16.699244,
+    "arm_elev_r": 16.699244,
+    "arm_elevation": 16.699244,
     "cervical_tilt": 0.0,
+    "head_roll": 0.0,
+    "shoulder_elev": 0.568182,
     "shoulder_line_tilt": 0.0,
     "shoulder_width_ratio": 0.628571,
     "trunk_tilt_frontal": 0.0

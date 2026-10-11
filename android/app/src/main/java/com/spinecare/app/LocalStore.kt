@@ -19,6 +19,7 @@ class LocalStore(context: Context) {
     private val approvals = File(dir, "approvals.json")
     private val recordings = File(context.filesDir, "recordings")
     private val cacheDir = context.cacheDir
+    private val prefs = context.getSharedPreferences("spinecare", Context.MODE_PRIVATE)
 
     private fun today() = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
 
@@ -108,6 +109,10 @@ class LocalStore(context: Context) {
         val o = if (approvals.exists()) runCatching { JSONObject(approvals.readText()) }.getOrDefault(JSONObject()) else JSONObject()
         o.put(id, v); approvals.writeText(o.toString())
     }
+
+    /** Plan tab programme filter: all | full | upper_body | neck. */
+    fun programFilter(): String = prefs.getString("program_filter", "all") ?: "all"
+    fun setProgramFilter(p: String) = prefs.edit().putString("program_filter", p).apply()
 
     // ---- export
 

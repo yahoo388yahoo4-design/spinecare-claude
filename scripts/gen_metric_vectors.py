@@ -28,6 +28,29 @@ SIDE_R = {  # profile facing image-right, left side toward the camera
     "lknee": (350, 330, 0.9), "rknee": (350, 330, 0.3),
 }
 
+# Head-and-shoulders close-up (neck programme): nothing below the shoulders.
+NECK_FRONT = {
+    "nose": (320, 150, 0.9), "lear": (270, 165, 0.9), "rear": (370, 165, 0.9),
+    "lsho": (170, 330, 0.9), "rsho": (470, 330, 0.9),
+}
+NECK_SIDE_R = {  # close-up profile facing image-right
+    "nose": (400, 150, 0.9), "lear": (320, 165, 0.9), "rear": (320, 165, 0.2),
+    "lsho": (300, 330, 0.9), "rsho": (300, 330, 0.3),
+}
+# Waist-up framing (upper-body programme): hips out of view.
+UPPER_FRONT = {
+    "nose": (320, 90, 0.9), "lear": (295, 100, 0.9), "rear": (345, 100, 0.9),
+    "lsho": (250, 170, 0.9), "rsho": (390, 170, 0.9),
+    "lelb": (240, 280, 0.9), "relb": (400, 280, 0.9),
+    "lwri": (238, 380, 0.8), "rwri": (402, 380, 0.8),
+}
+UPPER_SIDE_R = {
+    "nose": (360, 95, 0.9), "lear": (322, 102, 0.9), "rear": (322, 102, 0.2),
+    "lsho": (310, 180, 0.9), "rsho": (310, 180, 0.3),
+    "lelb": (312, 290, 0.9), "relb": (312, 290, 0.3),
+    "lwri": (380, 300, 0.8),
+}
+
 
 def mirror(d, width=640):
     return {k: (width - x, y, c) for k, (x, y, c) in d.items()}
@@ -49,6 +72,18 @@ CASES = {
     "side_facing_left": mirror(SIDE_R),
     "side_head_forward": with_(SIDE_R, lear=(335, 110, 0.9), nose=(368, 106, 0.9)),
     "side_leaning_back": with_(SIDE_R, lsho=(285, 166, 0.9), lear=(298, 108, 0.9), nose=(332, 100, 0.9)),
+    "neck_front_neutral": NECK_FRONT,
+    "neck_front_side_bend": with_(NECK_FRONT, lear=(275, 140, 0.9), rear=(360, 190, 0.9), nose=(330, 160, 0.9)),
+    "neck_front_shrug": with_(NECK_FRONT, lsho=(170, 290, 0.9), rsho=(470, 290, 0.9)),
+    "neck_side_neutral": NECK_SIDE_R,
+    "neck_side_chin_tuck": with_(NECK_SIDE_R, lear=(300, 165, 0.9), nose=(380, 152, 0.9)),
+    "neck_side_flexion": with_(NECK_SIDE_R, nose=(385, 215, 0.9)),
+    "neck_side_facing_left": mirror(NECK_SIDE_R),
+    "upper_front_arms_down": UPPER_FRONT,
+    "upper_front_arms_raised": with_(UPPER_FRONT, lelb=(150, 220, 0.9), relb=(495, 210, 0.9)),
+    "upper_side_neutral": UPPER_SIDE_R,
+    "upper_side_retracted": with_(UPPER_SIDE_R, lelb=(285, 285, 0.9)),
+    "upper_side_facing_left_retracted": mirror(with_(UPPER_SIDE_R, lelb=(285, 285, 0.9))),
     "back_retracted": with_(FRONT, nose=(320, 100, 0.1), lsho=(276, 160, 0.9), rsho=(364, 160, 0.9)),
 }
 

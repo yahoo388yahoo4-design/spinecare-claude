@@ -55,6 +55,14 @@ object Metrics {
         return if (score(s) >= VIS) s else null
     }
 
+    /** 'l' or 'r': the side whose ear/shoulder pair is most visible, or null.
+     *  Used by head-and-shoulders and waist-up exercises (hips out of view). */
+    fun bestSideUpper(p: Map<String, P>): String? {
+        fun score(s: String) = minOf(p[s + "ear"]?.c ?: 0.0, p[s + "sho"]?.c ?: 0.0)
+        val s = if (score("l") >= score("r")) "l" else "r"
+        return if (score(s) >= VIS) s else null
+    }
+
     fun compute(p: Map<String, P>): Map<String, Double> {
         val m = HashMap<String, Double>()
         fun g(k: String) = p[k] ?: ZERO
@@ -95,6 +103,30 @@ object Metrics {
                 m["trunk_lean_sagittal"] = Math.toDegrees(atan2((sho.x - hip.x) * -facing, hip.y - sho.y))
             }
             angBetween(nose.x - ear.x, nose.y - ear.y, sho.x - ear.x, sho.y - ear.y)?.let { m["cervical_sag_proxy"] = it }
+        }
+        // Upper-body-only metrics: nothing below the shoulders is needed, so they
+        // work with a head-and-shoulders (neck programme) or waist-up framing.
+        if (v("lear") && v("rear")) {
+            val deg = Math.toDegrees(atan2(rear.y - lear.y, rear.x - lear.x))
+            m["head_roll"] = wrap(deg + 90.0, 180.0) - 90.0
+            if (bothSho && shoW > 1e-6) m["shoulder_elev"] = ((lsho.y - lear.y) + (rsho.y - rear.y)) / 2.0 / shoW
+        }
+        for (s in listOf("l", "r")) if (v(s + "sho") && v(s + "elb")) {
+            angFromVertical(g(s + "sho"), g(s + "elb"))?.let { m["arm_elev_$s"] = it }
+        }
+        val armL = m["arm_elev_l"]; val armR = m["arm_elev_r"]
+        if (armL != null && armR != null) { m["arm_elevation"] = min(armL, armR); m["arm_elev_asym"] = armL - armR }
+        val up = bestSideUpper(p)
+        if (up != null && v("nose")) {
+            val ear = g(up + "ear"); val sho = g(up + "sho")
+            val facing = if (nose.x >= ear.x) 1.0 else -1.0
+            val neck = dist(ear, sho)
+            if (neck > 1e-6) m["head_forward_neck"] = (ear.x - sho.x) * facing / neck
+            m["head_pitch_side"] = Math.toDegrees(atan2(nose.y - ear.y, (nose.x - ear.x) * facing))
+            if (v(up + "elb")) {
+                val elb = g(up + "elb")
+                m["arm_ext_side"] = Math.toDegrees(atan2((sho.x - elb.x) * facing, elb.y - sho.y))
+            }
         }
         return m
     }
