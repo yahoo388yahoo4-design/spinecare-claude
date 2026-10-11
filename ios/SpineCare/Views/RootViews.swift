@@ -151,6 +151,7 @@ struct ExercisesView: View {
                 Text(L.t("stop_if") + " " + ex.stops(lang).joined(separator: ", ")).font(.caption).foregroundStyle(.orange)
             }
         }
+        if ex.cameraTracked { NavigationLink(L.t("gd_open")) { GuideView(exercise: ex) } }
         if let v = ex.videoUrl, !v.isEmpty, let url = URL(string: v) { Link(L.t("open_video"), destination: url) }
         if ex.isCustom {
             Label(L.t("approved"), systemImage: "checkmark.seal").foregroundStyle(.green)

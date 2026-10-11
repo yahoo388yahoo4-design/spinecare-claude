@@ -34,8 +34,16 @@ final class PoseTracker {
 
     func detect(_ pixelBuffer: CVPixelBuffer) -> Result {
         let w = CVPixelBufferGetWidth(pixelBuffer), h = CVPixelBufferGetHeight(pixelBuffer)
+        return run(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: .up, options: [:]), w, h)
+    }
+
+    /// Upright still image, e.g. a video frame from AVAssetImageGenerator (guide video analysis).
+    func detect(_ image: CGImage) -> Result {
+        run(VNImageRequestHandler(cgImage: image, orientation: .up, options: [:]), image.width, image.height)
+    }
+
+    private func run(_ handler: VNImageRequestHandler, _ w: Int, _ h: Int) -> Result {
         let t0 = CFAbsoluteTimeGetCurrent()
-        let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: .up, options: [:])
         try? handler.perform([request])
         var out: [String: Metrics.LM] = [:]
         if let obs = request.results?.first, let points = try? obs.recognizedPoints(.all) {

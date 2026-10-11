@@ -9,6 +9,9 @@ struct FormRule: Codable {
 
 struct RepBand: Codable { let low: Double; let high: Double }
 
+/// Seconds to move into the position, hold it, and return (shared/exercises.json "tempo_s").
+struct Tempo: Codable { var `in`: Double?; var hold: Double?; var out: Double? }
+
 /// One plan entry. Built-in entries come from shared/exercises.json (camera
 /// tracked); custom entries are added by the user after clinician approval and
 /// are tracked manually (timer + set counter).
@@ -32,6 +35,7 @@ struct Exercise: Codable, Identifiable, Hashable {
     var videoUrl: String?
     /// full | upper_body | neck: how much of the body must be in view. Custom entries have none.
     var program: String?
+    var tempoS: Tempo?
 
     var cameraTracked: Bool { (tracking ?? "camera") == "camera" }
     var isCustom: Bool { custom ?? false }
