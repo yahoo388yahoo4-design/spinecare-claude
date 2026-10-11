@@ -159,6 +159,9 @@ def main():
                 continue
             if not license_ok(info["license"], allowed):
                 continue
+            text = (info["title"] + " " + info["description"]).lower()
+            if entry.get("require_any") and not any(w in text for w in entry["require_any"]):
+                continue
             used.add(info["title"])
             vid_id = entry["id"] if entry.get("pick", 1) == 1 else f"{entry['id']}_{entry.get('pick', 1) - n + 1}"
             raw = out / "raw" / (vid_id + Path(urllib.parse.urlparse(pick_source(info)).path).suffix)
@@ -191,6 +194,7 @@ def main():
     (out / "sources.json").write_text(json.dumps({"fps": fps, "width": width, "max_seconds": max_s,
                                                   "videos": chosen}, indent=1))
     (out / "candidates.md").write_text("\n".join(cand_lines) + "\n")
+    print("\n".join(cand_lines))
     print(f"{len(chosen)} clips ready in {out}")
     if not chosen:
         sys.exit("no videos could be fetched")

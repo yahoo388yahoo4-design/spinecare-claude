@@ -11,7 +11,7 @@ import Foundation
 import ImageIO
 import UniformTypeIdentifiers
 
-private struct PlanFileCLI: Codable { let calibrationS: Double?; let exercises: [Exercise] }
+struct PlanFileCLI: Codable { let calibrationS: Double?; let exercises: [Exercise] }
 
 let args = CommandLine.arguments
 guard args.count >= 4 else { print("usage: ios_replay <videos_dir> <exercises.json> <out_dir> [max_frames]"); exit(2) }
