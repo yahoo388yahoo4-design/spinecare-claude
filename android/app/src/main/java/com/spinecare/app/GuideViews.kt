@@ -79,7 +79,7 @@ class GuideDemoView(context: Context) : View(context) {
 }
 
 /** Animated camera-placement diagram for one exercise view. */
-class PlacementDiagramView(context: Context, private val view: String) : View(context) {
+class PlacementDiagramView(context: Context, private val view: String, private val program: String) : View(context) {
     private val start = SystemClock.uptimeMillis()
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -89,7 +89,7 @@ class PlacementDiagramView(context: Context, private val view: String) : View(co
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        GuideRenderer.drawPlacement(canvas, view, SystemClock.uptimeMillis() - start)
+        GuideRenderer.drawPlacement(canvas, view, program, SystemClock.uptimeMillis() - start)
         if (isAttachedToWindow) postInvalidateOnAnimation()
     }
 }

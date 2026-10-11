@@ -173,7 +173,7 @@ object GuideRenderer {
 
     /** Two animated panels: a top-down plan (distance, which way to face) and a
      *  side elevation (phone upright on a table, lens at chest height). Loops every [LOOP_MS]. */
-    fun drawPlacement(c: Canvas, view: String, tMs: Long) {
+    fun drawPlacement(c: Canvas, view: String, program: String, tMs: Long) {
         val w = c.width.toFloat(); val h = c.height.toFloat()
         c.drawColor(Ui.SURFACE)
         val k = ((tMs % LOOP_MS).toFloat() / 1800f).coerceIn(0f, 1f)          // 0 -> 1 settling animation
@@ -216,7 +216,8 @@ object GuideRenderer {
         c.drawLine(ax - 10, personY + 14, ax, personY, stroke); c.drawLine(ax + 10, personY + 14, ax, personY, stroke)
         c.drawLine(ax - 10, phoneY - 14, ax, phoneY, stroke); c.drawLine(ax + 10, phoneY - 14, ax, phoneY, stroke)
         label.color = Ui.PRIMARY
-        c.drawText(t("gd_label_2m"), ax - label.measureText(t("gd_label_2m")) - 8, (personY + phoneY) / 2, label)
+        val dist = t(when (program) { "neck" -> "gd_label_1m"; "upper_body" -> "gd_label_15m"; else -> "gd_label_2m" })
+        c.drawText(dist, ax - label.measureText(dist) - 8, (personY + phoneY) / 2, label)
         label.color = Ui.MUTED
         c.drawText(t("gd_label_you"), pcx - label.measureText(t("gd_label_you")) / 2, personY - unit * 1.2f, label)
         c.drawText(t("gd_label_phone"), pcx - label.measureText(t("gd_label_phone")) / 2, phoneY + unit * 0.9f, label)
@@ -257,7 +258,7 @@ object GuideRenderer {
         c.drawLine(phx + unit * 0.3f, lensY, px - unit * 0.4f, chestY, dashed)
         label.color = if (e >= 1f) Ui.OK else Ui.MUTED
         val l1 = (if (e >= 1f) "✓ " else "") + t("gd_label_upright")
-        val l2 = (if (e >= 1f) "✓ " else "") + t("gd_label_chest")
+        val l2 = (if (e >= 1f) "✓ " else "") + t(if (program == "neck" || view == "front") "gd_label_face" else "gd_label_chest")
         c.drawText(ellipsize(l1, w * 0.44f), w * 0.54f, h * 0.14f, label)
         c.drawText(ellipsize(l2, w * 0.44f), w * 0.54f, h * 0.14f + label.textSize * 1.4f, label)
         // divider

@@ -44,11 +44,19 @@ object PlacementCoach {
         if (p == null || !anyBody) { phoneItems(); return Result(items) }
 
         // Which way the body faces: shoulders look narrow in profile, wide from the front or back.
+        // Measured against the torso, or against the ear-to-shoulder distance when the hips are out of view.
         val shoMid = mid(p["lsho"], p["rsho"])
         val hipMid = mid(p["lhip"], p["rhip"])
         val torso = if (shoMid != null && hipMid != null && (vis("lhip") || vis("rhip"))) hypot(shoMid.first - hipMid.first, shoMid.second - hipMid.second) else null
+        val upSide = Metrics.bestSideUpper(p)
+        val neck = upSide?.let { s -> val e = p.getValue(s + "ear"); val q = p.getValue(s + "sho"); hypot(e.x - q.x, e.y - q.y) }
         val shoW = if (p["lsho"] != null && p["rsho"] != null) abs(p.getValue("lsho").x - p.getValue("rsho").x) else null
-        val ratio = if (torso != null && torso > 1e-6 && shoW != null) shoW / torso else null
+        val ratio = when {
+            shoW == null -> null
+            torso != null && torso > 1e-6 -> shoW / torso
+            neck != null && neck > 1e-6 -> shoW / neck * 0.45      // ear-shoulder ≈ 0.45 torso
+            else -> null
+        }
         val faceSeen = (p["nose"]?.c ?: 0.0) >= 0.5
         val view = when {
             ratio == null -> null
@@ -58,17 +66,20 @@ object PlacementCoach {
         }
         val viewFix = when (ex.view) {
             "side" -> if (view != null && view != "side") "pc_fix_turn_side" else null
-            "front" -> if (view == "side") "pc_fix_face" else if (view == "back") "pc_fix_face" else null
+            "front" -> if (view == "side" || view == "back") "pc_fix_face" else null
             "back" -> if (view == "side" || view == "front") "pc_fix_turn_back" else null
             else -> null
         }
         items.add(Item("view", viewFix == null, viewFix ?: ""))
 
-        // Distance: torso length relative to the frame height (about 1/4 when seated ~2 m away).
+        // Distance: body size in the picture. Full programme: torso about 1/4 of the frame height
+        // (seated ~2 m away). Waist-up and head-and-shoulders programmes sit closer, judged by the
+        // ear-to-shoulder distance.
         val headTopY = listOfNotNull(p["nose"], p["lear"], p["rear"]).filter { it.c >= minConf }.minOfOrNull { it.y }
-        val tooClose = (torso != null && torso / h > 0.45) ||
-            (torso == null && shoW != null && shoW / w > 0.6)
-        val tooFar = torso != null && torso / h < 0.12
+        val (lo, hi) = when (ex.program) { "neck" -> Pair(0.14, 0.40); "upper_body" -> Pair(0.09, 0.30); else -> Pair(0.12, 0.45) }
+        val size = if (ex.program == "neck" || ex.program == "upper_body") neck?.let { it / h } else torso?.let { it / h }
+        val tooClose = (size != null && size > hi) || (size == null && shoW != null && shoW / w > 0.75)
+        val tooFar = size != null && size < lo
         items.add(Item("distance", !tooClose && !tooFar, if (tooClose) "pc_fix_step_back" else if (tooFar) "pc_fix_come_closer" else ""))
 
         // Centre: the body midline in the middle 40 % of the picture.

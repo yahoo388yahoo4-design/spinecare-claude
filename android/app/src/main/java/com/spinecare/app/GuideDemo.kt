@@ -26,11 +26,12 @@ class GuideDemo(val exercise: Exercise, val calibrationMs: Long = 1500, val mist
     )
 
     /** Body movements the demo can perform; [amount] is pixels or degrees. */
-    enum class Move { HEAD_SHIFT, HEAD_NOD, HEAD_YAW, HEAD_TILT, SHOULDER_HIKE, TRUNK_ROTATE, SHOULDER_SQUEEZE }
+    enum class Move { HEAD_SHIFT, HEAD_NOD, HEAD_YAW, HEAD_TILT, SHOULDER_HIKE, SHRUG, TRUNK_ROTATE, SHOULDER_SQUEEZE, ARMS_OUT, ARM_SWING }
 
     data class Motion(val move: Move, val amounts: List<Double>)   // one amount per rep (alternates for abs signals)
 
-    val base: Map<String, Metrics.P> = basePose(exercise.view)
+    val base: Map<String, Metrics.P> = basePose(exercise.view, exercise.program)
+    private val zoom = zoomFor(exercise.program)
     val reps = exercise.targetReps.coerceIn(1, DEMO_REPS)
     val inMs = (exercise.tempoIn * 1000).toLong().coerceAtLeast(500)
     val holdMs = (exercise.tempoHold * 1000).toLong().coerceAtLeast(600)   // RepEngine needs >= 400 ms above the band
@@ -115,7 +116,7 @@ class GuideDemo(val exercise: Exercise, val calibrationMs: Long = 1500, val mist
     private fun solve(move: Move, target: Double, f: (Map<String, Metrics.P>) -> Double?): Double? {
         val sign = if (target < 0) -1.0 else 1.0
         val goal = abs(target)
-        val max = LIMIT.getValue(move)
+        val max = LIMIT.getValue(move) * if (move in DEGREES) 1.0 else zoom
         val steps = 60
         var prev = 0.0
         for (k in 1..steps) {
@@ -149,12 +150,24 @@ class GuideDemo(val exercise: Exercise, val calibrationMs: Long = 1500, val mist
             "trunk_lean_sagittal" to Move.TRUNK_ROTATE,
             "trunk_tilt_frontal" to Move.TRUNK_ROTATE,
             "shoulder_width_ratio" to Move.SHOULDER_SQUEEZE,
+            "head_forward_neck" to Move.HEAD_SHIFT,
+            "head_pitch_side" to Move.HEAD_NOD,
+            "head_roll" to Move.HEAD_TILT,
+            "shoulder_elev" to Move.SHRUG,
+            "arm_elevation" to Move.ARMS_OUT,
+            "arm_elev_asym" to Move.ARM_SWING,
+            "arm_ext_side" to Move.ARM_SWING,
         )
 
         private val LIMIT = mapOf(
             Move.HEAD_SHIFT to 80.0, Move.HEAD_NOD to 45.0, Move.HEAD_YAW to 60.0, Move.HEAD_TILT to 40.0,
-            Move.SHOULDER_HIKE to 60.0, Move.TRUNK_ROTATE to 35.0, Move.SHOULDER_SQUEEZE to 60.0,
+            Move.SHOULDER_HIKE to 60.0, Move.SHRUG to 60.0, Move.TRUNK_ROTATE to 35.0, Move.SHOULDER_SQUEEZE to 60.0,
+            Move.ARMS_OUT to 110.0, Move.ARM_SWING to 60.0,
         )
+
+        private val DEGREES = setOf(Move.HEAD_NOD, Move.HEAD_TILT, Move.TRUNK_ROTATE, Move.ARMS_OUT, Move.ARM_SWING)
+
+        fun zoomFor(program: String) = when (program) { "neck" -> 2.2; "upper_body" -> 1.25; else -> 1.0 }
 
         private val HEAD = setOf("nose", "lear", "rear")
         private val UPPER = setOf("nose", "lear", "rear", "lsho", "rsho", "lelb", "relb", "lwri", "rwri")
@@ -162,9 +175,23 @@ class GuideDemo(val exercise: Exercise, val calibrationMs: Long = 1500, val mist
         private fun p(x: Double, y: Double, c: Double = 0.95) = Metrics.P(x, y, c)
 
         /** Seated figure in a [W]x[H] portrait frame, seen from the side (facing right),
-         *  the front, or the back. Far-side points have low visibility, as a real
-         *  pose model reports for occluded joints. */
-        fun basePose(view: String): Map<String, Metrics.P> = when (view) {
+         *  the front, or the back, framed for the exercise's programme: whole seated
+         *  body (full), waist up (upper_body) or head and shoulders (neck). Far-side
+         *  and out-of-frame points have low visibility, as a real pose model reports. */
+        fun basePose(view: String, program: String = "full"): Map<String, Metrics.P> {
+            val zoom = zoomFor(program)
+            val body = seated(view)
+            if (zoom == 1.0) return body
+            val out = LinkedHashMap<String, Metrics.P>()
+            for ((k, v) in body) {
+                val x = W / 2.0 + (v.x - W / 2.0) * zoom; val y = 330.0 + (v.y - 330.0) * zoom
+                val inside = x > 0 && x < W && y > 0 && y < H
+                out[k] = Metrics.P(x, y, if (inside) v.c else 0.0)
+            }
+            return out
+        }
+
+        private fun seated(view: String): Map<String, Metrics.P> = when (view) {
             "side" -> linkedMapOf(
                 "nose" to p(405.0, 312.0),
                 "lear" to p(352.0, 300.0), "rear" to p(346.0, 298.0, 0.2),
@@ -209,7 +236,7 @@ class GuideDemo(val exercise: Exercise, val calibrationMs: Long = 1500, val mist
             val nose = p["nose"]; val lear = p["lear"]
             // side view: facing direction from nose vs ear
             val facing = if (nose != null && lear != null && nose.x < lear.x) -1.0 else 1.0
-            val (smx, smy) = mid(p["lsho"], p["rsho"])
+            val (smx, _) = mid(p["lsho"], p["rsho"])
             val (hmx, hmy) = mid(p["lhip"], p["rhip"])
             when (move) {
                 Move.HEAD_SHIFT -> for (k in HEAD) p[k]?.let { out[k] = it.copy(x = it.x + u * facing) }
@@ -221,11 +248,28 @@ class GuideDemo(val exercise: Exercise, val calibrationMs: Long = 1500, val mist
                     p["nose"]?.let { out["nose"] = it.copy(x = it.x + u) }
                     for (k in listOf("lear", "rear")) p[k]?.let { out[k] = it.copy(x = it.x + u * 0.35) }
                 }
-                Move.HEAD_TILT -> for (k in HEAD) p[k]?.let { out[k] = rotate(it, smx, smy - 30, u) }
+                Move.HEAD_TILT -> {      // side bend about the middle of the head, so the face stays forward
+                    val (ex, ey) = mid(p["lear"], p["rear"])
+                    for (k in HEAD) p[k]?.let { out[k] = rotate(it, ex, ey, u) }
+                }
                 Move.SHOULDER_HIKE -> {
                     p["rsho"]?.let { out["rsho"] = it.copy(y = it.y - u) }
                     p["relb"]?.let { out["relb"] = it.copy(y = it.y - u * 0.7) }
                     p["rwri"]?.let { out["rwri"] = it.copy(y = it.y - u * 0.3) }
+                }
+                Move.SHRUG -> for (s in listOf("l", "r")) {
+                    p[s + "sho"]?.let { out[s + "sho"] = it.copy(y = it.y - u) }
+                    p[s + "elb"]?.let { out[s + "elb"] = it.copy(y = it.y - u * 0.8) }
+                    p[s + "wri"]?.let { out[s + "wri"] = it.copy(y = it.y - u * 0.6) }
+                }
+                Move.ARMS_OUT -> for (s in listOf("l", "r")) {      // both arms raised out to the side
+                    val sho = p[s + "sho"] ?: continue
+                    val outward = if (sho.x > smx) -1.0 else 1.0
+                    for (k in listOf(s + "elb", s + "wri")) p[k]?.let { out[k] = rotate(it, sho.x, sho.y, u * outward) }
+                }
+                Move.ARM_SWING -> for (s in listOf("l", "r")) {     // both arms swing the same way (back in profile)
+                    val sho = p[s + "sho"] ?: continue
+                    for (k in listOf(s + "elb", s + "wri")) p[k]?.let { out[k] = rotate(it, sho.x, sho.y, u) }
                 }
                 Move.TRUNK_ROTATE -> for (k in UPPER) p[k]?.let { out[k] = rotate(it, hmx, hmy, u) }
                 Move.SHOULDER_SQUEEZE -> for (k in listOf("lsho", "rsho", "lelb", "relb")) p[k]?.let {

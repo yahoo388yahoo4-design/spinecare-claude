@@ -49,8 +49,8 @@ class GuideActivity : AppCompatActivity() {
 
         // 1. camera placement
         ui.h(t("gd_step1"))
-        ui.add(PlacementDiagramView(this, ex.view))
-        val guide = FramingGuide.forView(ex.view)
+        ui.add(PlacementDiagramView(this, ex.view, ex.program))
+        val guide = FramingGuide.forView(ex.view, ex.program)
         ui.p(guide.headline, Ui.TEXT, 15f)
         for (s in guide.steps) ui.p("• $s", Ui.MUTED, 13f)
 

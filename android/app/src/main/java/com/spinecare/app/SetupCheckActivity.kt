@@ -85,7 +85,7 @@ class SetupCheckActivity : AppCompatActivity(), SensorEventListener {
             orientation = LinearLayout.VERTICAL; setBackgroundColor(0xE00B1220.toInt()); setPadding(24, 16, 24, 16)
         }
         panel.addView(TextView(this).apply {
-            text = "${ex.name(I18n.lang)}\n${FramingGuide.forView(ex.view).headline}"; setTextColor(Ui.TEXT); textSize = 14f
+            text = "${ex.name(I18n.lang)}\n${FramingGuide.forView(ex.view, ex.program).headline}"; setTextColor(Ui.TEXT); textSize = 14f
         })
         panel.addView(TextView(this).apply { text = t("sc_body"); setTextColor(Ui.MUTED); textSize = 12f })
         list = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }

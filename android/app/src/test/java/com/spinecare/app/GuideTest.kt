@@ -76,18 +76,22 @@ class GuideTest {
 
     @Test fun placementAcceptsTheDemoPose() {
         for (ex in camera) {
-            val r = PlacementCoach.assess(GuideDemo.basePose(ex.view), w(), h(), ex, pitch = 2.0, roll = -1.0)
+            val r = PlacementCoach.assess(GuideDemo.basePose(ex.view, ex.program), w(), h(), ex, pitch = 2.0, roll = -1.0)
             assertTrue("${ex.id}: ${r.items.filter { !it.ok }}", r.ready)
         }
     }
 
     @Test fun placementAsksToTurnForTheWrongView() {
-        val side = camera.first { it.view == "side" }
-        val front = camera.first { it.view == "front" }
-        assertEquals("pc_fix_turn_side", PlacementCoach.assess(GuideDemo.basePose("front"), w(), h(), side).firstFix?.fixKey)
-        assertEquals("pc_fix_face", PlacementCoach.assess(GuideDemo.basePose("side"), w(), h(), front).firstFix?.fixKey)
-        camera.firstOrNull { it.view == "back" }?.let { back ->
-            assertEquals("pc_fix_turn_back", PlacementCoach.assess(GuideDemo.basePose("front"), w(), h(), back).firstFix?.fixKey)
+        for (prog in listOf("full", "upper_body", "neck")) {
+            camera.firstOrNull { it.view == "side" && it.program == prog }?.let { side ->
+                assertEquals(prog, "pc_fix_turn_side", PlacementCoach.assess(GuideDemo.basePose("front", prog), w(), h(), side).firstFix?.fixKey)
+            }
+            camera.firstOrNull { it.view == "front" && it.program == prog }?.let { front ->
+                assertEquals(prog, "pc_fix_face", PlacementCoach.assess(GuideDemo.basePose("side", prog), w(), h(), front).firstFix?.fixKey)
+            }
+            camera.firstOrNull { it.view == "back" && it.program == prog }?.let { back ->
+                assertEquals(prog, "pc_fix_turn_back", PlacementCoach.assess(GuideDemo.basePose("front", prog), w(), h(), back).firstFix?.fixKey)
+            }
         }
     }
 
@@ -96,7 +100,7 @@ class GuideTest {
     }
 
     @Test fun placementDistanceHeightAndTilt() {
-        val ex = camera.first { it.view == "side" }
+        val ex = camera.first { it.view == "side" && it.program == "full" }
         val base = GuideDemo.basePose("side")
         fun fix(p: Map<String, Metrics.P>, pitch: Double? = null, roll: Double? = null) =
             PlacementCoach.assess(p, w(), h(), ex, pitch = pitch, roll = roll).items.filter { !it.ok }.map { it.fixKey }
