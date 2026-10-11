@@ -40,6 +40,9 @@
 
         <activity android:name=".ExerciseActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".ManualSessionActivity" android:exported="false"/>
+        <activity android:name=".GuideActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity android:name=".SetupCheckActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity android:name=".VideoAnalysisActivity" android:exported="false"/>
         <activity android:name=".SessionReplayActivity" android:exported="false" android:screenOrientation="portrait"/>
 
         <!-- Privacy policy; Health Connect opens it to explain the permission request -->
