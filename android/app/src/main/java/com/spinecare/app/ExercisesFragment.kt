@@ -57,6 +57,9 @@ class ExercisesFragment : Fragment() {
             ui.muted(meta, card)
             ui.p(ex.description(lang), Ui.MUTED, 13f, card)
             if (ex.stops(lang).isNotEmpty()) ui.p(t("stop_if") + " " + ex.stops(lang).joinToString(), Ui.WARN, 12f, card)
+            if (ex.cameraTracked) ui.button(t("gd_open"), card) {
+                startActivity(Intent(ctx, GuideActivity::class.java).putExtra("exercise_id", ex.id))
+            }
             if (ex.videoUrl.isNotBlank()) ui.button(t("open_video"), card) {
                 runCatching { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(ex.videoUrl))) }
                     .onFailure { Toast.makeText(ctx, t("cannot_open"), Toast.LENGTH_SHORT).show() }

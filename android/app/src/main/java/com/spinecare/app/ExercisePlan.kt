@@ -29,6 +29,9 @@ data class Exercise(
     val custom: Boolean = false,
     val videoUrl: String = "",
     val program: String = "full",    // full | upper_body | neck (what must be in view) | custom
+    val tempoIn: Double = 1.5,        // seconds: move into the position
+    val tempoHold: Double = 1.0,      // seconds: hold it
+    val tempoOut: Double = 1.5,       // seconds: return to neutral
 ) {
     fun name(lang: String) = name[lang] ?: name["en"] ?: id
     fun description(lang: String) = description[lang] ?: description["en"] ?: ""
@@ -44,6 +47,7 @@ data class Exercise(
         fun parse(o: JSONObject): Exercise {
             val band = o.optJSONObject("rep_band")
             val stops = o.opt("stop_conditions")
+            val tempo = o.optJSONObject("tempo_s")
             return Exercise(
                 id = o.getString("id"),
                 name = strMap(o.opt("name")),
@@ -73,6 +77,9 @@ data class Exercise(
                 custom = o.optBoolean("custom", false),
                 videoUrl = o.optString("video_url", ""),
                 program = o.optString("program", if (o.optBoolean("custom", false)) "custom" else "full"),
+                tempoIn = tempo?.optDouble("in", 1.5) ?: 1.5,
+                tempoHold = tempo?.optDouble("hold", 1.0) ?: 1.0,
+                tempoOut = tempo?.optDouble("out", 1.5) ?: 1.5,
             )
         }
 
