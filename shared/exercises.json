@@ -1,0 +1,245 @@
+{
+  "version": 2,
+  "patient_context": "C2-C7 disc protrusions, right C5/C7 radiculopathy, mild cervico-dorsal scoliosis, C6 lesion under imaging follow-up. ALL plans require clinician sign-off.",
+  "notes": "Single source of truth for the built-in plan. Bundled into the Android app (assets), the iOS app (resources) and read by the server. Signals are relative to a per-session neutral baseline captured during calibration. Thresholds are prototype values and need clinical validation. Form rules with relative=true compare against the calibrated baseline, so a person's resting asymmetry (e.g. scoliosis) does not trigger cues.",
+  "calibration_s": 1.5,
+  "exercises": [
+    {
+      "id": "chin_tuck",
+      "name": {
+        "en": "Chin tuck (deep neck flexor)",
+        "ro": "Retracția bărbiei (flexori cervicali profunzi)"
+      },
+      "description": {
+        "en": "Gently draw the chin straight back (double chin), keeping the eyes level. Hold 3 s. Move only the head.",
+        "ro": "Trage ușor bărbia drept înapoi (bărbie dublă), cu privirea la orizontală. Menține 3 s. Mișcă doar capul."
+      },
+      "view": "side",
+      "tracking": "camera",
+      "required_landmarks": [
+        "nose",
+        "any_ear",
+        "any_sho",
+        "any_hip"
+      ],
+      "min_conf": 0.5,
+      "signal": "head_forward_proxy",
+      "direction": -1,
+      "rep_band": {
+        "low": 0.015,
+        "high": 0.05
+      },
+      "target_reps": 10,
+      "target_sets": 1,
+      "tempo_s": {
+        "in": 2,
+        "hold": 3,
+        "out": 2
+      },
+      "form_rules": [
+        {
+          "metric": "trunk_lean_sagittal",
+          "max_abs": 10,
+          "cue": {
+            "en": "Keep the trunk upright; only the head moves.",
+            "ro": "Menține trunchiul drept; doar capul se mișcă."
+          },
+          "relative": true
+        }
+      ],
+      "stop_conditions": {
+        "en": [
+          "arm pain increases",
+          "tingling worsens",
+          "dizziness"
+        ],
+        "ro": [
+          "durerea în braț crește",
+          "furnicăturile se agravează",
+          "amețeală"
+        ]
+      },
+      "clinician_approved": false
+    },
+    {
+      "id": "cervical_rotation_rom",
+      "name": {
+        "en": "Cervical rotation ROM (pain-free range)",
+        "ro": "Rotație cervicală (amplitudine fără durere)"
+      },
+      "description": {
+        "en": "Slowly turn the head toward each side within the pain-free range. Never push into symptoms.",
+        "ro": "Rotește încet capul spre fiecare parte, doar în amplitudinea fără durere. Nu forța spre simptome."
+      },
+      "view": "front",
+      "tracking": "camera",
+      "required_landmarks": [
+        "nose",
+        "lsho",
+        "rsho"
+      ],
+      "min_conf": 0.5,
+      "signal": "abs:neck_yaw_est",
+      "direction": 1,
+      "rep_band": {
+        "low": 8,
+        "high": 35
+      },
+      "target_reps": 8,
+      "target_sets": 1,
+      "tempo_s": {
+        "in": 3,
+        "hold": 2,
+        "out": 3
+      },
+      "form_rules": [
+        {
+          "metric": "shoulder_line_tilt",
+          "max_abs": 8,
+          "cue": {
+            "en": "Do not lift the shoulder when turning; rotate through the neck only.",
+            "ro": "Nu ridica umărul când rotești; mișcarea vine doar din gât."
+          },
+          "relative": true
+        },
+        {
+          "metric": "trunk_tilt_frontal",
+          "max_abs": 8,
+          "cue": {
+            "en": "Keep the chest facing forward; isolate neck rotation.",
+            "ro": "Ține pieptul orientat înainte; izolează rotația gâtului."
+          },
+          "relative": true
+        }
+      ],
+      "stop_conditions": {
+        "en": [
+          "radiating arm pain",
+          "numbness increases"
+        ],
+        "ro": [
+          "durere care iradiază în braț",
+          "amorțeala crește"
+        ]
+      },
+      "clinician_approved": false
+    },
+    {
+      "id": "thoracic_extension",
+      "name": {
+        "en": "Thoracic extension (seated)",
+        "ro": "Extensie toracică (șezând)"
+      },
+      "description": {
+        "en": "Sit tall, hands behind the head, and extend the upper back over the chair back. Keep the neck long.",
+        "ro": "Stai drept, cu mâinile la ceafă, și extinde partea superioară a spatelui peste spătarul scaunului. Menține gâtul lung."
+      },
+      "view": "side",
+      "tracking": "camera",
+      "required_landmarks": [
+        "nose",
+        "any_ear",
+        "any_sho",
+        "any_hip"
+      ],
+      "min_conf": 0.5,
+      "signal": "trunk_lean_sagittal",
+      "direction": 1,
+      "rep_band": {
+        "low": 4,
+        "high": 12
+      },
+      "target_reps": 10,
+      "target_sets": 1,
+      "tempo_s": {
+        "in": 3,
+        "hold": 3,
+        "out": 3
+      },
+      "form_rules": [
+        {
+          "metric": "cervical_sag_proxy",
+          "max_abs": 25,
+          "cue": {
+            "en": "Lead with the chest, not the head; keep the neck long.",
+            "ro": "Mișcarea pornește din piept, nu din cap; menține gâtul lung."
+          },
+          "relative": true
+        }
+      ],
+      "stop_conditions": {
+        "en": [
+          "sharp neck pain",
+          "arm symptoms"
+        ],
+        "ro": [
+          "durere ascuțită în gât",
+          "simptome în braț"
+        ]
+      },
+      "clinician_approved": false
+    },
+    {
+      "id": "scapular_retraction",
+      "name": {
+        "en": "Scapular setting (retraction)",
+        "ro": "Stabilizare scapulară (retracție)"
+      },
+      "description": {
+        "en": "Gently draw the shoulder blades down and back without shrugging. Hold 5 s.",
+        "ro": "Trage ușor omoplații în jos și înapoi, fără a ridica umerii. Menține 5 s."
+      },
+      "view": "back",
+      "tracking": "camera",
+      "required_landmarks": [
+        "lsho",
+        "rsho",
+        "lhip",
+        "rhip"
+      ],
+      "min_conf": 0.5,
+      "signal": "shoulder_width_ratio",
+      "direction": -1,
+      "rep_band": {
+        "low": 0.012,
+        "high": 0.035
+      },
+      "target_reps": 10,
+      "target_sets": 1,
+      "tempo_s": {
+        "in": 3,
+        "hold": 5,
+        "out": 3
+      },
+      "form_rules": [
+        {
+          "metric": "trunk_tilt_frontal",
+          "max_abs": 8,
+          "cue": {
+            "en": "Stay tall; do not lean.",
+            "ro": "Stai drept; nu te apleca."
+          },
+          "relative": true
+        },
+        {
+          "metric": "shoulder_line_tilt",
+          "max_abs": 6,
+          "cue": {
+            "en": "Keep both shoulders level; do not shrug.",
+            "ro": "Ține umerii la același nivel; nu îi ridica."
+          },
+          "relative": true
+        }
+      ],
+      "stop_conditions": {
+        "en": [
+          "pain between the shoulder blades worsens"
+        ],
+        "ro": [
+          "durerea dintre omoplați se agravează"
+        ]
+      },
+      "clinician_approved": false
+    }
+  ]
+}

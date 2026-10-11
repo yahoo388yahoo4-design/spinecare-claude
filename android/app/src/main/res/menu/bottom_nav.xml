@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- BottomNavigationView supports at most five items (a sixth crashes on launch). -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/tab_home" android:title="Home" android:icon="@android:drawable/ic_menu_today"/>
+    <item android:id="@+id/tab_exercises" android:title="Plan" android:icon="@android:drawable/ic_menu_myplaces"/>
+    <item android:id="@+id/tab_sessions" android:title="Progress" android:icon="@android:drawable/ic_menu_gallery"/>
+    <item android:id="@+id/tab_sensors" android:title="Sensors" android:icon="@android:drawable/ic_menu_manage"/>
+    <item android:id="@+id/tab_settings" android:title="Settings" android:icon="@android:drawable/ic_menu_preferences"/>
+</menu>

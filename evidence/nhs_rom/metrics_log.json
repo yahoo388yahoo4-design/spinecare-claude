@@ -1,0 +1,9323 @@
+{
+ "exercise": "cervical_rotation_rom",
+ "session": "1457c755",
+ "frames": 457,
+ "latency_p50_ms": 9,
+ "latency_mean_ms": 8.706783369803064,
+ "final_reps": 5,
+ "avg_metrics": {
+  "trunk_tilt_frontal": 5.11,
+  "head_forward_proxy": 0.0,
+  "cervical_tilt": 2.1,
+  "neck_yaw_est": -6.1,
+  "shoulder_line_tilt": 1.23,
+  "cervical_sag_proxy": 15.52
+ },
+ "log": [
+  {
+   "frame": 0,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 13
+  },
+  {
+   "frame": 1,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 2,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 3,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 4,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 5,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 7
+  },
+  {
+   "frame": 6,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 7,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 8,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 9,
+   "metrics": {
+    "trunk_tilt_frontal": 0.6,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 1.24,
+    "neck_yaw_est": 2.61,
+    "shoulder_line_tilt": 1.05,
+    "cervical_sag_proxy": 0.88
+   },
+   "signal": 2.6108217582951583,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 10,
+   "metrics": {
+    "trunk_tilt_frontal": 1.41,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 1.39,
+    "neck_yaw_est": 2.5,
+    "shoulder_line_tilt": 0.54,
+    "cervical_sag_proxy": 0.51
+   },
+   "signal": 2.5007856240655926,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 11,
+   "metrics": {
+    "trunk_tilt_frontal": 1.22,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 1.14,
+    "neck_yaw_est": 1.97,
+    "shoulder_line_tilt": 0.54,
+    "cervical_sag_proxy": 0.53
+   },
+   "signal": 1.9656602619637078,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 12,
+   "metrics": {
+    "trunk_tilt_frontal": 1.42,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 1.19,
+    "neck_yaw_est": 3.47,
+    "shoulder_line_tilt": 0.46,
+    "cervical_sag_proxy": 3.44
+   },
+   "signal": 3.4692584341919166,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 13,
+   "metrics": {
+    "trunk_tilt_frontal": 1.39,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 1.45,
+    "neck_yaw_est": 3.33,
+    "shoulder_line_tilt": 0.61,
+    "cervical_sag_proxy": 1.64
+   },
+   "signal": 3.332104420139433,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 14,
+   "metrics": {
+    "trunk_tilt_frontal": 1.25,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 1.45,
+    "neck_yaw_est": 3.76,
+    "shoulder_line_tilt": 0.53,
+    "cervical_sag_proxy": 2.88
+   },
+   "signal": 3.7577759288724715,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 15,
+   "metrics": {
+    "trunk_tilt_frontal": 1.46,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 1.38,
+    "neck_yaw_est": 3.34,
+    "shoulder_line_tilt": 0.48,
+    "cervical_sag_proxy": 2.09
+   },
+   "signal": 3.3397654411516506,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 16,
+   "metrics": {
+    "trunk_tilt_frontal": 1.48,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 1.41,
+    "neck_yaw_est": 3.2,
+    "shoulder_line_tilt": 0.56,
+    "cervical_sag_proxy": 1.48
+   },
+   "signal": 3.200304435294811,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 17,
+   "metrics": {
+    "trunk_tilt_frontal": 1.48,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 1.43,
+    "neck_yaw_est": 3.32,
+    "shoulder_line_tilt": 0.53,
+    "cervical_sag_proxy": 1.73
+   },
+   "signal": 3.321675052558625,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 18,
+   "metrics": {
+    "trunk_tilt_frontal": 1.5,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 1.42,
+    "neck_yaw_est": 3.33,
+    "shoulder_line_tilt": 0.5,
+    "cervical_sag_proxy": 1.82
+   },
+   "signal": 3.3305742264355365,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 19,
+   "metrics": {
+    "trunk_tilt_frontal": 1.24,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 1.49,
+    "neck_yaw_est": 3.56,
+    "shoulder_line_tilt": 0.53,
+    "cervical_sag_proxy": 2.08
+   },
+   "signal": 3.5591773125677073,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 20,
+   "metrics": {
+    "trunk_tilt_frontal": 1.21,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 1.4,
+    "neck_yaw_est": 3.02,
+    "shoulder_line_tilt": 0.34,
+    "cervical_sag_proxy": 0.96
+   },
+   "signal": 3.0214482725116585,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 21,
+   "metrics": {
+    "trunk_tilt_frontal": 0.74,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 0.98,
+    "neck_yaw_est": 2.79,
+    "shoulder_line_tilt": -0.23,
+    "cervical_sag_proxy": 2.61
+   },
+   "signal": 2.7885677785785354,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 22,
+   "metrics": {
+    "trunk_tilt_frontal": 1.26,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 0.99,
+    "neck_yaw_est": 2.69,
+    "shoulder_line_tilt": -0.13,
+    "cervical_sag_proxy": 2.25
+   },
+   "signal": 2.6936168396046742,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 23,
+   "metrics": {
+    "trunk_tilt_frontal": 0.9,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 0.95,
+    "neck_yaw_est": 3.46,
+    "shoulder_line_tilt": -0.38,
+    "cervical_sag_proxy": 5.45
+   },
+   "signal": 3.456443986181398,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 24,
+   "metrics": {
+    "cervical_tilt": 0.68,
+    "neck_yaw_est": 2.92,
+    "shoulder_line_tilt": -0.13,
+    "cervical_sag_proxy": 5.9
+   },
+   "signal": 2.9211419012244515,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 25,
+   "metrics": {
+    "trunk_tilt_frontal": 1.15,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 0.74,
+    "neck_yaw_est": 2.74,
+    "shoulder_line_tilt": -0.11,
+    "cervical_sag_proxy": 4.47
+   },
+   "signal": 2.7434787737560846,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 26,
+   "metrics": {
+    "trunk_tilt_frontal": 1.26,
+    "head_forward_proxy": 0.0,
+    "cervical_tilt": 0.46,
+    "neck_yaw_est": 2.08,
+    "shoulder_line_tilt": -0.16,
+    "cervical_sag_proxy": 4.17
+   },
+   "signal": 2.0781495059517536,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 27,
+   "metrics": {
+    "trunk_tilt_frontal": 0.85,
+    "head_forward_proxy": 0.0,
+    "cervical_tilt": 0.39,
+    "neck_yaw_est": 2.37,
+    "shoulder_line_tilt": -0.12,
+    "cervical_sag_proxy": 5.65
+   },
+   "signal": 2.370990948663485,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 28,
+   "metrics": {
+    "trunk_tilt_frontal": 0.72,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 0.61,
+    "neck_yaw_est": 2.13,
+    "shoulder_line_tilt": 0.07,
+    "cervical_sag_proxy": 3.18
+   },
+   "signal": 2.1304229391097116,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 29,
+   "metrics": {
+    "trunk_tilt_frontal": 1.0,
+    "head_forward_proxy": 0.0,
+    "cervical_tilt": 0.4,
+    "neck_yaw_est": 1.42,
+    "shoulder_line_tilt": -0.19,
+    "cervical_sag_proxy": 2.03
+   },
+   "signal": 1.4185877548525447,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 30,
+   "metrics": {
+    "trunk_tilt_frontal": 0.19,
+    "head_forward_proxy": -0.0,
+    "cervical_tilt": 0.03,
+    "neck_yaw_est": 1.14,
+    "shoulder_line_tilt": -0.42,
+    "cervical_sag_proxy": 3.84
+   },
+   "signal": 1.1434763938605708,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 31,
+   "metrics": {
+    "trunk_tilt_frontal": 0.0,
+    "head_forward_proxy": -0.01,
+    "cervical_tilt": 0.69,
+    "neck_yaw_est": 0.76,
+    "shoulder_line_tilt": -0.58,
+    "cervical_sag_proxy": 7.81
+   },
+   "signal": 0.7598552400102074,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 32,
+   "metrics": {
+    "trunk_tilt_frontal": 0.53,
+    "head_forward_proxy": -0.01,
+    "cervical_tilt": 1.11,
+    "neck_yaw_est": -1.3,
+    "shoulder_line_tilt": -0.42,
+    "cervical_sag_proxy": 3.61
+   },
+   "signal": 1.3028726271588738,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 33,
+   "metrics": {
+    "trunk_tilt_frontal": 0.81,
+    "head_forward_proxy": -0.01,
+    "cervical_tilt": 0.84,
+    "neck_yaw_est": -1.6,
+    "shoulder_line_tilt": -0.27,
+    "cervical_sag_proxy": 0.72
+   },
+   "signal": 1.6041487375475398,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 34,
+   "metrics": {
+    "trunk_tilt_frontal": 0.66,
+    "head_forward_proxy": -0.0,
+    "cervical_tilt": 0.48,
+    "neck_yaw_est": -1.48,
+    "shoulder_line_tilt": 0.02,
+    "cervical_sag_proxy": 2.83
+   },
+   "signal": 1.4787726072006215,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 35,
+   "metrics": {
+    "trunk_tilt_frontal": 0.52,
+    "head_forward_proxy": -0.0,
+    "cervical_tilt": 0.55,
+    "neck_yaw_est": -2.63,
+    "shoulder_line_tilt": -0.06,
+    "cervical_sag_proxy": 9.81
+   },
+   "signal": 2.62822312408106,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 36,
+   "metrics": {
+    "trunk_tilt_frontal": 0.7,
+    "head_forward_proxy": -0.0,
+    "cervical_tilt": 0.49,
+    "neck_yaw_est": -3.71,
+    "shoulder_line_tilt": -0.56,
+    "cervical_sag_proxy": 23.0
+   },
+   "signal": 3.7061086304409465,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 37,
+   "metrics": {
+    "trunk_tilt_frontal": 0.52,
+    "head_forward_proxy": -0.0,
+    "cervical_tilt": 0.41,
+    "neck_yaw_est": -3.23,
+    "shoulder_line_tilt": -0.59,
+    "cervical_sag_proxy": 19.15
+   },
+   "signal": 3.229275526082971,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 38,
+   "metrics": {
+    "trunk_tilt_frontal": 0.19,
+    "head_forward_proxy": -0.01,
+    "cervical_tilt": 0.58,
+    "neck_yaw_est": -2.31,
+    "shoulder_line_tilt": -0.43,
+    "cervical_sag_proxy": 6.86
+   },
+   "signal": 2.307327221329831,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 39,
+   "metrics": {
+    "trunk_tilt_frontal": 0.08,
+    "head_forward_proxy": -0.01,
+    "cervical_tilt": 0.77,
+    "neck_yaw_est": -3.4,
+    "shoulder_line_tilt": -0.82,
+    "cervical_sag_proxy": 19.0
+   },
+   "signal": 3.4001914533603164,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 40,
+   "metrics": {
+    "trunk_tilt_frontal": 0.62,
+    "head_forward_proxy": -0.01,
+    "cervical_tilt": 0.87,
+    "neck_yaw_est": -4.51,
+    "shoulder_line_tilt": -1.02,
+    "cervical_sag_proxy": 24.49
+   },
+   "signal": 4.510679741476003,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 41,
+   "metrics": {
+    "trunk_tilt_frontal": 0.71,
+    "head_forward_proxy": -0.0,
+    "cervical_tilt": 0.04,
+    "neck_yaw_est": -4.19,
+    "shoulder_line_tilt": -0.11,
+    "cervical_sag_proxy": 26.09
+   },
+   "signal": 4.1893376030610625,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 42,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 43,
+   "metrics": {
+    "cervical_tilt": 4.23,
+    "neck_yaw_est": -15.2,
+    "shoulder_line_tilt": 2.22,
+    "cervical_sag_proxy": 17.62
+   },
+   "signal": 15.20198747992908,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 44,
+   "metrics": {
+    "cervical_tilt": 0.01,
+    "shoulder_line_tilt": 0.35
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 45,
+   "metrics": {
+    "cervical_tilt": 0.03,
+    "shoulder_line_tilt": 0.4
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 46,
+   "metrics": {
+    "cervical_tilt": 0.03,
+    "shoulder_line_tilt": 0.34
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 47,
+   "metrics": {
+    "cervical_tilt": 0.61,
+    "shoulder_line_tilt": -0.02
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 48,
+   "metrics": {
+    "cervical_tilt": 0.51,
+    "shoulder_line_tilt": 0.2
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 49,
+   "metrics": {
+    "cervical_tilt": 2.86,
+    "neck_yaw_est": -26.47,
+    "shoulder_line_tilt": -2.35,
+    "cervical_sag_proxy": 31.28
+   },
+   "signal": 26.472245366128895,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 50,
+   "metrics": {
+    "cervical_tilt": 2.89,
+    "neck_yaw_est": -25.54,
+    "shoulder_line_tilt": -2.31,
+    "cervical_sag_proxy": 30.41
+   },
+   "signal": 25.54260201908798,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 51,
+   "metrics": {
+    "cervical_tilt": 2.07,
+    "neck_yaw_est": -9.56,
+    "shoulder_line_tilt": 0.82,
+    "cervical_sag_proxy": 15.2
+   },
+   "signal": 9.563243951770923,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 52,
+   "metrics": {
+    "cervical_tilt": 1.39,
+    "neck_yaw_est": -6.08,
+    "shoulder_line_tilt": 0.89,
+    "cervical_sag_proxy": 9.59
+   },
+   "signal": 6.08083949420096,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 53,
+   "metrics": {
+    "cervical_tilt": 1.23,
+    "neck_yaw_est": -5.15,
+    "shoulder_line_tilt": 1.01,
+    "cervical_sag_proxy": 7.69
+   },
+   "signal": 5.149748342779032,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 54,
+   "metrics": {
+    "cervical_tilt": 1.77,
+    "neck_yaw_est": -5.79,
+    "shoulder_line_tilt": 0.95,
+    "cervical_sag_proxy": 5.99
+   },
+   "signal": 5.787441792595243,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 55,
+   "metrics": {
+    "cervical_tilt": 1.69,
+    "neck_yaw_est": -6.54,
+    "shoulder_line_tilt": 0.87,
+    "cervical_sag_proxy": 8.0
+   },
+   "signal": 6.539418223695575,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 56,
+   "metrics": {
+    "cervical_tilt": 1.49,
+    "neck_yaw_est": -5.78,
+    "shoulder_line_tilt": 0.66,
+    "cervical_sag_proxy": 7.55
+   },
+   "signal": 5.783745269158774,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 57,
+   "metrics": {
+    "cervical_tilt": 2.55,
+    "neck_yaw_est": -13.97,
+    "shoulder_line_tilt": 0.47,
+    "cervical_sag_proxy": 24.74
+   },
+   "signal": 13.972274000618821,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 58,
+   "metrics": {
+    "cervical_tilt": 1.98,
+    "neck_yaw_est": -11.21,
+    "shoulder_line_tilt": 0.6,
+    "cervical_sag_proxy": 18.35
+   },
+   "signal": 11.205803656070715,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 59,
+   "metrics": {
+    "cervical_tilt": 1.99,
+    "neck_yaw_est": -9.68,
+    "shoulder_line_tilt": 0.61,
+    "cervical_sag_proxy": 14.42
+   },
+   "signal": 9.683357897941233,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 60,
+   "metrics": {
+    "cervical_tilt": 2.1,
+    "neck_yaw_est": -11.86,
+    "shoulder_line_tilt": 0.92,
+    "cervical_sag_proxy": 16.61
+   },
+   "signal": 11.864066167521237,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 61,
+   "metrics": {
+    "cervical_tilt": 1.42,
+    "neck_yaw_est": -8.47,
+    "shoulder_line_tilt": 0.78,
+    "cervical_sag_proxy": 14.48
+   },
+   "signal": 8.47116255350625,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 62,
+   "metrics": {
+    "cervical_tilt": 2.64,
+    "neck_yaw_est": -13.06,
+    "shoulder_line_tilt": 1.1,
+    "cervical_sag_proxy": 19.59
+   },
+   "signal": 13.05723218709741,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 63,
+   "metrics": {
+    "cervical_tilt": 2.67,
+    "neck_yaw_est": -13.33,
+    "shoulder_line_tilt": 1.16,
+    "cervical_sag_proxy": 20.08
+   },
+   "signal": 13.329014705660464,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 64,
+   "metrics": {
+    "cervical_tilt": 2.76,
+    "neck_yaw_est": -14.93,
+    "shoulder_line_tilt": 0.88,
+    "cervical_sag_proxy": 22.28
+   },
+   "signal": 14.928707514483706,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 65,
+   "metrics": {
+    "cervical_tilt": 3.41,
+    "neck_yaw_est": -15.13,
+    "shoulder_line_tilt": 1.18,
+    "cervical_sag_proxy": 19.43
+   },
+   "signal": 15.129134613776923,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 66,
+   "metrics": {
+    "cervical_tilt": 3.38,
+    "neck_yaw_est": -13.56,
+    "shoulder_line_tilt": 1.06,
+    "cervical_sag_proxy": 17.62
+   },
+   "signal": 13.563458790127765,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 67,
+   "metrics": {
+    "cervical_tilt": 2.87,
+    "neck_yaw_est": -11.83,
+    "shoulder_line_tilt": 0.6,
+    "cervical_sag_proxy": 16.59
+   },
+   "signal": 11.82730901515094,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 68,
+   "metrics": {
+    "cervical_tilt": 2.85,
+    "neck_yaw_est": -12.41,
+    "shoulder_line_tilt": 0.44,
+    "cervical_sag_proxy": 17.11
+   },
+   "signal": 12.412827368667081,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 69,
+   "metrics": {
+    "cervical_tilt": 2.54,
+    "neck_yaw_est": -12.29,
+    "shoulder_line_tilt": 0.36,
+    "cervical_sag_proxy": 18.44
+   },
+   "signal": 12.291693254049209,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 70,
+   "metrics": {
+    "cervical_tilt": 2.47,
+    "neck_yaw_est": -7.57,
+    "shoulder_line_tilt": 0.53,
+    "cervical_sag_proxy": 7.99
+   },
+   "signal": 7.571597201572615,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 71,
+   "metrics": {
+    "cervical_tilt": 2.6,
+    "neck_yaw_est": -8.39,
+    "shoulder_line_tilt": 0.46,
+    "cervical_sag_proxy": 8.44
+   },
+   "signal": 8.390734243808591,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 72,
+   "metrics": {
+    "cervical_tilt": 2.86,
+    "neck_yaw_est": -11.71,
+    "shoulder_line_tilt": 0.34,
+    "cervical_sag_proxy": 13.33
+   },
+   "signal": 11.714295999402074,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 73,
+   "metrics": {
+    "cervical_tilt": 2.35,
+    "neck_yaw_est": -9.61,
+    "shoulder_line_tilt": 0.35,
+    "cervical_sag_proxy": 10.82
+   },
+   "signal": 9.611065375130051,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 74,
+   "metrics": {
+    "cervical_tilt": 3.01,
+    "neck_yaw_est": -11.69,
+    "shoulder_line_tilt": 0.63,
+    "cervical_sag_proxy": 12.61
+   },
+   "signal": 11.693891633949653,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 75,
+   "metrics": {
+    "cervical_tilt": 3.18,
+    "neck_yaw_est": -12.89,
+    "shoulder_line_tilt": 0.55,
+    "cervical_sag_proxy": 16.7
+   },
+   "signal": 12.891097843577423,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 76,
+   "metrics": {
+    "cervical_tilt": 2.22,
+    "neck_yaw_est": -8.17,
+    "shoulder_line_tilt": 0.81,
+    "cervical_sag_proxy": 8.45
+   },
+   "signal": 8.17443106615996,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 77,
+   "metrics": {
+    "cervical_tilt": 2.35,
+    "neck_yaw_est": -8.44,
+    "shoulder_line_tilt": 0.59,
+    "cervical_sag_proxy": 8.27
+   },
+   "signal": 8.435312213164785,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 78,
+   "metrics": {
+    "cervical_tilt": 2.19,
+    "neck_yaw_est": -5.83,
+    "shoulder_line_tilt": 0.49,
+    "cervical_sag_proxy": 4.16
+   },
+   "signal": 5.828280325922378,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 79,
+   "metrics": {
+    "cervical_tilt": 2.54,
+    "neck_yaw_est": -7.01,
+    "shoulder_line_tilt": 0.59,
+    "cervical_sag_proxy": 5.32
+   },
+   "signal": 7.00880826481464,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 80,
+   "metrics": {
+    "cervical_tilt": 2.68,
+    "neck_yaw_est": -8.81,
+    "shoulder_line_tilt": 0.67,
+    "cervical_sag_proxy": 8.09
+   },
+   "signal": 8.814093127616646,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 81,
+   "metrics": {
+    "cervical_tilt": 2.23,
+    "neck_yaw_est": -7.8,
+    "shoulder_line_tilt": 0.21,
+    "cervical_sag_proxy": 7.62
+   },
+   "signal": 7.8038615649995045,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 82,
+   "metrics": {
+    "cervical_tilt": 2.76,
+    "neck_yaw_est": -12.56,
+    "shoulder_line_tilt": -0.62,
+    "cervical_sag_proxy": 19.91
+   },
+   "signal": 12.561096789511863,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 83,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 84,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 85,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 86,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 87,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 88,
+   "metrics": {
+    "neck_yaw_est": -11.97,
+    "shoulder_line_tilt": -2.34,
+    "cervical_sag_proxy": 4.87
+   },
+   "signal": 11.96646641419929,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 89,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 90,
+   "metrics": {
+    "cervical_tilt": 2.31,
+    "neck_yaw_est": -1.34,
+    "shoulder_line_tilt": 0.69,
+    "cervical_sag_proxy": 2.89
+   },
+   "signal": 1.3394943424498627,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 91,
+   "metrics": {
+    "cervical_tilt": 4.2,
+    "neck_yaw_est": -15.44,
+    "shoulder_line_tilt": 1.5,
+    "cervical_sag_proxy": 22.9
+   },
+   "signal": 15.443156916207068,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 92,
+   "metrics": {
+    "cervical_tilt": 2.43,
+    "neck_yaw_est": -2.1,
+    "shoulder_line_tilt": 0.92,
+    "cervical_sag_proxy": 1.17
+   },
+   "signal": 2.1022672975736825,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 93,
+   "metrics": {
+    "cervical_tilt": 2.03,
+    "neck_yaw_est": -2.23,
+    "shoulder_line_tilt": 0.95,
+    "cervical_sag_proxy": 0.16
+   },
+   "signal": 2.230166907634307,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 94,
+   "metrics": {
+    "cervical_tilt": 2.81,
+    "neck_yaw_est": -4.53,
+    "shoulder_line_tilt": 1.15,
+    "cervical_sag_proxy": 2.62
+   },
+   "signal": 4.529456521624457,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 95,
+   "metrics": {
+    "cervical_tilt": 2.13,
+    "neck_yaw_est": -1.11,
+    "shoulder_line_tilt": 0.84,
+    "cervical_sag_proxy": 2.41
+   },
+   "signal": 1.1069473703451238,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 96,
+   "metrics": {
+    "cervical_tilt": 2.34,
+    "neck_yaw_est": -1.92,
+    "shoulder_line_tilt": 0.64,
+    "cervical_sag_proxy": 1.53
+   },
+   "signal": 1.9190649833522144,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 97,
+   "metrics": {
+    "cervical_tilt": 2.16,
+    "neck_yaw_est": -1.21,
+    "shoulder_line_tilt": 0.41,
+    "cervical_sag_proxy": 2.56
+   },
+   "signal": 1.2131298729523157,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 98,
+   "metrics": {
+    "cervical_tilt": 4.42,
+    "neck_yaw_est": -11.71,
+    "shoulder_line_tilt": 1.26,
+    "cervical_sag_proxy": 13.04
+   },
+   "signal": 11.709223987103368,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 99,
+   "metrics": {
+    "cervical_tilt": 3.33,
+    "neck_yaw_est": -8.16,
+    "shoulder_line_tilt": 0.11,
+    "cervical_sag_proxy": 9.5
+   },
+   "signal": 8.16422902699701,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 100,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 101,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 102,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 103,
+   "metrics": {
+    "cervical_tilt": 2.37,
+    "neck_yaw_est": -9.32,
+    "shoulder_line_tilt": -0.09,
+    "cervical_sag_proxy": 20.25
+   },
+   "signal": 9.317632172532953,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 104,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 105,
+   "metrics": {
+    "cervical_tilt": 2.14,
+    "neck_yaw_est": -6.22,
+    "shoulder_line_tilt": 0.58,
+    "cervical_sag_proxy": 5.93
+   },
+   "signal": 6.223580779266466,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 106,
+   "metrics": {
+    "cervical_tilt": 3.84,
+    "neck_yaw_est": -16.78,
+    "shoulder_line_tilt": 0.36,
+    "cervical_sag_proxy": 21.39
+   },
+   "signal": 16.776563107041245,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 107,
+   "metrics": {
+    "cervical_tilt": 1.99,
+    "neck_yaw_est": -2.99,
+    "shoulder_line_tilt": 0.15,
+    "cervical_sag_proxy": 0.62
+   },
+   "signal": 2.9852337650663103,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 108,
+   "metrics": {
+    "cervical_tilt": 0.72,
+    "neck_yaw_est": 0.84,
+    "shoulder_line_tilt": -0.26,
+    "cervical_sag_proxy": 3.9
+   },
+   "signal": 0.8401216707063308,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 109,
+   "metrics": {
+    "cervical_tilt": 2.26,
+    "neck_yaw_est": -4.88,
+    "shoulder_line_tilt": 0.08,
+    "cervical_sag_proxy": 1.88
+   },
+   "signal": 4.8837334778263255,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 110,
+   "metrics": {
+    "cervical_tilt": 2.87,
+    "neck_yaw_est": -7.86,
+    "shoulder_line_tilt": 0.51,
+    "cervical_sag_proxy": 5.67
+   },
+   "signal": 7.85683427100596,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 111,
+   "metrics": {
+    "cervical_tilt": 2.66,
+    "neck_yaw_est": -9.58,
+    "shoulder_line_tilt": 0.42,
+    "cervical_sag_proxy": 9.52
+   },
+   "signal": 9.580597969831286,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 112,
+   "metrics": {
+    "cervical_tilt": 2.58,
+    "neck_yaw_est": -8.82,
+    "shoulder_line_tilt": 0.68,
+    "cervical_sag_proxy": 8.22
+   },
+   "signal": 8.824409939597002,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 113,
+   "metrics": {
+    "trunk_tilt_frontal": 5.58,
+    "head_forward_proxy": -0.03,
+    "shoulder_line_tilt": 0.98
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf",
+     "lsho:out_of_frame",
+     "rsho:out_of_frame"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 114,
+   "metrics": {
+    "trunk_tilt_frontal": 7.53,
+    "head_forward_proxy": -0.05,
+    "shoulder_line_tilt": 0.52
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf",
+     "lsho:out_of_frame",
+     "rsho:out_of_frame"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 115,
+   "metrics": {
+    "trunk_tilt_frontal": 4.84,
+    "head_forward_proxy": -0.01,
+    "shoulder_line_tilt": -0.71
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 116,
+   "metrics": {
+    "trunk_tilt_frontal": 4.3,
+    "head_forward_proxy": 0.02,
+    "shoulder_line_tilt": 2.27
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 117,
+   "metrics": {
+    "trunk_tilt_frontal": 6.14,
+    "head_forward_proxy": -0.04,
+    "shoulder_line_tilt": 0.15
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 118,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 119,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 120,
+   "metrics": {
+    "trunk_tilt_frontal": 9.91,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 1.72,
+    "shoulder_line_tilt": 0.93
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "trunk_tilt_frontal",
+     "value": 9.9,
+     "cue": "Keep the chest facing forward; isolate neck rotation."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 121,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 122,
+   "metrics": {
+    "trunk_tilt_frontal": 6.41,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 1.83,
+    "shoulder_line_tilt": -0.57
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 123,
+   "metrics": {
+    "trunk_tilt_frontal": 8.05,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 1.2,
+    "shoulder_line_tilt": -0.52
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "trunk_tilt_frontal",
+     "value": 8.0,
+     "cue": "Keep the chest facing forward; isolate neck rotation."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 124,
+   "metrics": {
+    "trunk_tilt_frontal": 11.78,
+    "head_forward_proxy": 0.03,
+    "cervical_tilt": 3.6,
+    "shoulder_line_tilt": 2.46
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "trunk_tilt_frontal",
+     "value": 11.8,
+     "cue": "Keep the chest facing forward; isolate neck rotation."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 125,
+   "metrics": {
+    "trunk_tilt_frontal": 5.17,
+    "head_forward_proxy": 0.07,
+    "cervical_tilt": 8.26,
+    "shoulder_line_tilt": 1.77
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 126,
+   "metrics": {
+    "trunk_tilt_frontal": 13.43,
+    "head_forward_proxy": 0.06,
+    "cervical_tilt": 6.72,
+    "shoulder_line_tilt": 0.63
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "trunk_tilt_frontal",
+     "value": 13.4,
+     "cue": "Keep the chest facing forward; isolate neck rotation."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 127,
+   "metrics": {
+    "trunk_tilt_frontal": 9.57,
+    "head_forward_proxy": 0.11,
+    "shoulder_line_tilt": 38.85
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "shoulder_line_tilt",
+     "value": 38.9,
+     "cue": "Do not lift the shoulder when turning; rotate through the neck only."
+    },
+    {
+     "metric": "trunk_tilt_frontal",
+     "value": 9.6,
+     "cue": "Keep the chest facing forward; isolate neck rotation."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 128,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 129,
+   "metrics": {
+    "trunk_tilt_frontal": 4.47,
+    "head_forward_proxy": 0.02,
+    "cervical_tilt": 1.95,
+    "shoulder_line_tilt": 0.46
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 130,
+   "metrics": {
+    "trunk_tilt_frontal": 8.59,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 1.01,
+    "shoulder_line_tilt": -0.54
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "trunk_tilt_frontal",
+     "value": 8.6,
+     "cue": "Keep the chest facing forward; isolate neck rotation."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 131,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 132,
+   "metrics": {
+    "trunk_tilt_frontal": 2.44,
+    "head_forward_proxy": -0.01,
+    "shoulder_line_tilt": -1.57
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 133,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 134,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 135,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 136,
+   "metrics": {
+    "trunk_tilt_frontal": 2.31,
+    "head_forward_proxy": -0.01,
+    "shoulder_line_tilt": 0.78
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 137,
+   "metrics": {
+    "trunk_tilt_frontal": 6.61,
+    "head_forward_proxy": 0.01,
+    "shoulder_line_tilt": 1.04
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 138,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 139,
+   "metrics": {
+    "trunk_tilt_frontal": 6.86,
+    "head_forward_proxy": -0.0,
+    "shoulder_line_tilt": 0.56
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 140,
+   "metrics": {
+    "cervical_tilt": 0.85,
+    "neck_yaw_est": -0.74,
+    "shoulder_line_tilt": 0.37,
+    "cervical_sag_proxy": 1.41
+   },
+   "signal": 0.7412559990378254,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 141,
+   "metrics": {
+    "cervical_tilt": 0.85,
+    "neck_yaw_est": -0.73,
+    "shoulder_line_tilt": 0.37,
+    "cervical_sag_proxy": 1.43
+   },
+   "signal": 0.7301746464139627,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 142,
+   "metrics": {
+    "cervical_tilt": 1.37,
+    "neck_yaw_est": -1.06,
+    "shoulder_line_tilt": 0.51,
+    "cervical_sag_proxy": 1.99
+   },
+   "signal": 1.0601056783731466,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 143,
+   "metrics": {
+    "cervical_tilt": 0.98,
+    "neck_yaw_est": -0.97,
+    "shoulder_line_tilt": 0.2,
+    "cervical_sag_proxy": 1.15
+   },
+   "signal": 0.9691184563361325,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 144,
+   "metrics": {
+    "cervical_tilt": 1.65,
+    "neck_yaw_est": -2.74,
+    "shoulder_line_tilt": 0.63,
+    "cervical_sag_proxy": 0.23
+   },
+   "signal": 2.7352982463436692,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 145,
+   "metrics": {
+    "cervical_tilt": 1.7,
+    "neck_yaw_est": -1.28,
+    "shoulder_line_tilt": 0.85,
+    "cervical_sag_proxy": 2.74
+   },
+   "signal": 1.2767767059847803,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 146,
+   "metrics": {
+    "cervical_tilt": 0.66,
+    "neck_yaw_est": 2.16,
+    "shoulder_line_tilt": 0.04,
+    "cervical_sag_proxy": 6.04
+   },
+   "signal": 2.1593371310624687,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 147,
+   "metrics": {
+    "cervical_tilt": 1.0,
+    "neck_yaw_est": -1.07,
+    "shoulder_line_tilt": 0.21,
+    "cervical_sag_proxy": 1.1
+   },
+   "signal": 1.0661360972379705,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 148,
+   "metrics": {
+    "cervical_tilt": 0.69,
+    "neck_yaw_est": 1.01,
+    "shoulder_line_tilt": 0.07,
+    "cervical_sag_proxy": 3.85
+   },
+   "signal": 1.0082735348930967,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 149,
+   "metrics": {
+    "cervical_tilt": 0.79,
+    "neck_yaw_est": -0.18,
+    "shoulder_line_tilt": 0.82,
+    "cervical_sag_proxy": 2.02
+   },
+   "signal": 0.1791791773820335,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 150,
+   "metrics": {
+    "cervical_tilt": 1.81,
+    "neck_yaw_est": -3.1,
+    "shoulder_line_tilt": 0.67,
+    "cervical_sag_proxy": 0.12
+   },
+   "signal": 3.0982811727664687,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 151,
+   "metrics": {
+    "cervical_tilt": 0.27,
+    "neck_yaw_est": 1.51,
+    "shoulder_line_tilt": 0.76,
+    "cervical_sag_proxy": 3.89
+   },
+   "signal": 1.5064084232413522,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 152,
+   "metrics": {
+    "cervical_tilt": 1.16,
+    "neck_yaw_est": -0.13,
+    "shoulder_line_tilt": 0.95,
+    "cervical_sag_proxy": 3.18
+   },
+   "signal": 0.126424061903034,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 153,
+   "metrics": {
+    "cervical_tilt": 1.69,
+    "neck_yaw_est": -5.11,
+    "shoulder_line_tilt": 1.47,
+    "cervical_sag_proxy": 4.26
+   },
+   "signal": 5.107116318377876,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 154,
+   "metrics": {
+    "cervical_tilt": 2.5,
+    "neck_yaw_est": -7.1,
+    "shoulder_line_tilt": 0.11,
+    "cervical_sag_proxy": 5.29
+   },
+   "signal": 7.096534403141554,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 155,
+   "metrics": {
+    "cervical_tilt": 1.91,
+    "neck_yaw_est": -3.69,
+    "shoulder_line_tilt": 0.15,
+    "cervical_sag_proxy": 1.53
+   },
+   "signal": 3.6896417728809685,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 156,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 157,
+   "metrics": {
+    "cervical_tilt": 1.33,
+    "neck_yaw_est": -0.45,
+    "shoulder_line_tilt": 0.12,
+    "cervical_sag_proxy": 2.91
+   },
+   "signal": 0.45325487693942274,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 158,
+   "metrics": {
+    "cervical_tilt": 0.1,
+    "neck_yaw_est": 2.04,
+    "shoulder_line_tilt": -0.26,
+    "cervical_sag_proxy": 3.54
+   },
+   "signal": 2.038007167754577,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 159,
+   "metrics": {
+    "cervical_tilt": 0.24,
+    "neck_yaw_est": 5.66,
+    "shoulder_line_tilt": -0.83,
+    "cervical_sag_proxy": 11.55
+   },
+   "signal": 5.662464211733837,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 160,
+   "metrics": {
+    "neck_yaw_est": 0.51,
+    "shoulder_line_tilt": -0.55
+   },
+   "signal": 0.5133483702473792,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 161,
+   "metrics": {
+    "neck_yaw_est": 3.42,
+    "shoulder_line_tilt": -0.4
+   },
+   "signal": 3.4218504769704063,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 162,
+   "metrics": {
+    "cervical_tilt": 0.22,
+    "shoulder_line_tilt": 2.29
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 163,
+   "metrics": {
+    "cervical_tilt": 0.1,
+    "shoulder_line_tilt": 2.42
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 164,
+   "metrics": {
+    "cervical_tilt": 0.68,
+    "shoulder_line_tilt": 2.12
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 165,
+   "metrics": {
+    "cervical_tilt": 0.35,
+    "shoulder_line_tilt": 2.38
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 166,
+   "metrics": {
+    "cervical_tilt": 0.37,
+    "shoulder_line_tilt": 2.55
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 167,
+   "metrics": {
+    "cervical_tilt": 0.06,
+    "shoulder_line_tilt": 2.66
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 168,
+   "metrics": {
+    "cervical_tilt": 0.15,
+    "shoulder_line_tilt": 2.72
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 169,
+   "metrics": {
+    "cervical_tilt": 1.05,
+    "shoulder_line_tilt": 2.05
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 170,
+   "metrics": {
+    "cervical_tilt": 1.36,
+    "shoulder_line_tilt": -1.13
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 171,
+   "metrics": {
+    "cervical_tilt": 0.93,
+    "shoulder_line_tilt": -1.07
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 172,
+   "metrics": {
+    "cervical_tilt": 4.96,
+    "shoulder_line_tilt": 2.23
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 10
+  },
+  {
+   "frame": 173,
+   "metrics": {
+    "cervical_tilt": 0.24,
+    "shoulder_line_tilt": -1.08
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 174,
+   "metrics": {
+    "cervical_tilt": 0.01,
+    "shoulder_line_tilt": -0.94
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 175,
+   "metrics": {
+    "cervical_tilt": 1.17,
+    "neck_yaw_est": -1.15,
+    "shoulder_line_tilt": 0.48,
+    "cervical_sag_proxy": 1.17
+   },
+   "signal": 1.1480103649426936,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 176,
+   "metrics": {
+    "cervical_tilt": 0.3,
+    "neck_yaw_est": -0.01,
+    "shoulder_line_tilt": -1.03,
+    "cervical_sag_proxy": 0.74
+   },
+   "signal": 0.00826630310257009,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 177,
+   "metrics": {
+    "cervical_tilt": 1.32,
+    "neck_yaw_est": 0.05,
+    "shoulder_line_tilt": -0.76,
+    "cervical_sag_proxy": 4.47
+   },
+   "signal": 0.04701892745966525,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 178,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 179,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 180,
+   "metrics": {
+    "cervical_tilt": 1.55,
+    "neck_yaw_est": -3.71,
+    "shoulder_line_tilt": -0.52,
+    "cervical_sag_proxy": 3.11
+   },
+   "signal": 3.705706927854292,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 181,
+   "metrics": {
+    "neck_yaw_est": -16.73,
+    "shoulder_line_tilt": -1.43,
+    "cervical_sag_proxy": 27.32
+   },
+   "signal": 16.729182762443088,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 182,
+   "metrics": {
+    "trunk_tilt_frontal": 3.07,
+    "head_forward_proxy": -0.03,
+    "shoulder_line_tilt": 1.74
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 183,
+   "metrics": {
+    "trunk_tilt_frontal": 2.78,
+    "head_forward_proxy": -0.03,
+    "shoulder_line_tilt": -1.52
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 184,
+   "metrics": {
+    "trunk_tilt_frontal": 3.58,
+    "head_forward_proxy": -0.03,
+    "shoulder_line_tilt": 1.53
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 185,
+   "metrics": {
+    "trunk_tilt_frontal": 4.24,
+    "head_forward_proxy": -0.02,
+    "shoulder_line_tilt": 2.46
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf",
+     "lsho:out_of_frame"
+    ],
+    "missing": [
+     "nose",
+     "lsho"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 186,
+   "metrics": {
+    "trunk_tilt_frontal": 5.87,
+    "head_forward_proxy": 0.01,
+    "shoulder_line_tilt": 0.7
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 187,
+   "metrics": {
+    "trunk_tilt_frontal": 3.97,
+    "head_forward_proxy": 0.01,
+    "shoulder_line_tilt": 24.23
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "shoulder_line_tilt",
+     "value": 24.2,
+     "cue": "Do not lift the shoulder when turning; rotate through the neck only."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 188,
+   "metrics": {
+    "trunk_tilt_frontal": 3.67,
+    "head_forward_proxy": -0.03,
+    "shoulder_line_tilt": 2.15
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf",
+     "rsho:out_of_frame"
+    ],
+    "missing": [
+     "nose",
+     "rsho"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 189,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 190,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 191,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 192,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 193,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 194,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 195,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 196,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 197,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 198,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 199,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 200,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 201,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 202,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 203,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 204,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 205,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 7
+  },
+  {
+   "frame": 206,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 207,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 208,
+   "metrics": {
+    "trunk_tilt_frontal": 2.15,
+    "head_forward_proxy": -0.02,
+    "shoulder_line_tilt": 0.9
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 209,
+   "metrics": {},
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 210,
+   "metrics": {
+    "trunk_tilt_frontal": 0.77,
+    "head_forward_proxy": -0.02,
+    "shoulder_line_tilt": 1.23
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 211,
+   "metrics": {
+    "cervical_tilt": 0.55,
+    "neck_yaw_est": -2.5,
+    "shoulder_line_tilt": 0.49,
+    "cervical_sag_proxy": 3.52
+   },
+   "signal": 2.4983716985798874,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 212,
+   "metrics": {
+    "cervical_tilt": 1.98,
+    "neck_yaw_est": -7.85,
+    "shoulder_line_tilt": 0.69,
+    "cervical_sag_proxy": 8.46
+   },
+   "signal": 7.852849604498458,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 213,
+   "metrics": {
+    "cervical_tilt": 1.59,
+    "neck_yaw_est": -5.81,
+    "shoulder_line_tilt": 0.16,
+    "cervical_sag_proxy": 5.48
+   },
+   "signal": 5.812951038056287,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 214,
+   "metrics": {
+    "cervical_tilt": 1.8,
+    "neck_yaw_est": -5.66,
+    "shoulder_line_tilt": 0.23,
+    "cervical_sag_proxy": 4.83
+   },
+   "signal": 5.657102197539302,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 215,
+   "metrics": {
+    "cervical_tilt": 1.85,
+    "neck_yaw_est": -9.86,
+    "shoulder_line_tilt": 0.37,
+    "cervical_sag_proxy": 12.94
+   },
+   "signal": 9.859730535056128,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 216,
+   "metrics": {
+    "cervical_tilt": 1.25,
+    "neck_yaw_est": -6.98,
+    "shoulder_line_tilt": -0.37,
+    "cervical_sag_proxy": 9.33
+   },
+   "signal": 6.977382975807456,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 217,
+   "metrics": {
+    "cervical_tilt": 2.14,
+    "neck_yaw_est": -10.84,
+    "shoulder_line_tilt": -0.16,
+    "cervical_sag_proxy": 14.27
+   },
+   "signal": 10.844377867744983,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 218,
+   "metrics": {
+    "cervical_tilt": 1.9,
+    "neck_yaw_est": -10.65,
+    "shoulder_line_tilt": 0.3,
+    "cervical_sag_proxy": 14.36
+   },
+   "signal": 10.649215821269028,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 219,
+   "metrics": {
+    "cervical_tilt": 2.19,
+    "neck_yaw_est": -8.9,
+    "shoulder_line_tilt": 0.5,
+    "cervical_sag_proxy": 10.24
+   },
+   "signal": 8.90096369582971,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 220,
+   "metrics": {
+    "cervical_tilt": 2.21,
+    "neck_yaw_est": -9.73,
+    "shoulder_line_tilt": 0.29,
+    "cervical_sag_proxy": 11.47
+   },
+   "signal": 9.72947969258447,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 221,
+   "metrics": {
+    "cervical_tilt": 2.11,
+    "neck_yaw_est": -9.38,
+    "shoulder_line_tilt": 0.29,
+    "cervical_sag_proxy": 11.67
+   },
+   "signal": 9.377585897766538,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 222,
+   "metrics": {
+    "cervical_tilt": 2.34,
+    "neck_yaw_est": -10.52,
+    "shoulder_line_tilt": 0.62,
+    "cervical_sag_proxy": 16.19
+   },
+   "signal": 10.521899736533305,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 223,
+   "metrics": {
+    "neck_yaw_est": -20.24,
+    "shoulder_line_tilt": -0.15,
+    "cervical_sag_proxy": 47.08
+   },
+   "signal": 20.241760646490928,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 224,
+   "metrics": {
+    "neck_yaw_est": -27.78,
+    "shoulder_line_tilt": -0.03,
+    "cervical_sag_proxy": 51.82
+   },
+   "signal": 27.782987697072514,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 225,
+   "metrics": {
+    "cervical_tilt": 0.76,
+    "neck_yaw_est": -16.4,
+    "shoulder_line_tilt": 0.93,
+    "cervical_sag_proxy": 32.18
+   },
+   "signal": 16.40431030753825,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 226,
+   "metrics": {
+    "cervical_tilt": 1.83,
+    "neck_yaw_est": -9.24,
+    "shoulder_line_tilt": 0.33,
+    "cervical_sag_proxy": 12.47
+   },
+   "signal": 9.236912433253998,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 227,
+   "metrics": {
+    "neck_yaw_est": -67.86,
+    "shoulder_line_tilt": 1.75,
+    "cervical_sag_proxy": 82.2
+   },
+   "signal": 67.86212145720107,
+   "reps": 0,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 228,
+   "metrics": {
+    "neck_yaw_est": -25.95,
+    "shoulder_line_tilt": 1.68,
+    "cervical_sag_proxy": 51.55
+   },
+   "signal": 25.951129287987033,
+   "reps": 0,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 229,
+   "metrics": {
+    "neck_yaw_est": -90.0,
+    "shoulder_line_tilt": 0.14,
+    "cervical_sag_proxy": 90.74
+   },
+   "signal": 90.0,
+   "reps": 0,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 230,
+   "metrics": {
+    "neck_yaw_est": -90.0,
+    "shoulder_line_tilt": 0.92,
+    "cervical_sag_proxy": 91.73
+   },
+   "signal": 90.0,
+   "reps": 0,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 231,
+   "metrics": {
+    "neck_yaw_est": -90.0,
+    "shoulder_line_tilt": 1.27,
+    "cervical_sag_proxy": 94.42
+   },
+   "signal": 90.0,
+   "reps": 0,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 232,
+   "metrics": {
+    "neck_yaw_est": -90.0,
+    "shoulder_line_tilt": 2.45,
+    "cervical_sag_proxy": 96.86
+   },
+   "signal": 90.0,
+   "reps": 0,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 233,
+   "metrics": {
+    "neck_yaw_est": -90.0,
+    "shoulder_line_tilt": 0.63,
+    "cervical_sag_proxy": 95.12
+   },
+   "signal": 90.0,
+   "reps": 0,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 234,
+   "metrics": {
+    "neck_yaw_est": -90.0,
+    "shoulder_line_tilt": 2.2,
+    "cervical_sag_proxy": 94.87
+   },
+   "signal": 90.0,
+   "reps": 0,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 235,
+   "metrics": {
+    "neck_yaw_est": -83.5,
+    "shoulder_line_tilt": 2.5,
+    "cervical_sag_proxy": 88.55
+   },
+   "signal": 83.49800041771972,
+   "reps": 0,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 236,
+   "metrics": {
+    "trunk_tilt_frontal": 27.94,
+    "head_forward_proxy": -0.36,
+    "shoulder_line_tilt": -3.3
+   },
+   "signal": null,
+   "reps": 0,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "trunk_tilt_frontal",
+     "value": 27.9,
+     "cue": "Keep the chest facing forward; isolate neck rotation."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 237,
+   "metrics": {
+    "cervical_tilt": 0.77,
+    "neck_yaw_est": 7.08,
+    "shoulder_line_tilt": 0.05,
+    "cervical_sag_proxy": 11.44
+   },
+   "signal": 7.076885425830063,
+   "reps": 1,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 238,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 239,
+   "metrics": {
+    "cervical_tilt": 0.65,
+    "neck_yaw_est": -6.46,
+    "shoulder_line_tilt": 1.76,
+    "cervical_sag_proxy": 10.84
+   },
+   "signal": 6.461081235359208,
+   "reps": 1,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 240,
+   "metrics": {
+    "neck_yaw_est": -42.88,
+    "shoulder_line_tilt": 0.16,
+    "cervical_sag_proxy": 58.01
+   },
+   "signal": 42.88294157515126,
+   "reps": 1,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 241,
+   "metrics": {
+    "cervical_tilt": 2.53,
+    "neck_yaw_est": -10.33,
+    "shoulder_line_tilt": 1.57,
+    "cervical_sag_proxy": 11.67
+   },
+   "signal": 10.32728825693463,
+   "reps": 1,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 242,
+   "metrics": {
+    "cervical_tilt": 1.97,
+    "neck_yaw_est": -4.23,
+    "shoulder_line_tilt": 1.24,
+    "cervical_sag_proxy": 1.81
+   },
+   "signal": 4.233107714140311,
+   "reps": 1,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 243,
+   "metrics": {
+    "cervical_tilt": 1.43,
+    "neck_yaw_est": -3.76,
+    "shoulder_line_tilt": 0.81,
+    "cervical_sag_proxy": 2.55
+   },
+   "signal": 3.7557657882172113,
+   "reps": 1,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 244,
+   "metrics": {
+    "cervical_tilt": 2.46,
+    "neck_yaw_est": -8.36,
+    "shoulder_line_tilt": 0.6,
+    "cervical_sag_proxy": 8.85
+   },
+   "signal": 8.359734173619126,
+   "reps": 1,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 245,
+   "metrics": {
+    "cervical_tilt": 1.47,
+    "neck_yaw_est": -4.58,
+    "shoulder_line_tilt": 0.75,
+    "cervical_sag_proxy": 3.39
+   },
+   "signal": 4.575620417051188,
+   "reps": 1,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 246,
+   "metrics": {
+    "neck_yaw_est": -7.89,
+    "shoulder_line_tilt": 0.26,
+    "cervical_sag_proxy": 22.72
+   },
+   "signal": 7.887411251829916,
+   "reps": 1,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 247,
+   "metrics": {
+    "cervical_tilt": 1.83,
+    "neck_yaw_est": -7.85,
+    "shoulder_line_tilt": 0.76,
+    "cervical_sag_proxy": 15.15
+   },
+   "signal": 7.851964904395282,
+   "reps": 1,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 248,
+   "metrics": {
+    "cervical_tilt": 2.64,
+    "neck_yaw_est": -10.29,
+    "shoulder_line_tilt": 0.4,
+    "cervical_sag_proxy": 13.53
+   },
+   "signal": 10.291432089036102,
+   "reps": 1,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 249,
+   "metrics": {
+    "cervical_tilt": 3.08,
+    "neck_yaw_est": -9.87,
+    "shoulder_line_tilt": 0.44,
+    "cervical_sag_proxy": 9.87
+   },
+   "signal": 9.866494567926072,
+   "reps": 1,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 250,
+   "metrics": {
+    "cervical_tilt": 2.26,
+    "neck_yaw_est": -9.0,
+    "shoulder_line_tilt": 0.79,
+    "cervical_sag_proxy": 10.09
+   },
+   "signal": 8.99981676795581,
+   "reps": 1,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 251,
+   "metrics": {
+    "cervical_tilt": 1.55,
+    "neck_yaw_est": -7.5,
+    "shoulder_line_tilt": 0.29,
+    "cervical_sag_proxy": 10.62
+   },
+   "signal": 7.502633395305585,
+   "reps": 1,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 252,
+   "metrics": {
+    "neck_yaw_est": -34.83,
+    "shoulder_line_tilt": 1.67,
+    "cervical_sag_proxy": 55.55
+   },
+   "signal": 34.82749231726436,
+   "reps": 1,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 253,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 254,
+   "metrics": {
+    "trunk_tilt_frontal": 17.55,
+    "head_forward_proxy": -0.27,
+    "shoulder_line_tilt": -37.21
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "shoulder_line_tilt",
+     "value": -37.2,
+     "cue": "Do not lift the shoulder when turning; rotate through the neck only."
+    },
+    {
+     "metric": "trunk_tilt_frontal",
+     "value": 17.5,
+     "cue": "Keep the chest facing forward; isolate neck rotation."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 255,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 256,
+   "metrics": {
+    "trunk_tilt_frontal": 5.84,
+    "head_forward_proxy": -0.21,
+    "shoulder_line_tilt": 20.35
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "shoulder_line_tilt",
+     "value": 20.3,
+     "cue": "Do not lift the shoulder when turning; rotate through the neck only."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 257,
+   "metrics": {
+    "trunk_tilt_frontal": 6.22,
+    "head_forward_proxy": -0.02,
+    "shoulder_line_tilt": 9.35
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "shoulder_line_tilt",
+     "value": 9.4,
+     "cue": "Do not lift the shoulder when turning; rotate through the neck only."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 258,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 259,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 260,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 261,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 262,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 263,
+   "metrics": {
+    "trunk_tilt_frontal": 31.5,
+    "head_forward_proxy": -0.36,
+    "shoulder_line_tilt": 17.31
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "shoulder_line_tilt",
+     "value": 17.3,
+     "cue": "Do not lift the shoulder when turning; rotate through the neck only."
+    },
+    {
+     "metric": "trunk_tilt_frontal",
+     "value": 31.5,
+     "cue": "Keep the chest facing forward; isolate neck rotation."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 264,
+   "metrics": {
+    "trunk_tilt_frontal": 26.59,
+    "head_forward_proxy": -0.36,
+    "shoulder_line_tilt": -24.35
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "shoulder_line_tilt",
+     "value": -24.3,
+     "cue": "Do not lift the shoulder when turning; rotate through the neck only."
+    },
+    {
+     "metric": "trunk_tilt_frontal",
+     "value": 26.6,
+     "cue": "Keep the chest facing forward; isolate neck rotation."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 265,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 266,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 267,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 268,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 269,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 270,
+   "metrics": {
+    "trunk_tilt_frontal": 1.86,
+    "head_forward_proxy": -0.02,
+    "shoulder_line_tilt": 0.05
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf",
+     "lsho:out_of_frame",
+     "rsho:out_of_frame"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 271,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf",
+     "lsho:low_conf"
+    ],
+    "missing": [
+     "nose",
+     "lsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 272,
+   "metrics": {
+    "trunk_tilt_frontal": 4.4,
+    "head_forward_proxy": -0.04,
+    "shoulder_line_tilt": 0.52
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 273,
+   "metrics": {
+    "trunk_tilt_frontal": 5.84,
+    "head_forward_proxy": -0.01,
+    "shoulder_line_tilt": 0.83
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 274,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 275,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 276,
+   "metrics": {
+    "trunk_tilt_frontal": 7.31,
+    "head_forward_proxy": -0.02,
+    "shoulder_line_tilt": -0.12
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 277,
+   "metrics": {
+    "trunk_tilt_frontal": 8.6,
+    "head_forward_proxy": -0.0,
+    "shoulder_line_tilt": 1.1
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "trunk_tilt_frontal",
+     "value": 8.6,
+     "cue": "Keep the chest facing forward; isolate neck rotation."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 278,
+   "metrics": {
+    "trunk_tilt_frontal": 3.11,
+    "head_forward_proxy": 0.09,
+    "shoulder_line_tilt": 0.37
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 279,
+   "metrics": {
+    "trunk_tilt_frontal": 15.53,
+    "head_forward_proxy": 0.27,
+    "shoulder_line_tilt": 12.78
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "shoulder_line_tilt",
+     "value": 12.8,
+     "cue": "Do not lift the shoulder when turning; rotate through the neck only."
+    },
+    {
+     "metric": "trunk_tilt_frontal",
+     "value": 15.5,
+     "cue": "Keep the chest facing forward; isolate neck rotation."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 280,
+   "metrics": {
+    "trunk_tilt_frontal": 1.97,
+    "head_forward_proxy": 0.05,
+    "neck_yaw_est": -0.68,
+    "shoulder_line_tilt": 5.25
+   },
+   "signal": 0.6778780815506206,
+   "reps": 1,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 281,
+   "metrics": {
+    "trunk_tilt_frontal": 36.38,
+    "head_forward_proxy": 0.43,
+    "neck_yaw_est": 90.0,
+    "shoulder_line_tilt": 22.47
+   },
+   "signal": 90.0,
+   "reps": 1,
+   "phase": "out",
+   "cues": [
+    {
+     "metric": "shoulder_line_tilt",
+     "value": 22.5,
+     "cue": "Do not lift the shoulder when turning; rotate through the neck only."
+    },
+    {
+     "metric": "trunk_tilt_frontal",
+     "value": 36.4,
+     "cue": "Keep the chest facing forward; isolate neck rotation."
+    }
+   ],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 282,
+   "metrics": {
+    "trunk_tilt_frontal": 32.23,
+    "head_forward_proxy": 0.44,
+    "shoulder_line_tilt": 85.49
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "shoulder_line_tilt",
+     "value": 85.5,
+     "cue": "Do not lift the shoulder when turning; rotate through the neck only."
+    },
+    {
+     "metric": "trunk_tilt_frontal",
+     "value": 32.2,
+     "cue": "Keep the chest facing forward; isolate neck rotation."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 283,
+   "metrics": {
+    "trunk_tilt_frontal": 32.34,
+    "head_forward_proxy": 0.41,
+    "shoulder_line_tilt": 74.89
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "shoulder_line_tilt",
+     "value": 74.9,
+     "cue": "Do not lift the shoulder when turning; rotate through the neck only."
+    },
+    {
+     "metric": "trunk_tilt_frontal",
+     "value": 32.3,
+     "cue": "Keep the chest facing forward; isolate neck rotation."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 284,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 285,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 286,
+   "metrics": {
+    "trunk_tilt_frontal": 1.7,
+    "head_forward_proxy": 0.14,
+    "shoulder_line_tilt": 6.7
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 287,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 288,
+   "metrics": {
+    "trunk_tilt_frontal": 6.73,
+    "head_forward_proxy": 0.05,
+    "neck_yaw_est": 29.33,
+    "shoulder_line_tilt": -3.21
+   },
+   "signal": 29.33022698821295,
+   "reps": 1,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 289,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf",
+     "lsho:low_conf"
+    ],
+    "missing": [
+     "nose",
+     "lsho"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 290,
+   "metrics": {
+    "trunk_tilt_frontal": 3.75,
+    "head_forward_proxy": 0.08,
+    "shoulder_line_tilt": -1.94
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 291,
+   "metrics": {
+    "trunk_tilt_frontal": 10.42,
+    "head_forward_proxy": 0.03,
+    "shoulder_line_tilt": -1.12
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "trunk_tilt_frontal",
+     "value": 10.4,
+     "cue": "Keep the chest facing forward; isolate neck rotation."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 292,
+   "metrics": {
+    "trunk_tilt_frontal": 0.24,
+    "head_forward_proxy": -0.02,
+    "neck_yaw_est": -15.59,
+    "shoulder_line_tilt": -2.56
+   },
+   "signal": 15.586397497383798,
+   "reps": 1,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 293,
+   "metrics": {
+    "trunk_tilt_frontal": 7.69,
+    "head_forward_proxy": -0.02,
+    "shoulder_line_tilt": -3.12
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 294,
+   "metrics": {},
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 295,
+   "metrics": {
+    "trunk_tilt_frontal": 5.13,
+    "head_forward_proxy": -0.02,
+    "shoulder_line_tilt": 2.46
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf",
+     "rsho:out_of_frame"
+    ],
+    "missing": [
+     "nose",
+     "rsho"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 296,
+   "metrics": {
+    "trunk_tilt_frontal": 1.42,
+    "head_forward_proxy": -0.01,
+    "shoulder_line_tilt": 1.84
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf",
+     "rsho:out_of_frame"
+    ],
+    "missing": [
+     "nose",
+     "rsho"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 297,
+   "metrics": {
+    "trunk_tilt_frontal": 3.0,
+    "head_forward_proxy": -0.0,
+    "shoulder_line_tilt": -0.38
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 298,
+   "metrics": {
+    "trunk_tilt_frontal": 2.06,
+    "head_forward_proxy": 0.0,
+    "shoulder_line_tilt": -0.3
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf",
+     "lsho:out_of_frame",
+     "rsho:out_of_frame"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 10
+  },
+  {
+   "frame": 299,
+   "metrics": {
+    "trunk_tilt_frontal": 2.34,
+    "head_forward_proxy": 0.0,
+    "shoulder_line_tilt": -0.9
+   },
+   "signal": null,
+   "reps": 1,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf",
+     "lsho:out_of_frame",
+     "rsho:out_of_frame"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 10
+  },
+  {
+   "frame": 300,
+   "metrics": {
+    "cervical_tilt": 0.46,
+    "neck_yaw_est": 1.41,
+    "shoulder_line_tilt": -0.31,
+    "cervical_sag_proxy": 3.86
+   },
+   "signal": 1.4084629172664285,
+   "reps": 2,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 10
+  },
+  {
+   "frame": 301,
+   "metrics": {
+    "cervical_tilt": 1.37,
+    "neck_yaw_est": -3.99,
+    "shoulder_line_tilt": 0.17,
+    "cervical_sag_proxy": 3.33
+   },
+   "signal": 3.991423703164858,
+   "reps": 2,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 10
+  },
+  {
+   "frame": 302,
+   "metrics": {
+    "neck_yaw_est": -13.07,
+    "shoulder_line_tilt": 0.44
+   },
+   "signal": 13.06652314007083,
+   "reps": 2,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 303,
+   "metrics": {
+    "cervical_tilt": 1.32,
+    "shoulder_line_tilt": -2.75
+   },
+   "signal": null,
+   "reps": 2,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 304,
+   "metrics": {
+    "neck_yaw_est": -5.66,
+    "shoulder_line_tilt": 1.27,
+    "cervical_sag_proxy": 60.09
+   },
+   "signal": 5.664477448456712,
+   "reps": 2,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 10
+  },
+  {
+   "frame": 305,
+   "metrics": {
+    "neck_yaw_est": 90.0,
+    "shoulder_line_tilt": 0.29
+   },
+   "signal": 90.0,
+   "reps": 2,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 306,
+   "metrics": {
+    "neck_yaw_est": 90.0,
+    "shoulder_line_tilt": 0.16
+   },
+   "signal": 90.0,
+   "reps": 2,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 10
+  },
+  {
+   "frame": 307,
+   "metrics": {
+    "shoulder_line_tilt": 1.31
+   },
+   "signal": null,
+   "reps": 2,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 308,
+   "metrics": {
+    "shoulder_line_tilt": 1.16
+   },
+   "signal": null,
+   "reps": 2,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 309,
+   "metrics": {
+    "shoulder_line_tilt": 1.13
+   },
+   "signal": null,
+   "reps": 2,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 310,
+   "metrics": {
+    "shoulder_line_tilt": 1.67
+   },
+   "signal": null,
+   "reps": 2,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 10
+  },
+  {
+   "frame": 311,
+   "metrics": {
+    "shoulder_line_tilt": 1.61
+   },
+   "signal": null,
+   "reps": 2,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 312,
+   "metrics": {
+    "shoulder_line_tilt": 1.61
+   },
+   "signal": null,
+   "reps": 2,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 11
+  },
+  {
+   "frame": 313,
+   "metrics": {
+    "neck_yaw_est": 90.0,
+    "shoulder_line_tilt": -0.02
+   },
+   "signal": 90.0,
+   "reps": 2,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 314,
+   "metrics": {
+    "neck_yaw_est": 90.0,
+    "shoulder_line_tilt": -0.17
+   },
+   "signal": 90.0,
+   "reps": 2,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 10
+  },
+  {
+   "frame": 315,
+   "metrics": {
+    "shoulder_line_tilt": 1.11
+   },
+   "signal": null,
+   "reps": 2,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 10
+  },
+  {
+   "frame": 316,
+   "metrics": {
+    "cervical_tilt": 5.73,
+    "shoulder_line_tilt": -0.4
+   },
+   "signal": null,
+   "reps": 2,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 11
+  },
+  {
+   "frame": 317,
+   "metrics": {
+    "cervical_tilt": 2.15,
+    "shoulder_line_tilt": -0.65
+   },
+   "signal": null,
+   "reps": 2,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 11
+  },
+  {
+   "frame": 318,
+   "metrics": {
+    "neck_yaw_est": 3.9,
+    "shoulder_line_tilt": 1.23
+   },
+   "signal": 3.8977016649997283,
+   "reps": 3,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 10
+  },
+  {
+   "frame": 319,
+   "metrics": {
+    "cervical_tilt": 1.78,
+    "neck_yaw_est": -4.34,
+    "shoulder_line_tilt": 0.49,
+    "cervical_sag_proxy": 2.88
+   },
+   "signal": 4.339747954335215,
+   "reps": 3,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 11
+  },
+  {
+   "frame": 320,
+   "metrics": {
+    "cervical_tilt": 1.49,
+    "neck_yaw_est": -7.49,
+    "shoulder_line_tilt": 2.06,
+    "cervical_sag_proxy": 14.78
+   },
+   "signal": 7.494530309837917,
+   "reps": 3,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 10
+  },
+  {
+   "frame": 321,
+   "metrics": {
+    "cervical_tilt": 1.15,
+    "neck_yaw_est": 0.18,
+    "shoulder_line_tilt": 0.13,
+    "cervical_sag_proxy": 4.25
+   },
+   "signal": 0.1809381214638704,
+   "reps": 3,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 11
+  },
+  {
+   "frame": 322,
+   "metrics": {
+    "cervical_tilt": 1.91,
+    "neck_yaw_est": -5.21,
+    "shoulder_line_tilt": 0.37,
+    "cervical_sag_proxy": 4.45
+   },
+   "signal": 5.206746117493286,
+   "reps": 3,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 10
+  },
+  {
+   "frame": 323,
+   "metrics": {
+    "cervical_tilt": 3.19,
+    "neck_yaw_est": -11.78,
+    "shoulder_line_tilt": 0.39,
+    "cervical_sag_proxy": 14.23
+   },
+   "signal": 11.783160095567471,
+   "reps": 3,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 10
+  },
+  {
+   "frame": 324,
+   "metrics": {
+    "cervical_tilt": 3.13,
+    "neck_yaw_est": -10.77,
+    "shoulder_line_tilt": 0.04,
+    "cervical_sag_proxy": 11.0
+   },
+   "signal": 10.767383040779844,
+   "reps": 3,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 10
+  },
+  {
+   "frame": 325,
+   "metrics": {
+    "cervical_tilt": 2.65,
+    "neck_yaw_est": -7.33,
+    "shoulder_line_tilt": 0.23,
+    "cervical_sag_proxy": 5.48
+   },
+   "signal": 7.334925948859408,
+   "reps": 3,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 10
+  },
+  {
+   "frame": 326,
+   "metrics": {
+    "neck_yaw_est": -42.26,
+    "shoulder_line_tilt": 0.41,
+    "cervical_sag_proxy": 50.98
+   },
+   "signal": 42.26132505962566,
+   "reps": 3,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 327,
+   "metrics": {
+    "neck_yaw_est": -18.81,
+    "shoulder_line_tilt": 0.07,
+    "cervical_sag_proxy": 21.56
+   },
+   "signal": 18.805751969536878,
+   "reps": 3,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 328,
+   "metrics": {
+    "neck_yaw_est": -29.74,
+    "shoulder_line_tilt": -0.24,
+    "cervical_sag_proxy": 28.96
+   },
+   "signal": 29.738114289785297,
+   "reps": 3,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 329,
+   "metrics": {
+    "neck_yaw_est": -90.0,
+    "shoulder_line_tilt": -5.95,
+    "cervical_sag_proxy": 64.87
+   },
+   "signal": 90.0,
+   "reps": 3,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 330,
+   "metrics": {
+    "neck_yaw_est": -90.0,
+    "shoulder_line_tilt": -1.45,
+    "cervical_sag_proxy": 82.34
+   },
+   "signal": 90.0,
+   "reps": 3,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 331,
+   "metrics": {
+    "neck_yaw_est": -69.61,
+    "shoulder_line_tilt": -3.14,
+    "cervical_sag_proxy": 68.92
+   },
+   "signal": 69.61334645981634,
+   "reps": 3,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 332,
+   "metrics": {
+    "shoulder_line_tilt": -3.36
+   },
+   "signal": null,
+   "reps": 3,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 333,
+   "metrics": {
+    "shoulder_line_tilt": -4.1
+   },
+   "signal": null,
+   "reps": 3,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 334,
+   "metrics": {
+    "shoulder_line_tilt": -3.84
+   },
+   "signal": null,
+   "reps": 3,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 335,
+   "metrics": {
+    "shoulder_line_tilt": -1.72
+   },
+   "signal": null,
+   "reps": 3,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 336,
+   "metrics": {
+    "cervical_tilt": 7.74,
+    "shoulder_line_tilt": -2.1
+   },
+   "signal": null,
+   "reps": 3,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 337,
+   "metrics": {
+    "shoulder_line_tilt": -1.96
+   },
+   "signal": null,
+   "reps": 3,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 338,
+   "metrics": {
+    "shoulder_line_tilt": -1.45
+   },
+   "signal": null,
+   "reps": 3,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 339,
+   "metrics": {
+    "cervical_tilt": 9.02,
+    "shoulder_line_tilt": -3.16
+   },
+   "signal": null,
+   "reps": 3,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 340,
+   "metrics": {},
+   "signal": null,
+   "reps": 3,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 341,
+   "metrics": {},
+   "signal": null,
+   "reps": 3,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 342,
+   "metrics": {
+    "neck_yaw_est": -38.04,
+    "shoulder_line_tilt": -2.31,
+    "cervical_sag_proxy": 39.4
+   },
+   "signal": 38.040214013540016,
+   "reps": 3,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 343,
+   "metrics": {
+    "neck_yaw_est": -36.73,
+    "shoulder_line_tilt": -0.98,
+    "cervical_sag_proxy": 40.4
+   },
+   "signal": 36.73119244701591,
+   "reps": 3,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 344,
+   "metrics": {
+    "cervical_tilt": 4.4,
+    "neck_yaw_est": -12.79,
+    "shoulder_line_tilt": 1.15,
+    "cervical_sag_proxy": 20.3
+   },
+   "signal": 12.788895579181265,
+   "reps": 3,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 345,
+   "metrics": {
+    "cervical_tilt": 5.91,
+    "neck_yaw_est": -25.73,
+    "shoulder_line_tilt": 0.11,
+    "cervical_sag_proxy": 41.15
+   },
+   "signal": 25.725298976168272,
+   "reps": 3,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 346,
+   "metrics": {
+    "cervical_tilt": 4.17,
+    "neck_yaw_est": -14.11,
+    "shoulder_line_tilt": 0.11,
+    "cervical_sag_proxy": 15.29
+   },
+   "signal": 14.11413561668701,
+   "reps": 3,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 347,
+   "metrics": {
+    "cervical_tilt": 1.52,
+    "neck_yaw_est": -3.96,
+    "shoulder_line_tilt": 0.11,
+    "cervical_sag_proxy": 3.99
+   },
+   "signal": 3.9584674017153256,
+   "reps": 4,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 348,
+   "metrics": {
+    "cervical_tilt": 1.91,
+    "neck_yaw_est": -9.5,
+    "shoulder_line_tilt": 0.28,
+    "cervical_sag_proxy": 16.47
+   },
+   "signal": 9.499371395750067,
+   "reps": 4,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 349,
+   "metrics": {
+    "neck_yaw_est": -10.68,
+    "shoulder_line_tilt": -0.08,
+    "cervical_sag_proxy": 32.39
+   },
+   "signal": 10.680467908861637,
+   "reps": 4,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 350,
+   "metrics": {
+    "neck_yaw_est": -16.22,
+    "shoulder_line_tilt": 0.31,
+    "cervical_sag_proxy": 36.82
+   },
+   "signal": 16.217636656645954,
+   "reps": 4,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 351,
+   "metrics": {
+    "trunk_tilt_frontal": 2.06,
+    "head_forward_proxy": -0.0,
+    "shoulder_line_tilt": 0.81
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 352,
+   "metrics": {
+    "trunk_tilt_frontal": 1.26,
+    "head_forward_proxy": 0.03,
+    "shoulder_line_tilt": 0.8
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf",
+     "lsho:out_of_frame"
+    ],
+    "missing": [
+     "nose",
+     "lsho"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 353,
+   "metrics": {
+    "trunk_tilt_frontal": 3.17,
+    "head_forward_proxy": -0.01,
+    "shoulder_line_tilt": -0.06
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 354,
+   "metrics": {
+    "trunk_tilt_frontal": 0.43,
+    "head_forward_proxy": 0.0,
+    "shoulder_line_tilt": 2.51
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 355,
+   "metrics": {
+    "trunk_tilt_frontal": 2.26,
+    "head_forward_proxy": -0.01,
+    "shoulder_line_tilt": 0.43
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 356,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 357,
+   "metrics": {
+    "trunk_tilt_frontal": 5.27,
+    "head_forward_proxy": -0.03,
+    "shoulder_line_tilt": 1.2
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 358,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 359,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 360,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 361,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 362,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 363,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 364,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 365,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 366,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 367,
+   "metrics": {
+    "trunk_tilt_frontal": 5.48,
+    "head_forward_proxy": -0.04,
+    "shoulder_line_tilt": 1.44
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 368,
+   "metrics": {
+    "trunk_tilt_frontal": 4.46,
+    "head_forward_proxy": -0.03,
+    "shoulder_line_tilt": 1.66
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 369,
+   "metrics": {
+    "trunk_tilt_frontal": 0.01,
+    "head_forward_proxy": 0.01,
+    "shoulder_line_tilt": -0.22
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 370,
+   "metrics": {
+    "trunk_tilt_frontal": 2.55,
+    "head_forward_proxy": -0.03,
+    "shoulder_line_tilt": -0.21
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf",
+     "lsho:out_of_frame",
+     "rsho:out_of_frame"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 371,
+   "metrics": {
+    "trunk_tilt_frontal": 2.66,
+    "head_forward_proxy": 0.0,
+    "shoulder_line_tilt": -1.31
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 372,
+   "metrics": {
+    "trunk_tilt_frontal": 4.66,
+    "head_forward_proxy": -0.05,
+    "shoulder_line_tilt": -0.56
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf",
+     "lsho:out_of_frame",
+     "rsho:out_of_frame"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 373,
+   "metrics": {
+    "trunk_tilt_frontal": 3.54,
+    "head_forward_proxy": -0.01,
+    "shoulder_line_tilt": -0.43
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 374,
+   "metrics": {
+    "trunk_tilt_frontal": 3.6,
+    "head_forward_proxy": -0.02,
+    "shoulder_line_tilt": 0.21
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 375,
+   "metrics": {
+    "trunk_tilt_frontal": 3.53,
+    "head_forward_proxy": -0.02,
+    "shoulder_line_tilt": 0.06
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 376,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 377,
+   "metrics": {
+    "trunk_tilt_frontal": 4.28,
+    "head_forward_proxy": -0.03,
+    "shoulder_line_tilt": -3.54
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 378,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf",
+     "lsho:low_conf",
+     "rsho:low_conf"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 379,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf",
+     "lsho:low_conf",
+     "rsho:low_conf"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 380,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 381,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 382,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 383,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 384,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 385,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 7
+  },
+  {
+   "frame": 386,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 387,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 388,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 389,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 7
+  },
+  {
+   "frame": 390,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 391,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 392,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 393,
+   "metrics": {
+    "trunk_tilt_frontal": 5.98,
+    "head_forward_proxy": 0.01,
+    "cervical_tilt": 2.54,
+    "shoulder_line_tilt": 1.26
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 394,
+   "metrics": {
+    "trunk_tilt_frontal": 7.07,
+    "head_forward_proxy": 0.01,
+    "shoulder_line_tilt": -1.09
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 395,
+   "metrics": {
+    "trunk_tilt_frontal": 3.14,
+    "head_forward_proxy": -0.01,
+    "shoulder_line_tilt": -3.6
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 396,
+   "metrics": {
+    "trunk_tilt_frontal": 2.79,
+    "head_forward_proxy": -0.06,
+    "shoulder_line_tilt": 0.47
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 397,
+   "metrics": {},
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 398,
+   "metrics": {
+    "trunk_tilt_frontal": 0.8,
+    "head_forward_proxy": -0.03,
+    "shoulder_line_tilt": 0.72
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 399,
+   "metrics": {
+    "trunk_tilt_frontal": 0.47,
+    "head_forward_proxy": 0.0,
+    "shoulder_line_tilt": 1.35
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 400,
+   "metrics": {
+    "trunk_tilt_frontal": 0.18,
+    "head_forward_proxy": 0.0,
+    "shoulder_line_tilt": 0.98
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 401,
+   "metrics": {
+    "cervical_tilt": 1.14,
+    "neck_yaw_est": -5.12,
+    "shoulder_line_tilt": -0.36,
+    "cervical_sag_proxy": 6.5
+   },
+   "signal": 5.123108897999997,
+   "reps": 4,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 402,
+   "metrics": {
+    "cervical_tilt": 1.58,
+    "neck_yaw_est": -4.35,
+    "shoulder_line_tilt": 0.02,
+    "cervical_sag_proxy": 4.42
+   },
+   "signal": 4.352301006602702,
+   "reps": 4,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 403,
+   "metrics": {
+    "cervical_tilt": 1.07,
+    "neck_yaw_est": 4.29,
+    "shoulder_line_tilt": 0.63,
+    "cervical_sag_proxy": 5.0
+   },
+   "signal": 4.293619921769387,
+   "reps": 4,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 404,
+   "metrics": {
+    "cervical_tilt": 4.61,
+    "neck_yaw_est": 14.32,
+    "shoulder_line_tilt": 1.25,
+    "cervical_sag_proxy": 12.22
+   },
+   "signal": 14.321701914138334,
+   "reps": 4,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 405,
+   "metrics": {
+    "neck_yaw_est": 12.27,
+    "shoulder_line_tilt": 1.71
+   },
+   "signal": 12.271005893708978,
+   "reps": 4,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 406,
+   "metrics": {
+    "neck_yaw_est": 20.73,
+    "shoulder_line_tilt": 3.55
+   },
+   "signal": 20.727177407890338,
+   "reps": 4,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 407,
+   "metrics": {
+    "cervical_tilt": 10.38,
+    "neck_yaw_est": 90.0,
+    "shoulder_line_tilt": -3.4,
+    "cervical_sag_proxy": 30.0
+   },
+   "signal": 90.0,
+   "reps": 4,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 408,
+   "metrics": {
+    "shoulder_line_tilt": 3.75
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 409,
+   "metrics": {
+    "cervical_tilt": 11.42,
+    "shoulder_line_tilt": 8.34
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [
+    {
+     "metric": "shoulder_line_tilt",
+     "value": 8.3,
+     "cue": "Do not lift the shoulder when turning; rotate through the neck only."
+    }
+   ],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 410,
+   "metrics": {
+    "cervical_tilt": 11.3,
+    "shoulder_line_tilt": 7.08
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 411,
+   "metrics": {
+    "cervical_tilt": 11.81,
+    "shoulder_line_tilt": 6.76
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 412,
+   "metrics": {
+    "cervical_tilt": 11.04,
+    "shoulder_line_tilt": 7.1
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 413,
+   "metrics": {
+    "neck_yaw_est": 44.5,
+    "shoulder_line_tilt": 4.4
+   },
+   "signal": 44.50277976496652,
+   "reps": 4,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 414,
+   "metrics": {
+    "shoulder_line_tilt": 6.39
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 415,
+   "metrics": {
+    "neck_yaw_est": 35.55,
+    "shoulder_line_tilt": 4.25
+   },
+   "signal": 35.55283872248598,
+   "reps": 4,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 416,
+   "metrics": {
+    "neck_yaw_est": 32.34,
+    "shoulder_line_tilt": 3.8
+   },
+   "signal": 32.341511469697615,
+   "reps": 4,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 417,
+   "metrics": {
+    "neck_yaw_est": 37.1,
+    "shoulder_line_tilt": 3.67
+   },
+   "signal": 37.102353920934355,
+   "reps": 4,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 418,
+   "metrics": {
+    "shoulder_line_tilt": 4.64
+   },
+   "signal": null,
+   "reps": 4,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "nose:low_conf"
+    ],
+    "missing": [
+     "nose"
+    ]
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 419,
+   "metrics": {
+    "neck_yaw_est": 31.41,
+    "shoulder_line_tilt": 3.32
+   },
+   "signal": 31.40593027288097,
+   "reps": 4,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 420,
+   "metrics": {
+    "neck_yaw_est": 29.69,
+    "shoulder_line_tilt": 2.47
+   },
+   "signal": 29.69352047876193,
+   "reps": 4,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 421,
+   "metrics": {
+    "neck_yaw_est": 25.26,
+    "shoulder_line_tilt": 1.87
+   },
+   "signal": 25.262354524158763,
+   "reps": 4,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 422,
+   "metrics": {
+    "cervical_tilt": 4.43,
+    "neck_yaw_est": 14.82,
+    "shoulder_line_tilt": 2.11,
+    "cervical_sag_proxy": 12.42
+   },
+   "signal": 14.819313987665407,
+   "reps": 4,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 423,
+   "metrics": {
+    "cervical_tilt": 2.44,
+    "neck_yaw_est": 11.42,
+    "shoulder_line_tilt": 0.66,
+    "cervical_sag_proxy": 13.99
+   },
+   "signal": 11.41844483573521,
+   "reps": 4,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 424,
+   "metrics": {
+    "cervical_tilt": 0.45,
+    "neck_yaw_est": 8.57,
+    "shoulder_line_tilt": 0.54,
+    "cervical_sag_proxy": 17.1
+   },
+   "signal": 8.572135060332515,
+   "reps": 4,
+   "phase": "out",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 425,
+   "metrics": {
+    "cervical_tilt": 2.34,
+    "neck_yaw_est": -7.45,
+    "shoulder_line_tilt": -0.11,
+    "cervical_sag_proxy": 6.64
+   },
+   "signal": 7.453980759082955,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 426,
+   "metrics": {
+    "cervical_tilt": 2.36,
+    "neck_yaw_est": -7.26,
+    "shoulder_line_tilt": 0.11,
+    "cervical_sag_proxy": 6.68
+   },
+   "signal": 7.264395451898856,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 427,
+   "metrics": {
+    "cervical_tilt": 2.07,
+    "neck_yaw_est": -6.84,
+    "shoulder_line_tilt": 0.33,
+    "cervical_sag_proxy": 8.77
+   },
+   "signal": 6.8425904999507114,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 428,
+   "metrics": {
+    "cervical_tilt": 2.38,
+    "neck_yaw_est": -8.99,
+    "shoulder_line_tilt": 0.12,
+    "cervical_sag_proxy": 10.61
+   },
+   "signal": 8.992219366889717,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 429,
+   "metrics": {
+    "cervical_tilt": 2.29,
+    "neck_yaw_est": -9.84,
+    "shoulder_line_tilt": 0.18,
+    "cervical_sag_proxy": 12.37
+   },
+   "signal": 9.835285889076486,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 430,
+   "metrics": {
+    "cervical_tilt": 3.25,
+    "neck_yaw_est": -12.68,
+    "shoulder_line_tilt": 0.93,
+    "cervical_sag_proxy": 13.06
+   },
+   "signal": 12.682817180759653,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 431,
+   "metrics": {
+    "cervical_tilt": 2.33,
+    "neck_yaw_est": -5.86,
+    "shoulder_line_tilt": 1.82,
+    "cervical_sag_proxy": 4.08
+   },
+   "signal": 5.855895461804887,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 432,
+   "metrics": {
+    "cervical_tilt": 2.66,
+    "neck_yaw_est": -7.64,
+    "shoulder_line_tilt": 1.66,
+    "cervical_sag_proxy": 6.12
+   },
+   "signal": 7.635432861748713,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 433,
+   "metrics": {
+    "cervical_tilt": 2.14,
+    "neck_yaw_est": -9.34,
+    "shoulder_line_tilt": 1.44,
+    "cervical_sag_proxy": 9.82
+   },
+   "signal": 9.337991746503082,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 434,
+   "metrics": {
+    "cervical_tilt": 2.21,
+    "neck_yaw_est": -9.41,
+    "shoulder_line_tilt": 0.99,
+    "cervical_sag_proxy": 10.28
+   },
+   "signal": 9.406388819170967,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 435,
+   "metrics": {
+    "cervical_tilt": 1.68,
+    "neck_yaw_est": -5.67,
+    "shoulder_line_tilt": 1.5,
+    "cervical_sag_proxy": 5.19
+   },
+   "signal": 5.671238729057182,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 436,
+   "metrics": {
+    "cervical_tilt": 1.75,
+    "neck_yaw_est": -3.25,
+    "shoulder_line_tilt": 1.81,
+    "cervical_sag_proxy": 0.26
+   },
+   "signal": 3.2465045522740925,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 437,
+   "metrics": {
+    "cervical_tilt": 2.39,
+    "neck_yaw_est": -6.99,
+    "shoulder_line_tilt": 2.36,
+    "cervical_sag_proxy": 5.19
+   },
+   "signal": 6.992263264583135,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 438,
+   "metrics": {
+    "cervical_tilt": 1.46,
+    "neck_yaw_est": -1.65,
+    "shoulder_line_tilt": 2.35,
+    "cervical_sag_proxy": 2.5
+   },
+   "signal": 1.6531538172216138,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 439,
+   "metrics": {
+    "cervical_tilt": 0.38,
+    "neck_yaw_est": -0.43,
+    "shoulder_line_tilt": 1.49,
+    "cervical_sag_proxy": 0.53
+   },
+   "signal": 0.4259150636011737,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 440,
+   "metrics": {
+    "cervical_tilt": 0.53,
+    "neck_yaw_est": 1.21,
+    "shoulder_line_tilt": 1.86,
+    "cervical_sag_proxy": 4.52
+   },
+   "signal": 1.2132375088760672,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 441,
+   "metrics": {
+    "cervical_tilt": 0.53,
+    "neck_yaw_est": 1.46,
+    "shoulder_line_tilt": 1.36,
+    "cervical_sag_proxy": 5.39
+   },
+   "signal": 1.4573229357561504,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 442,
+   "metrics": {
+    "cervical_tilt": 1.84,
+    "neck_yaw_est": 6.54,
+    "shoulder_line_tilt": 1.47,
+    "cervical_sag_proxy": 7.33
+   },
+   "signal": 6.53797579824381,
+   "reps": 5,
+   "phase": "in",
+   "cues": [],
+   "framing": {
+    "ready": true,
+    "issues": [],
+    "missing": []
+   },
+   "latency_ms": 9
+  },
+  {
+   "frame": 443,
+   "metrics": {},
+   "signal": null,
+   "reps": 5,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 444,
+   "metrics": {},
+   "signal": null,
+   "reps": 5,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 445,
+   "metrics": {},
+   "signal": null,
+   "reps": 5,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 446,
+   "metrics": {},
+   "signal": null,
+   "reps": 5,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 447,
+   "metrics": {},
+   "signal": null,
+   "reps": 5,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 448,
+   "metrics": {},
+   "signal": null,
+   "reps": 5,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 449,
+   "metrics": {},
+   "signal": null,
+   "reps": 5,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 450,
+   "metrics": {},
+   "signal": null,
+   "reps": 5,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 451,
+   "metrics": {},
+   "signal": null,
+   "reps": 5,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 452,
+   "metrics": {},
+   "signal": null,
+   "reps": 5,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 453,
+   "metrics": {},
+   "signal": null,
+   "reps": 5,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 454,
+   "metrics": {},
+   "signal": null,
+   "reps": 5,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 455,
+   "metrics": {},
+   "signal": null,
+   "reps": 5,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  },
+  {
+   "frame": 456,
+   "metrics": {},
+   "signal": null,
+   "reps": 5,
+   "phase": "rest",
+   "cues": [],
+   "framing": {
+    "ready": false,
+    "issues": [
+     "no_person"
+    ],
+    "missing": [
+     "nose",
+     "lsho",
+     "rsho"
+    ]
+   },
+   "latency_ms": 8
+  }
+ ]
+}

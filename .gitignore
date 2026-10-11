@@ -1,0 +1,10 @@
+*.pyc
+__pycache__/
+.pytest_cache/
+server/sessions.db
+android/.gradle/
+android/**/build/
+android/local.properties
+*.iml
+.idea/
+.DS_Store

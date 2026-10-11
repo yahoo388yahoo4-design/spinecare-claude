@@ -1,0 +1,31 @@
+name: SpineCare
+options:
+  bundleIdPrefix: com.spinecare
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    CODE_SIGN_STYLE: Automatic
+targets:
+  SpineCare:
+    type: application
+    platform: iOS
+    sources:
+      - SpineCare
+    info:
+      path: SpineCare/Info.plist
+      properties:
+        CFBundleDisplayName: SpineCare
+        NSCameraUsageDescription: "SpineCare uses the camera to guide and monitor your rehabilitation exercises. Video never leaves the device unless you enable the GPU server."
+        NSMotionUsageDescription: "Used for posture context during exercises."
+        UIBackgroundModes: []
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.spinecare.app
+        INFOPLIST_FILE: SpineCare/Info.plist

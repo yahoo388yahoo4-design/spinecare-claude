@@ -1,0 +1,3 @@
+# GPU pose for camera-frame mode. Landmark-only mode does not need these.
+-r requirements.txt
+ultralytics>=8.2

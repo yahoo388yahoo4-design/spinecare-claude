@@ -1,0 +1,70 @@
+name: Release builds
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  android-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: "8.7"
+      - name: Generate test keystore (ephemeral, prototype signing)
+        run: |
+          keytool -genkeypair -v -keystore spinecare-test.keystore \
+            -alias spinecare -keyalg RSA -keysize 2048 -validity 3650 \
+            -storepass spinecare-test -keypass spinecare-test \
+            -dname "CN=SpineCare Prototype, OU=CI, O=SpineCare, C=US"
+      - name: Assemble release APK (signed with test key)
+        working-directory: android
+        env:
+          SPINECARE_KEYSTORE: ${{ github.workspace }}/spinecare-test.keystore
+          SPINECARE_KEYSTORE_PASSWORD: spinecare-test
+          SPINECARE_KEY_ALIAS: spinecare
+          SPINECARE_KEY_PASSWORD: spinecare-test
+        run: gradle --no-daemon assembleRelease
+      - name: Assemble debug APK
+        working-directory: android
+        run: gradle --no-daemon assembleDebug
+      - name: Upload to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            android/app/build/outputs/apk/release/app-release.apk
+            android/app/build/outputs/apk/debug/app-debug.apk
+
+  ios-release:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install xcodegen
+        run: brew install xcodegen
+      - name: Generate project
+        working-directory: ios
+        run: xcodegen generate
+      - name: Build (unsigned, for CI artifact)
+        working-directory: ios
+        run: |
+          xcodebuild -project SpineCare.xcodeproj -scheme SpineCare \
+            -sdk iphoneos -configuration Release CODE_SIGNING_ALLOWED=NO \
+            -derivedDataPath build build
+      - name: Package unsigned IPA
+        working-directory: ios
+        run: |
+          mkdir -p Payload
+          cp -r build/Build/Products/Release-iphoneos/SpineCare.app Payload/
+          zip -qr SpineCare-unsigned.ipa Payload
+      - name: Upload to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ios/SpineCare-unsigned.ipa
