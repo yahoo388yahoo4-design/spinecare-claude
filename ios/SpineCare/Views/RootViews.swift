@@ -99,12 +99,22 @@ struct ExercisesView: View {
     @State private var video = ""
     @State private var approved = false
     @State private var formError = ""
+    @AppStorage("programFilter") private var programFilter = "all"
 
     var body: some View {
         NavigationStack {
             List {
                 Section { Text("⚠ " + L.t("approval_warning")).font(.callout).foregroundStyle(.red) }
-                ForEach(Plan.all) { ex in
+                Section {
+                    Picker(L.t("program_pick"), selection: $programFilter) {
+                        ForEach(["all"] + Plan.programs, id: \.self) { Text(L.t("program_short_" + $0)).tag($0) }
+                    }
+                    .pickerStyle(.segmented)
+                    if programFilter != "all" {
+                        Text(L.t("program_hint_" + programFilter)).font(.caption).foregroundStyle(.secondary)
+                    }
+                }
+                ForEach(Plan.builtIn(in: programFilter) + store.customExercises) { ex in
                     Section { row(ex) }
                 }
                 Section(L.t("custom_title")) {
@@ -132,6 +142,7 @@ struct ExercisesView: View {
         let ok = ex.isCustom || store.isApproved(ex.id)
         VStack(alignment: .leading, spacing: 4) {
             Text(ex.title(lang)).font(.headline)
+            Text(L.t("program_" + ex.programId)).font(.caption).foregroundStyle(.blue)
             Text(ex.cameraTracked ? L.f("meta_camera", L.t("view_" + ex.view), ex.targetReps)
                                   : L.f("meta_manual", ex.targetSets ?? 0, ex.targetReps))
                 .font(.caption).foregroundStyle(.secondary)

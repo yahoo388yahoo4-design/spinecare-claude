@@ -29,6 +29,14 @@ enum Metrics {
         return score(s) >= vis ? s : nil
     }
 
+    /// "l" or "r": the side whose ear/shoulder pair is most visible, or nil.
+    /// Used by head-and-shoulders and waist-up exercises (hips out of view).
+    static func bestSideUpper(_ p: [String: LM]) -> String? {
+        func score(_ s: String) -> Double { min(p[s + "ear"]?.conf ?? 0, p[s + "sho"]?.conf ?? 0) }
+        let s = score("l") >= score("r") ? "l" : "r"
+        return score(s) >= vis ? s : nil
+    }
+
     static func compute(_ p: [String: LM]) -> [String: Double] {
         var m: [String: Double] = [:]
         let zero = LM(x: 0, y: 0, conf: 0)
@@ -69,6 +77,31 @@ enum Metrics {
             }
             if let a = angBetween(nose.x - ear.x, nose.y - ear.y, sho.x - ear.x, sho.y - ear.y) {
                 m["cervical_sag_proxy"] = a
+            }
+        }
+        // Upper-body-only metrics: nothing below the shoulders is needed, so they
+        // work with a head-and-shoulders (neck programme) or waist-up framing.
+        if v("lear") && v("rear") {
+            let deg = atan2(rear.y - lear.y, rear.x - lear.x) * 180 / .pi
+            let w = (deg + 90).truncatingRemainder(dividingBy: 180)
+            m["head_roll"] = (w < 0 ? w + 180 : w) - 90
+            if bothSho && shoW > 1e-6 { m["shoulder_elev"] = ((lsho.y - lear.y) + (rsho.y - rear.y)) / 2 / shoW }
+        }
+        for s in ["l", "r"] where v(s + "sho") && v(s + "elb") {
+            if let a = angFromVertical(g(s + "sho"), g(s + "elb")) { m["arm_elev_" + s] = a }
+        }
+        if let l = m["arm_elev_l"], let r = m["arm_elev_r"] {
+            m["arm_elevation"] = min(l, r); m["arm_elev_asym"] = l - r
+        }
+        if let up = bestSideUpper(p), v("nose") {
+            let ear = g(up + "ear"), sho = g(up + "sho")
+            let facing: Double = nose.x >= ear.x ? 1 : -1
+            let neck = dist(ear, sho)
+            if neck > 1e-6 { m["head_forward_neck"] = (ear.x - sho.x) * facing / neck }
+            m["head_pitch_side"] = atan2(nose.y - ear.y, (nose.x - ear.x) * facing) * 180 / .pi
+            if v(up + "elb") {
+                let elb = g(up + "elb")
+                m["arm_ext_side"] = atan2((sho.x - elb.x) * facing, elb.y - sho.y) * 180 / .pi
             }
         }
         return m

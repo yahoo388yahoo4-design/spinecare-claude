@@ -28,6 +28,7 @@ data class Exercise(
     val clinicianApproved: Boolean,
     val custom: Boolean = false,
     val videoUrl: String = "",
+    val program: String = "full",    // full | upper_body | neck (what must be in view) | custom
 ) {
     fun name(lang: String) = name[lang] ?: name["en"] ?: id
     fun description(lang: String) = description[lang] ?: description["en"] ?: ""
@@ -71,6 +72,7 @@ data class Exercise(
                 clinicianApproved = o.optBoolean("clinician_approved", false),
                 custom = o.optBoolean("custom", false),
                 videoUrl = o.optString("video_url", ""),
+                program = o.optString("program", if (o.optBoolean("custom", false)) "custom" else "full"),
             )
         }
 
@@ -91,7 +93,7 @@ data class Exercise(
             view = "any", tracking = "manual", requiredLandmarks = emptyList(), minConf = 0.5,
             signal = "", direction = 1.0, repLow = 0.0, repHigh = 0.0,
             targetReps = reps, targetSets = sets, formRules = emptyList(), stopConditions = emptyMap(),
-            clinicianApproved = true, custom = true, videoUrl = videoUrl,
+            clinicianApproved = true, custom = true, videoUrl = videoUrl, program = "custom",
         )
     }
 }
@@ -99,6 +101,9 @@ data class Exercise(
 /** Built-in plan (shared/exercises.json, bundled as an asset) plus the user's
  *  custom clinician-approved entries. Nothing here is self-prescribed. */
 object Plan {
+    /** Built-in programmes, from the most to the least of the body that must be in view. */
+    val PROGRAMS = listOf("full", "upper_body", "neck")
+
     data class Bundle(val exercises: List<Exercise>, val calibrationS: Double)
 
     @Volatile private var builtIn: Bundle? = null
@@ -115,4 +120,6 @@ object Plan {
 
     fun all(ctx: Context): List<Exercise> = bundle(ctx).exercises + LocalStore(ctx).customExercises()
     fun byId(ctx: Context, id: String) = all(ctx).firstOrNull { it.id == id }
+    fun inProgram(exercises: List<Exercise>, program: String) =
+        if (program == "all") exercises else exercises.filter { it.program == program }
 }

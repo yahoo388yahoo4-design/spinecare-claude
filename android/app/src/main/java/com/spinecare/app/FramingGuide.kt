@@ -7,7 +7,18 @@ import com.spinecare.app.I18n.t
 object FramingGuide {
     data class Guide(val headline: String, val steps: List<String>)
 
-    fun forView(view: String): Guide = when (view) {
+    /** Neck and upper-body programmes frame closer and never need the hips in view. */
+    fun forView(view: String, program: String = "full"): Guide = when {
+        program == "neck" && view == "front" ->
+            Guide(t("guide_neck_front_title"), listOf(t("guide_neck_1"), t("guide_neck_front_2"), t("guide_light")))
+        program == "neck" -> Guide(t("guide_neck_side_title"), listOf(t("guide_neck_1"), t("guide_neck_side_2"), t("guide_light")))
+        program == "upper_body" && view == "front" ->
+            Guide(t("guide_upper_front_title"), listOf(t("guide_upper_1"), t("guide_upper_2"), t("guide_light")))
+        program == "upper_body" -> Guide(t("guide_upper_side_title"), listOf(t("guide_upper_1"), t("guide_upper_2"), t("guide_light")))
+        else -> forViewFull(view)
+    }
+
+    private fun forViewFull(view: String): Guide = when (view) {
         "side" -> Guide(t("guide_side_title"), listOf(t("guide_side_1"), t("guide_side_2"), t("guide_side_3"), t("guide_light")))
         "front" -> Guide(t("guide_front_title"), listOf(t("guide_front_1"), t("guide_front_2"), t("guide_front_3")))
         "back" -> Guide(t("guide_back_title"), listOf(t("guide_back_1"), t("guide_back_2"), t("guide_light")))

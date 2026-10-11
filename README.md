@@ -41,6 +41,11 @@ testdata/   sample images; evidence/ is the earlier hermes test evidence
   - It calibrates **your own neutral posture** for 1.5 s, then counts reps relative to it. That way a resting asymmetry, such as scoliosis, isn't penalised.
   - It gives localized cues with optional voice and haptics.
   - Sessions can optionally be recorded with the overlay drawn in, for later review.
+- **Three programmes**, picked on the Plan tab by how much of you the camera has to see:
+  - **Full posture** (ear to hip in view): chin tuck, thoracic extension, scapular setting.
+  - **Upper body only** (waist up, hips can be out of view): shoulder shrug, side arm raise, shoulder blade squeeze.
+  - **Neck only** (head and shoulders): chin tuck, neck rotation, side bend and flexion.
+  - Upper-body and neck exercises use only metrics that need nothing below the shoulders, so framing, rep counting and form cues all work from a close-up or at a desk.
 - **Before and after symptom check-ins** around each session, plus a daily check-in for neck pain, arm symptoms and sleep.
 - **Custom exercises** from your clinician, run with a timer and a set counter. Links must use HTTPS.
 - **Progress:** session history, pain trend and CSV export through the share sheet. History can be cleared.
