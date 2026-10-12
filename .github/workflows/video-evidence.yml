@@ -79,7 +79,7 @@ jobs:
           disk-size: 6G
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none -camera-front none
-          script: bash scripts/ci_android_replay.sh evidence/android 270 shoulder_press,jumping_jack,neck_yoga_loosening_2
+          script: bash scripts/ci_android_replay.sh evidence/android 270 neck_side_bend_yoga,serratus_punch,bent_over_row
       - uses: actions/upload-artifact@v4
         if: always()
         with:

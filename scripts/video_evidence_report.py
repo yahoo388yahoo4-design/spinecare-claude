@@ -123,10 +123,10 @@ def main():
         fmt = lambda r: "not run" if not r else f"{pct(r.get('detection_rate'))} / {pct(r.get('ready_rate'))} / {r.get('reps')}"  # noqa: E731
         L.append(f"| {v['id']} | {v['exercise_id']} | {fmt(a)} | {fmt(i)} | {fmt(s)} | "
                  f"{a.get('latency_p50_ms') if a else '–'} | {a.get('recorder_frames') if a else '–'} |")
-    L += ["", "## Sources", "", "| clip | file | author | license | length used |", "|---|---|---|---|---|"]
+    L += ["", "## Sources", "", "| clip | spine-care relevance | file | author | license | length used |", "|---|---|---|---|---|---|"]
     cell = lambda t: " ".join(str(t).split()).replace("|", "/")[:90]  # noqa: E731  one table cell
     for v in sources["videos"]:
-        L.append(f"| {v['id']} | [{v['title']}]({v['page']}) | {cell(v.get('author') or v.get('credit') or '–')} | "
+        L.append(f"| {v['id']} | {cell(v.get('relevance') or '–')} | [{v['title']}]({v['page']}) | {cell(v.get('author') or v.get('credit') or '–')} | "
                  f"{v['license']} | {v.get('frames', 0) / fps:.0f} s of {v.get('duration', 0):.0f} s |")
     L += ["", "Files per clip: `android/<id>/overlay.mp4` (annotated frames from the app's OverlayRenderer), "
           "`android/<id>/app_recorder.mp4` (the app's own SessionRecorder), `ios/<id>/overlay.mp4`, "

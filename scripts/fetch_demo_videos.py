@@ -176,6 +176,7 @@ def main():
             chosen.append({
                 "id": vid_id, "exercise_id": entry["exercise_id"], "file": f"{vid_id}.mp4",
                 "frames": frames, "fps": fps, "query": entry.get("commons_search", ""),
+                "relevance": entry.get("relevance", ""),
                 **{k: info[k] for k in ("title", "page", "license", "license_url", "author", "credit",
                                         "description", "duration")},
             })
