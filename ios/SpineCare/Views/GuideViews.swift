@@ -354,7 +354,9 @@ final class SetupCheckController: ObservableObject {
         motion.deviceMotionUpdateInterval = 0.1
         motion.startDeviceMotionUpdates(to: .main) { [weak self] m, _ in
             guard let g = m?.gravity, let self else { return }
-            let (p, r) = PlacementCoach.tilt(gx: g.x, gy: g.y, gz: g.z)
+            // device axes -> screen axes, so "level" and "upright" also hold in landscape
+            let (sx, sy) = CameraOptions.screenGravity(gx: g.x, gy: g.y, rotationDeg: CameraOptions.rotationDegrees(OrientationLock.current))
+            let (p, r) = PlacementCoach.tilt(gx: sx, gy: sy, gz: g.z)
             self.queue.async { self.pitch = p; self.roll = r }
         }
     }
@@ -404,6 +406,9 @@ struct SetupCheckView: View {
     @StateObject private var ctl: SetupCheckController
     @ObservedObject private var store = SessionStore.shared
     @State private var frontCamera = true
+    @StateObject private var camera = CameraControl()
+    @State private var orient = CameraOptions.orientation
+    @Environment(\.verticalSizeClass) private var vSize
 
     init(exercise: Exercise) {
         self.exercise = exercise
@@ -411,8 +416,10 @@ struct SetupCheckView: View {
     }
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            CameraPreview(frontCamera: frontCamera) { ctl.process($0) }.ignoresSafeArea()
+        // landscape: the panel sits on the right instead of the bottom
+        ZStack(alignment: vSize == .compact ? .trailing : .bottom) {
+            CameraPreview(frontCamera: frontCamera, camera: camera) { ctl.process($0) }.ignoresSafeArea()
+                .gesture(MagnificationGesture().onChanged { camera.pinch($0) }.onEnded { _ in camera.pinchEnded() })
             Canvas { ctx, size in
                 let zone = CGRect(x: size.width * 0.28, y: size.height * 0.06, width: size.width * 0.44, height: size.height * 0.56)
                 ctx.stroke(Path(roundedRect: zone, cornerRadius: 24), with: .color(ctl.result.ready ? .green : .yellow.opacity(0.8)),
@@ -430,6 +437,13 @@ struct SetupCheckView: View {
                 }
                 if ctl.readyStable { Text(L.t("sc_ready")).font(.callout.bold()).foregroundStyle(.green) }
                 HStack {
+                    if camera.lenses.count > 1 { Button(camera.lensLabel) { camera.nextLens() }.buttonStyle(.bordered) }
+                    Button(camera.zoomLabel) { camera.cycleZoom() }.buttonStyle(.bordered)
+                    Button("⟳ " + L.t(orient.key)) {
+                        orient = orient.next; CameraOptions.orientation = orient; OrientationLock.refresh()
+                    }.buttonStyle(.bordered)
+                }.font(.caption)
+                HStack {
                     Button(L.t("flip")) { frontCamera.toggle() }.buttonStyle(.bordered)
                     if exercise.isCustom || store.isApproved(exercise.id) {
                         NavigationLink(L.t("sc_start")) { ExerciseSessionView(exercise: exercise) }.buttonStyle(.borderedProminent)
@@ -438,13 +452,13 @@ struct SetupCheckView: View {
                     }
                 }
             }
-            .padding().frame(maxWidth: .infinity, alignment: .leading)
+            .padding().frame(maxWidth: vSize == .compact ? 340 : .infinity, alignment: .leading)
             .background(.black.opacity(0.75)).foregroundStyle(.white)
         }
         .navigationTitle(L.t("sc_title"))
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear { UIApplication.shared.isIdleTimerDisabled = true; ctl.start() }
-        .onDisappear { UIApplication.shared.isIdleTimerDisabled = false; ctl.stop() }
+        .onAppear { UIApplication.shared.isIdleTimerDisabled = true; OrientationLock.enterCameraScreen(); ctl.start() }
+        .onDisappear { UIApplication.shared.isIdleTimerDisabled = false; OrientationLock.leaveCameraScreen(); ctl.stop() }
     }
 }
 

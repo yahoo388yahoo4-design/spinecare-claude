@@ -28,34 +28,20 @@ class LocalStore(context: Context) {
     fun saveSession(exId: String, reps: Int, sets: Int, durationS: Long, avg: Map<String, Double>,
                     cues: Map<String, Int>, frames: Int, source: String,
                     videoPath: String? = null, recordedFrames: Int = 0,
-                    timelinePath: String? = null, timelineSamples: Int = 0) = synchronized(LOCK) {
-        val o = JSONObject()
-            .put("ts", System.currentTimeMillis())
-            .put("date", today())
-            .put("exercise", exId).put("reps", reps).put("sets", sets).put("duration_s", durationS)
-            .put("avg", JSONObject(avg.mapValues { Math.round(it.value * 1000) / 1000.0 } as Map<*, *>))
-            .put("cues", JSONObject(cues as Map<*, *>))
-            .put("frames", frames).put("source", source)
-        if (videoPath != null) o.put("video", File(videoPath).name).put("recorded_frames", recordedFrames)
-        if (timelinePath != null) o.put("timeline", File(timelinePath).name).put("timeline_samples", timelineSamples)
+                    timelinePath: String? = null, timelineSamples: Int = 0): JSONObject = synchronized(LOCK) {
+        val o = sessionRow(System.currentTimeMillis(), today(), exId, reps, sets, durationS, avg, cues, frames, source,
+            videoPath, recordedFrames, timelinePath, timelineSamples)
         sessions.appendText(o.toString() + "\n")
+        o
     }
 
     fun allSessions(): List<JSONObject> = readJsonl(sessions)
 
     /** Recording file for a session row (stored by name so it survives path changes). */
-    fun videoFile(row: JSONObject): File? {
-        val v = row.optString("video", "")
-        if (v.isEmpty() || v == "null") return null
-        return File(recordings, File(v).name)
-    }
+    fun videoFile(row: JSONObject): File? = recordingFor(row, "video", recordings)
 
     /** Sensor timeline for a session row (see SessionTimeline), stored next to recordings. */
-    fun timelineFile(row: JSONObject): File? {
-        val v = row.optString("timeline", "")
-        if (v.isEmpty() || v == "null") return null
-        return File(recordings, File(v).name)
-    }
+    fun timelineFile(row: JSONObject): File? = recordingFor(row, "timeline", recordings)
 
     /** Where a new session's timeline is written. */
     fun newTimelineFile(base: String): File = File(recordings.apply { mkdirs() }, "$base.timeline.jsonl")
@@ -130,8 +116,39 @@ class LocalStore(context: Context) {
 
         private fun readJsonl(f: File): List<JSONObject> = synchronized(LOCK) {
             if (!f.exists()) emptyList()
-            else f.readLines().mapNotNull { line -> runCatching { JSONObject(line) }.getOrNull() }
+            else parseRows(f.readLines())
         }
+
+        /** One saved-session row. Non-finite metric averages are dropped: org.json
+         *  refuses NaN/Infinity, which used to make Stop & save throw and lose the session. */
+        fun sessionRow(ts: Long, date: String, exId: String, reps: Int, sets: Int, durationS: Long, avg: Map<String, Double>,
+                       cues: Map<String, Int>, frames: Int, source: String, videoPath: String? = null, recordedFrames: Int = 0,
+                       timelinePath: String? = null, timelineSamples: Int = 0): JSONObject {
+            val a = JSONObject()
+            for ((k, v) in avg) if (!v.isNaN() && !v.isInfinite()) a.put(k, Math.round(v * 1000) / 1000.0)
+            val c = JSONObject()
+            for ((k, v) in cues) c.put(k, v)
+            val o = JSONObject()
+                .put("ts", ts).put("date", date)
+                .put("exercise", exId).put("reps", reps).put("sets", sets).put("duration_s", durationS)
+                .put("avg", a).put("cues", c)
+                .put("frames", frames).put("source", source)
+            if (videoPath != null) o.put("video", File(videoPath).name).put("recorded_frames", recordedFrames)
+            if (timelinePath != null) o.put("timeline", File(timelinePath).name).put("timeline_samples", timelineSamples)
+            return o
+        }
+
+        /** A session's recording or timeline, stored by file name in [dir] (so it survives path changes). */
+        fun recordingFor(row: JSONObject, key: String, dir: File): File? {
+            val v = row.optString(key, "")
+            if (v.isEmpty() || v == "null") return null
+            return File(dir, File(v).name)
+        }
+
+        /** The session row a replay was opened for. */
+        fun findSession(rows: List<JSONObject>, ts: Long): JSONObject? = rows.lastOrNull { it.optLong("ts") == ts }
+
+        fun parseRows(lines: List<String>): List<JSONObject> = lines.mapNotNull { line -> runCatching { JSONObject(line) }.getOrNull() }
 
         fun esc(v: Any?): String = "\"" + (v?.toString() ?: "").replace("\"", "\"\"") + "\""
 

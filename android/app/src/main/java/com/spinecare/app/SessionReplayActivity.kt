@@ -28,7 +28,8 @@ import java.io.File
  *  burned in) or, with no video, re-draws the skeleton and HUD from the saved
  *  sensor timeline; underneath, a metric chart with rep and cue marks, IMU
  *  lines from the BLE posture nodes, and a readout at the playhead.
- *  Everything stays on the device. */
+ *  Everything stays on the device. Works in portrait and landscape (side-by-side
+ *  layout); the playhead, speed and view survive a rotation. */
 class SessionReplayActivity : AppCompatActivity() {
     private lateinit var stage: ReplayStageView
     private lateinit var video: VideoView
@@ -51,6 +52,7 @@ class SessionReplayActivity : AppCompatActivity() {
     private var clock = 0L
     private var lastTick = 0L
     private var speedIdx = 1
+    private var preferVideo = true
     private var target = 0
     private val speeds = floatArrayOf(0.5f, 1f, 2f)
     private val main = Handler(Looper.getMainLooper())
@@ -64,11 +66,17 @@ class SessionReplayActivity : AppCompatActivity() {
         I18n.init(this)
         val store = LocalStore(this)
         val ts = intent.getLongExtra("ts", -1L)
-        val row = store.allSessions().firstOrNull { it.optLong("ts") == ts } ?: run { finish(); return }
+        val row = LocalStore.findSession(store.allSessions(), ts) ?: run { finish(); return }
         val ex = Plan.byId(this, row.optString("exercise"))
         target = ex?.targetReps ?: 0
         videoFile = store.videoFile(row)?.takeIf { it.exists() }
         buildUi(row, ex?.name(I18n.lang) ?: row.optString("exercise"))
+        savedInstanceState?.let {
+            clock = it.getLong(KEY_CLOCK, 0L)
+            speedIdx = it.getInt(KEY_SPEED, 1).coerceIn(0, speeds.size - 1)
+            speedBtn.text = speedLabel()
+            preferVideo = it.getBoolean(KEY_VIDEO, true)
+        }
 
         val tlFile = store.timelineFile(row)?.takeIf { it.exists() }
         if (tlFile == null) { onTimeline(null); return }
@@ -85,6 +93,7 @@ class SessionReplayActivity : AppCompatActivity() {
             this.text = text; isAllCaps = false; setOnClickListener { onClick() }
             layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
         }
+        val landscape = resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
         val col = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setBackgroundColor(Ui.BG); setPadding(12, 12, 12, 12) }
         col.addView(TextView(this).apply {
             text = "${row.optString("date")}  $title"; setTextColor(Ui.TEXT); textSize = 16f
@@ -97,7 +106,7 @@ class SessionReplayActivity : AppCompatActivity() {
         box.addView(video, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER))
         stage = ReplayStageView(this).also { it.target = target }
         box.addView(stage, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
-        col.addView(box, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
+        if (!landscape) col.addView(box, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
 
         modeRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
         videoBtn = btn(t("replay_video")) { setMode(true) }
@@ -146,7 +155,14 @@ class SessionReplayActivity : AppCompatActivity() {
                 setOnClickListener { openExternal(f) }
             })
         }
-        setContentView(col)
+        if (landscape) {
+            // picture on the left, controls and chart in a scrolling column on the right
+            val rowRoot = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; setBackgroundColor(Ui.BG) }
+            rowRoot.addView(box, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.3f))
+            rowRoot.addView(android.widget.ScrollView(this).apply { addView(col) },
+                LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
+            setContentView(rowRoot)
+        } else setContentView(col)
     }
 
     // ------------------------------------------------------------------ setup
@@ -185,7 +201,7 @@ class SessionReplayActivity : AppCompatActivity() {
             video.setOnErrorListener { _, _, _ -> player = null; if (useVideo) setMode(false); true }
         }
         modeRow.visibility = if (vf != null && parsed != null) View.VISIBLE else View.GONE
-        setMode(vf != null)
+        setMode(vf != null && preferVideo)
         render()
     }
 
@@ -242,8 +258,15 @@ class SessionReplayActivity : AppCompatActivity() {
 
     private fun cycleSpeed() {
         speedIdx = (speedIdx + 1) % speeds.size
-        speedBtn.text = when (speedIdx) { 0 -> "0.5×"; 1 -> "1×"; else -> "2×" }
+        speedBtn.text = speedLabel()
         applySpeed()
+    }
+
+    private fun speedLabel() = when (speedIdx) { 0 -> "0.5×"; 1 -> "1×"; else -> "2×" }
+
+    override fun onSaveInstanceState(out: Bundle) {
+        super.onSaveInstanceState(out)
+        out.putLong(KEY_CLOCK, clock); out.putInt(KEY_SPEED, speedIdx); out.putBoolean(KEY_VIDEO, useVideo || tl == null)
     }
 
     private fun seekTo(t: Long) {
@@ -309,5 +332,11 @@ class SessionReplayActivity : AppCompatActivity() {
         main.removeCallbacks(ticker)
         runCatching { video.stopPlayback() }
         super.onDestroy()
+    }
+
+    private companion object {
+        const val KEY_CLOCK = "clock"
+        const val KEY_SPEED = "speed"
+        const val KEY_VIDEO = "video"
     }
 }

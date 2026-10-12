@@ -59,9 +59,28 @@
         android:textSize="12sp"
         android:fontFamily="monospace"
         android:background="#CC0B1220"
-        app:layout_constraintBottom_toTopOf="@id/btnRow2"
+        app:layout_constraintBottom_toTopOf="@id/btnRow3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/btnRow3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="8dp" android:paddingEnd="8dp"
+        android:background="@color/sc_surface"
+        app:layout_constraintBottom_toTopOf="@id/btnRow2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button android:id="@+id/btnLens" android:layout_width="0dp" android:layout_weight="1"
+            android:layout_height="wrap_content" android:textAllCaps="false" android:text="Lens"/>
+        <Button android:id="@+id/btnZoom" android:layout_width="0dp" android:layout_weight="1"
+            android:layout_height="wrap_content" android:textAllCaps="false" android:text="1×"/>
+        <Button android:id="@+id/btnRotate" android:layout_width="0dp" android:layout_weight="1"
+            android:layout_height="wrap_content" android:textAllCaps="false" android:text="Rotate"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/btnRow"

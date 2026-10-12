@@ -86,6 +86,10 @@ object ServerConfig {
     fun recordSessions(c: Context) = p(c).getBoolean("record_sessions", false)
     fun setRecordSessions(c: Context, v: Boolean) = p(c).edit().putBoolean("record_sessions", v).apply()
 
+    /** Camera screens' orientation: CameraOptions.ORIENT_AUTO, _PORTRAIT or _LANDSCAPE. */
+    fun cameraOrientation(c: Context) = p(c).getInt("camera_orientation", CameraOptions.ORIENT_AUTO)
+    fun setCameraOrientation(c: Context, v: Int) = p(c).edit().putInt("camera_orientation", v).apply()
+
     /** Whether the configured server may be used at all: a URL is set, the mode
      *  allows it, and the transport is HTTPS (or opted-in HTTP on a private LAN). */
     fun serverUsable(c: Context): Boolean =
