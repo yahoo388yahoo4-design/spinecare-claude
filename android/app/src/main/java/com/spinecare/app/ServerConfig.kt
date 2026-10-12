@@ -83,7 +83,7 @@ object ServerConfig {
     fun setVoiceControl(c: Context, v: Boolean) = p(c).edit().putBoolean("voice_control", v).apply()
 
     /** Record sessions with the sensor overlay burned in (local MP4). */
-    fun recordSessions(c: Context) = p(c).getBoolean("record_sessions", false)
+    fun recordSessions(c: Context) = p(c).getBoolean("record_sessions", true)
     fun setRecordSessions(c: Context, v: Boolean) = p(c).edit().putBoolean("record_sessions", v).apply()
 
     /** Camera screens' orientation: CameraOptions.ORIENT_AUTO, _PORTRAIT or _LANDSCAPE. */

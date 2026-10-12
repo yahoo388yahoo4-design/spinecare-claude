@@ -197,7 +197,18 @@ class SessionReplayActivity : AppCompatActivity() {
 
         if (vf != null) {
             video.setVideoPath(vf.absolutePath)
-            video.setOnPreparedListener { mp -> player = mp; mp.setOnCompletionListener { pause() }; if (useVideo) seekTo(clock) }
+            video.setOnPreparedListener { mp ->
+                player = mp; mp.setOnCompletionListener { pause() }
+                if (useVideo) seekTo(clock)
+                // A VideoView shows nothing until playback starts, so the review looked
+                // empty until Play was pressed: run it until the first frame is drawn,
+                // then hold that frame at the playhead.
+                if (!playing) video.start()
+            }
+            video.setOnInfoListener { _, what, _ ->
+                if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START && !playing) { video.pause(); seekTo(clock) }
+                false
+            }
             video.setOnErrorListener { _, _, _ -> player = null; if (useVideo) setMode(false); true }
         }
         modeRow.visibility = if (vf != null && parsed != null) View.VISIBLE else View.GONE

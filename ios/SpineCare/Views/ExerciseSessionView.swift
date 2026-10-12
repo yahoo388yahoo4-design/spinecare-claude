@@ -617,6 +617,12 @@ struct CameraPreview: UIViewRepresentable {
         private var input: AVCaptureDeviceInput?
         private var devices: [String: AVCaptureDevice] = [:]
         private var orientation: UIInterfaceOrientation = .portrait
+        /// iOS 17+: Apple's per-camera rotation angles. A fixed angle (90° for
+        /// portrait) assumes every sensor is mounted the same way, which left the
+        /// picture sideways on some iPhones and cameras.
+        private var rotationCoordinator: AnyObject?
+        private var rotationObservers: [NSKeyValueObservation] = []
+        private var captureAngle: CGFloat?      // camera queue
 
         init(onFrame: @escaping (CMSampleBuffer) -> Void) { self.onFrame = onFrame }
 
@@ -692,7 +698,9 @@ struct CameraPreview: UIViewRepresentable {
             let lo = dev.minAvailableVideoZoomFactor, hi = Swift.min(dev.maxAvailableVideoZoomFactor, 10)
             if (try? dev.lockForConfiguration()) != nil { dev.videoZoomFactor = Swift.max(lo, 1); dev.unlockForConfiguration() }
             let index = lenses.firstIndex { $0.uniqueID == dev.uniqueID } ?? 0
+            captureAngle = nil
             DispatchQueue.main.async { [weak self] in
+                if #available(iOS 17.0, *) { self?.attachRotationCoordinator(dev) }
                 guard let c = self?.control else { return }
                 c.lenses = lenses; c.lensIndex = index
                 c.minZoom = lo; c.maxZoom = hi; c.zoom = Swift.max(lo, 1)
@@ -700,9 +708,41 @@ struct CameraPreview: UIViewRepresentable {
         }
 
         /// Called on layout (rotation): turns captured frames and the preview upright.
+        /// Follows the device's rotation angles for this camera (main thread). Both
+        /// preview and frames use the camera's own mounting, so the person is upright
+        /// in portrait and landscape on the front and back cameras alike.
+        @available(iOS 17.0, *)
+        private func attachRotationCoordinator(_ device: AVCaptureDevice) {
+            guard let layer = view?.previewLayer else { return }
+            rotationObservers.forEach { $0.invalidate() }
+            let rc = AVCaptureDevice.RotationCoordinator(device: device, previewLayer: layer)
+            rotationCoordinator = rc
+            // Frames get the same angle as the preview, so the analysed (and recorded)
+            // picture is exactly what is on screen and the pose overlay lines up even
+            // if the phone is turned while the screen orientation is held.
+            rotationObservers = [
+                rc.observe(\.videoRotationAngleForHorizonLevelPreview, options: [.initial, .new]) { [weak self] rc, _ in
+                    let a = rc.videoRotationAngleForHorizonLevelPreview
+                    DispatchQueue.main.async { self?.setPreviewAngle(a) }
+                    self?.queue.async {
+                        guard let self, self.captureAngle != a else { return }
+                        self.captureAngle = a
+                        self.session.beginConfiguration(); self.applyRotation(); self.session.commitConfiguration()
+                    }
+                },
+            ]
+        }
+
+        @available(iOS 17.0, *)
+        private func setPreviewAngle(_ a: CGFloat) {
+            if let pc = view?.previewLayer.connection, pc.isVideoRotationAngleSupported(a) { pc.videoRotationAngle = a }
+        }
+
         func updateRotation(_ o: UIInterfaceOrientation) {
             guard o != .unknown else { return }
-            if let pc = view?.previewLayer.connection { Self.rotate(pc, o) }
+            if #available(iOS 17.0, *), let rc = rotationCoordinator as? AVCaptureDevice.RotationCoordinator {
+                setPreviewAngle(rc.videoRotationAngleForHorizonLevelPreview)
+            } else if let pc = view?.previewLayer.connection { Self.rotate(pc, o) }
             queue.async {
                 guard o != self.orientation else { return }
                 self.orientation = o
@@ -712,7 +752,11 @@ struct CameraPreview: UIViewRepresentable {
 
         private func applyRotation() {
             guard let c = output.connection(with: .video) else { return }
-            Self.rotate(c, orientation)
+            if #available(iOS 17.0, *), let a = captureAngle {
+                if c.isVideoRotationAngleSupported(a) { c.videoRotationAngle = a }
+            } else {
+                Self.rotate(c, orientation)
+            }
             if c.isVideoMirroringSupported { c.automaticallyAdjustsVideoMirroring = false; c.isVideoMirrored = front ?? false }
         }
 

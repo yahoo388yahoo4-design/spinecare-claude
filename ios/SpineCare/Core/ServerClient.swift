@@ -39,7 +39,7 @@ final class ServerConfig: ObservableObject {
         minConfidence = d.object(forKey: "min_conf") as? Double ?? 0.5
         haptics = d.object(forKey: "haptics") as? Bool ?? true
         audioCues = d.object(forKey: "audio_cues") as? Bool ?? false
-        recordSessions = d.object(forKey: "record_sessions") as? Bool ?? false
+        recordSessions = d.object(forKey: "record_sessions") as? Bool ?? true
         voiceControl = d.object(forKey: "voice_control") as? Bool ?? false
     }
 
