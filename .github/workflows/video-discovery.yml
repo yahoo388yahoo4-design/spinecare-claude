@@ -1,0 +1,8 @@
+name: Video discovery (scratch)
+on: { push: { branches: [ "claude/video-discovery" ] } }
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 disc.py
