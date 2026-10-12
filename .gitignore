@@ -15,3 +15,7 @@ ios/Payload/
 *.apk
 firmware/**/.pio/
 .venv/
+
+# demo videos are downloaded at CI time (scripts/fetch_demo_videos.py), never committed
+android/app/src/androidTest/assets/videos/
+video-out/

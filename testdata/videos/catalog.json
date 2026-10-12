@@ -1,0 +1,144 @@
+{
+ "notes": [
+  "Demo videos used to exercise the detection pipelines in CI (scripts/fetch_demo_videos.py).",
+  "Videos are NOT stored in the repo: they are downloaded at CI time from Wikimedia Commons, and only",
+  "files whose license allows redistribution and derivatives (public domain, CC0, CC BY, CC BY-SA) are used.",
+  "Each run records title, author, license and source page in sources.json next to the downloaded files.",
+  "'commons_file' pins an exact file (picked from earlier CI candidate lists); 'commons_search' takes the best licensed matches of a search.",
+  "'exercise_id' is the app tracker the clip is replayed against and 'relevance' says why it is a spine-care clip; the mapping is ours, not a clinical label.",
+  "Only spine-care material is used: neck (cervical) mobility, shoulder-blade and upper-back posture work, and back-extensor / thoracic work. Openly licensed lumbar clips (cat-cow, McKenzie, bridges) were searched for and not found on Commons."
+ ],
+ "allowed_licenses": [
+  "public domain",
+  "pd",
+  "cc0",
+  "cc-by",
+  "cc by",
+  "cc-by-sa",
+  "cc by-sa",
+  "attribution"
+ ],
+ "max_seconds": 45,
+ "fps": 6,
+ "width": 640,
+ "videos": [
+  {
+   "id": "neck_rotation_yoga",
+   "exercise_id": "cervical_rotation_rom",
+   "commons_file": "File:Neck Movement - Loosening Practice - International Day of Yoga Celebration - NCSM - Kolkata 2015-06-21 7300.ogv",
+   "relevance": "Neck (cervical) loosening: head turns and tilts, group class"
+  },
+  {
+   "id": "neck_side_bend_yoga",
+   "exercise_id": "neck_side_bend",
+   "commons_file": "File:Neck Movement - Loosening Practice - International Day of Yoga Celebration - NCSM - Kolkata 2015-06-21 7301.ogv",
+   "relevance": "Neck (cervical) loosening: side bends, group class"
+  },
+  {
+   "id": "neck_coordination_rehab",
+   "exercise_id": "cervical_rotation_rom",
+   "commons_file": "File:A-novel-method-for-neck-coordination-exercise-–-a-pilot-study-on-persons-with-chronic-non-specific-1743-0003-5-36-S1.ogv",
+   "relevance": "Neck coordination exercise from a study on chronic non-specific neck pain"
+  },
+  {
+   "id": "shoulder_rolls",
+   "exercise_id": "shoulder_shrug",
+   "commons_file": "File:Yoga Hast Vinyasas - YOGAnDHARMA - Both Shoulder Rotations.theora.ogv",
+   "relevance": "Shoulder rolls for neck/upper-trapezius tension and posture"
+  },
+  {
+   "id": "shoulder_blades_mobility",
+   "exercise_id": "side_arm_raise",
+   "commons_file": "File:Yoga Hast Vinyasas - YOGAnDHARMA - Hands on Shoulder Blades Opposite.theora.ogv",
+   "relevance": "Shoulder-blade (scapular) mobility with arms raised"
+  },
+  {
+   "id": "arm_stretch_mobility",
+   "exercise_id": "side_arm_raise",
+   "commons_file": "File:Yoga Hast Vinyasas - YOGAnDHARMA - Prasarana.theora.ogv",
+   "relevance": "Seated arm and upper-back stretch (thoracic/shoulder mobility)"
+  },
+  {
+   "id": "reverse_prayer",
+   "exercise_id": "scapular_squeeze_side",
+   "commons_file": "File:Yoga Hast Vinyasas - YOGAnDHARMA - Reverse Prayer.theora.ogv",
+   "relevance": "Reverse prayer: chest opening and shoulder retraction for rounded-shoulder posture"
+  },
+  {
+   "id": "scapular_winging_clinical",
+   "exercise_id": "scapular_retraction",
+   "commons_file": "File:Scapular Winging in FSHD.webm",
+   "relevance": "Clinical back view of scapular winging; tests the back-view shoulder-blade tracker"
+  },
+  {
+   "id": "bent_over_row",
+   "exercise_id": "scapular_squeeze_side",
+   "commons_file": "File:Bent-over row - exercise demonstration video.webm",
+   "relevance": "Upper-back strengthening that squeezes the shoulder blades (postural muscles)"
+  },
+  {
+   "id": "serratus_punch",
+   "exercise_id": "scapular_squeeze_side",
+   "commons_file": "File:Serratus punch.webm",
+   "relevance": "Scapular stability exercise used in shoulder and posture rehab"
+  },
+  {
+   "id": "back_extension",
+   "exercise_id": "thoracic_extension",
+   "commons_file": "File:Muscle Strengthening at the Gym - Back Extension.webm",
+   "relevance": "Back-extensor strengthening (lumbar/thoracic extension), side view"
+  },
+  {
+   "id": "thoracic_twist",
+   "exercise_id": "thoracic_extension",
+   "commons_file": "File:Overhead Lunge and Twist.webm",
+   "relevance": "Thoracic mobility drill (rotation and trunk lean), side and front views"
+  }
+ ],
+ "discovery_queries": [
+  "neck exercise",
+  "neck pain exercise",
+  "neck stretch",
+  "cervical exercise",
+  "chin tuck",
+  "head retraction",
+  "neck rotation",
+  "neck flexion",
+  "yoga neck",
+  "YOGAnDHARMA",
+  "Yoga Hast Vinyasas",
+  "back pain exercise",
+  "low back exercise",
+  "lumbar exercise",
+  "McKenzie exercise",
+  "cat cow yoga",
+  "Marjaryasana",
+  "Bhujangasana",
+  "bridge exercise",
+  "pelvic tilt",
+  "spine mobility",
+  "spinal mobility",
+  "posture exercise",
+  "posture correction",
+  "scapular retraction",
+  "shoulder blade squeeze",
+  "thoracic extension",
+  "thoracic mobility",
+  "back extension",
+  "prone extension",
+  "superman exercise",
+  "bird dog exercise",
+  "physiotherapy exercise",
+  "physical therapy back",
+  "rehabilitation spine",
+  "core stability exercise",
+  "child pose yoga",
+  "spinal twist",
+  "shoulder roll",
+  "shoulder shrug",
+  "upper trapezius stretch",
+  "scoliosis exercise",
+  "Schroth",
+  "forward head posture"
+ ]
+}

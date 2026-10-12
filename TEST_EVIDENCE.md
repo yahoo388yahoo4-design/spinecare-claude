@@ -71,3 +71,37 @@ signal is now `abs:neck_yaw_est` (each turn-and-return = one rep). After the fix
   instructor demos include turns outside the configured band and camera cuts.
 - The IPA is unsigned (no Apple Developer account); installable IPA needs signing.
 - CSP videos are hotlink-protected (403) and could not be tested.
+
+## CI video replay on spine-care clips (combined app)
+
+Workflow **Video replay evidence** ([run 38187196484](https://github.com/yahoo388yahoo4-design/spinecare-claude/actions/runs/38187196484),
+artifact `video-evidence`) replayed 12 openly licensed spine-care clips from Wikimedia Commons
+(see `testdata/videos/README.md`) through three detection paths. Detect = frames with a person,
+ready = frames passing the exercise's framing gate, reps = reps counted. Not clinical validation;
+the clip-to-exercise mapping is ours.
+
+| clip | exercise | Android (emulator) | iOS engine (Apple Vision, macOS) | server (YOLOv8n CPU) |
+|---|---|---|---|---|
+| neck_rotation_yoga | cervical_rotation_rom | 92% / 87% / 2 | 100% / 79% / 8 | 100% / 55% / 7 |
+| neck_side_bend_yoga | neck_side_bend | 76% / 76% / 4 | 100% / 1% / 0 | 100% / 10% / 0 |
+| neck_coordination_rehab | cervical_rotation_rom | 18% / 4% / 0 | 6% / 0% / 0 | 9% / 6% / 0 |
+| shoulder_rolls | shoulder_shrug | 100% / 100% / 1 | 100% / 0% / 0 | 79% / 6% / 2 |
+| shoulder_blades_mobility | side_arm_raise | 96% / 0% / 0 | 96% / 4% / 0 | 86% / 63% / 0 |
+| arm_stretch_mobility | side_arm_raise | 100% / 0% / 0 | 100% / 13% / 0 | 85% / 60% / 4 |
+| reverse_prayer | scapular_squeeze_side | 100% / 100% / 5 | 100% / 97% / 3 | 83% / 69% / 8 |
+| scapular_winging_clinical | scapular_retraction | 80% / 44% / 0 | 2% / 0% / 0 | 99% / 1% / 0 |
+| bent_over_row | scapular_squeeze_side | 100% / 100% / 2 | 100% / 100% / 2 | 100% / 84% / 2 |
+| serratus_punch | scapular_squeeze_side | 61% / 61% / 1 | 100% / 0% / 0 | 14% / 3% / 0 |
+| back_extension | thoracic_extension | 69% / 65% / 1 | 65% / 27% / 1 | 3% / 0% / 0 |
+| thoracic_twist | thoracic_extension | 100% / 100% / 0 | 100% / 73% / 0 | 59% / 43% / 0 |
+
+Android on-device pose took ~70 ms per frame (p50) on the API 30 emulator; the app's own
+SessionRecorder wrote an MP4 for every clip. Three clips were also opened in the app's
+"Analyze a video" screen, which finished each one (13-30 s) and was screen-recorded.
+
+Found and fixed by this run: MediaPipe Tasks ships no x86_64 library, so x86_64 devices lost
+on-device pose; the app now packages only arm64-v8a, armeabi-v7a and x86.
+
+Worth a look next: the paths disagree on framing for the same clip (e.g. neck side bend is
+ready 76% on Android but 1-10% on iOS/server), and the neck-coordination study clip is barely
+detected by any path; its overlays have not been reviewed yet to see why.
