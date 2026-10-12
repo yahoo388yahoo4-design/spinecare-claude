@@ -28,6 +28,15 @@ object PlacementCoach {
         return Pair(pitch, roll)
     }
 
+    /** Gravity in screen axes for a display rotated by [rotationDeg] (0, 90, 180, 270,
+     *  as Surface.ROTATION_* x 90), so tiltFromGravity also works in landscape. */
+    fun screenGravity(gx: Double, gy: Double, rotationDeg: Int): Pair<Double, Double> = when (((rotationDeg % 360) + 360) % 360) {
+        90 -> Pair(-gy, gx)
+        180 -> Pair(-gx, -gy)
+        270 -> Pair(gy, -gx)
+        else -> Pair(gx, gy)
+    }
+
     /** [p] in pixels of a [w]x[h] upright frame; [pitch]/[roll] null when no sensor (e.g. a video). */
     fun assess(p: Map<String, Metrics.P>?, w: Double, h: Double, ex: Exercise, minConf: Double = 0.5,
                pitch: Double? = null, roll: Double? = null): Result {

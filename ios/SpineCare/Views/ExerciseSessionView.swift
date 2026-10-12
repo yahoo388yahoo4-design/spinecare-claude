@@ -200,7 +200,7 @@ final class SessionController: ObservableObject {
 
         frames += 1
         let metrics = Metrics.compute(px)
-        for (k, v) in metrics { let s = sums[k] ?? (0, 0); sums[k] = (s.0 + v, s.1 + 1) }
+        for (k, v) in metrics where v.isFinite { let s = sums[k] ?? (0, 0); sums[k] = (s.0 + v, s.1 + 1) }
         let local = tracker.update(metrics, ready: framing.ready, t: now)
 
         let imu = BlePostureClient.shared.snapshot()
@@ -296,6 +296,9 @@ struct ExerciseSessionView: View {
     @StateObject private var session: SessionController
     @ObservedObject private var cfg = ServerConfig.shared
     @State private var frontCamera = true
+    @StateObject private var camera = CameraControl()
+    @State private var orient = CameraOptions.orientation
+    @Environment(\.verticalSizeClass) private var vSize
     @State private var askPhase: String?
     @State private var neck = 0.0
     @State private var arm = 0.0
@@ -311,8 +314,9 @@ struct ExerciseSessionView: View {
         let lang = L.lang
         let guide = FramingText.forView(exercise.view, program: exercise.programId)
         ZStack(alignment: .top) {
-            CameraPreview(frontCamera: frontCamera) { session.process($0) }
+            CameraPreview(frontCamera: frontCamera, camera: camera) { session.process($0) }
                 .ignoresSafeArea()
+                .gesture(MagnificationGesture().onChanged { camera.pinch($0) }.onEnded { _ in camera.pinchEnded() })
             Canvas { ctx, size in
                 OverlayRenderer.draw(ctx: &ctx, size: size, frame: session.ui.frame, lms: session.ui.landmarks,
                                      ready: session.ui.ready, missing: session.ui.missing)
@@ -320,8 +324,10 @@ struct ExerciseSessionView: View {
             .ignoresSafeArea()
             .allowsHitTesting(false)
             VStack(spacing: 6) {
-                Text("\(exercise.title(lang))\n\(guide)")
-                    .font(.callout).padding(8).frame(maxWidth: .infinity, alignment: .leading)
+                // landscape (compact height): title only, so the person stays in view
+                Text(vSize == .compact ? exercise.title(lang) : "\(exercise.title(lang))\n\(guide)")
+                    .font(.callout).lineLimit(vSize == .compact ? 1 : nil)
+                    .padding(8).frame(maxWidth: .infinity, alignment: .leading)
                     .background(.black.opacity(0.6)).foregroundStyle(.white)
                 Button(action: toggleVoice) {
                     Text(voiceLabel).font(.caption).multilineTextAlignment(.leading).padding(8)
@@ -333,7 +339,7 @@ struct ExerciseSessionView: View {
                     Text(session.ui.cue).font(.subheadline).padding(8).frame(maxWidth: .infinity)
                         .background(.black.opacity(0.7)).foregroundStyle(.yellow)
                 }
-                if !session.ui.metrics.isEmpty {
+                if !session.ui.metrics.isEmpty && vSize != .compact {
                     Text(session.ui.metrics).font(.system(.caption2, design: .monospaced)).padding(6)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(.black.opacity(0.7)).foregroundStyle(.white)
@@ -350,6 +356,17 @@ struct ExerciseSessionView: View {
                     Button(L.t("flip")) { frontCamera.toggle() }.buttonStyle(.bordered)
                     Button(L.t("recalibrate")) { session.recalibrate() }.buttonStyle(.bordered).disabled(!session.running)
                 }
+                HStack {
+                    if camera.lenses.count > 1 {
+                        Button(camera.lensLabel) { camera.nextLens() }.buttonStyle(.bordered).disabled(session.running)
+                    }
+                    Button(camera.zoomLabel) { camera.cycleZoom() }.buttonStyle(.bordered)
+                        .disabled(camera.maxZoom <= camera.minZoom + 0.01)
+                    Button("⟳ " + L.t(orient.key)) {
+                        orient = orient.next; CameraOptions.orientation = orient; OrientationLock.refresh()
+                    }.buttonStyle(.bordered).disabled(session.running)
+                }
+                .font(.caption)
                 HStack {
                     Toggle(isOn: $cfg.recordSessions) { Label("REC", systemImage: "record.circle") }
                         .disabled(session.running).fixedSize()
@@ -370,6 +387,7 @@ struct ExerciseSessionView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             UIApplication.shared.isIdleTimerDisabled = true
+            OrientationLock.enterCameraScreen()
             session.coach.guidance = cfg.audioCues
             session.coach.guide("\(exercise.title(lang)). \(guide.replacingOccurrences(of: "\n", with: ". ")). \(L.t("vg_setup"))")
             if cfg.voiceControl { startVoice(announce: true) }
@@ -379,8 +397,10 @@ struct ExerciseSessionView: View {
             session.stopVoice()
             session.coach.stop()
             if session.running { session.stop { _ in } }   // leaving mid-session keeps the data
+            OrientationLock.hold(false); OrientationLock.leaveCameraScreen()
             cfg.save()
         }
+        .onChange(of: session.running) { running in OrientationLock.hold(running) }
         .onChange(of: scenePhase) { phase in
             // never listen in the background
             if phase == .active { if cfg.voiceControl { startVoice(announce: false) } } else { session.stopVoice() }
@@ -503,22 +523,77 @@ enum FramingText {
     }
 }
 
-/// Camera preview + capture. Frames are delivered upright (portrait) and
-/// mirrored for the front camera, so pose points match the preview directly.
+/// Lens and zoom for a CameraPreview, shared with the SwiftUI controls. The
+/// preview's coordinator does the AVFoundation work on its queue and publishes
+/// the result back here on the main thread.
+final class CameraControl: ObservableObject {
+    @Published fileprivate(set) var lenses: [CameraOptions.Lens] = []
+    @Published fileprivate(set) var lensIndex = 0
+    @Published fileprivate(set) var zoom: CGFloat = 1          // device zoom factor on the current lens
+    @Published fileprivate(set) var minZoom: CGFloat = 1
+    @Published fileprivate(set) var maxZoom: CGFloat = 1
+    fileprivate weak var coordinator: CameraPreview.Coordinator?
+    private var pinchBase: CGFloat?
+
+    var lens: CameraOptions.Lens? { lenses.indices.contains(lensIndex) ? lenses[lensIndex] : nil }
+
+    var lensLabel: String {
+        guard let l = lens else { return L.t("lens") }
+        return L.t("lens") + ": " + L.t(l.kind.key) + " " + CameraOptions.zoomLabel(l.relZoom)
+    }
+
+    /// Zoom as the user sees it (the ultra-wide at 1× reads 0.5×).
+    var zoomLabel: String { "🔍 " + CameraOptions.zoomLabel(zoom * (lens?.relZoom ?? 1)) }
+
+    func nextLens() {
+        guard lenses.count > 1 else { return }
+        lensIndex = (lensIndex + 1) % lenses.count
+        coordinator?.selectLens(lenses[lensIndex].uniqueID)
+    }
+
+    func cycleZoom() { setZoom(CameraOptions.nextZoomStop(zoom, min: minZoom, max: maxZoom)) }
+
+    func setZoom(_ z: CGFloat) {
+        let c = Swift.min(Swift.max(z, minZoom), Swift.max(minZoom, maxZoom))
+        zoom = c
+        coordinator?.setZoom(c)
+    }
+
+    /// Pinch-to-zoom: `scale` is the gesture's running magnification.
+    func pinch(_ scale: CGFloat) {
+        if pinchBase == nil { pinchBase = zoom }
+        setZoom((pinchBase ?? 1) * scale)
+    }
+
+    func pinchEnded() { pinchBase = nil }
+}
+
+/// Camera preview + capture. Frames are delivered upright for the current
+/// screen orientation (portrait or landscape) and mirrored for the front
+/// camera, so pose points match the preview directly. The optional
+/// CameraControl picks the lens (ultra-wide / wide / tele) and zoom.
 struct CameraPreview: UIViewRepresentable {
     let frontCamera: Bool
+    var camera: CameraControl? = nil
     let onFrame: (CMSampleBuffer) -> Void
 
     final class PreviewView: UIView {
         override class var layerClass: AnyClass { AVCaptureVideoPreviewLayer.self }
         var previewLayer: AVCaptureVideoPreviewLayer { layer as! AVCaptureVideoPreviewLayer }
+        var onLayout: (() -> Void)?
+        override func layoutSubviews() { super.layoutSubviews(); onLayout?() }
     }
 
     func makeUIView(context: Context) -> PreviewView {
         let v = PreviewView()
+        let c = context.coordinator
         v.previewLayer.videoGravity = .resizeAspectFill
-        v.previewLayer.session = context.coordinator.session
-        context.coordinator.start(front: frontCamera)
+        v.previewLayer.session = c.session
+        c.view = v
+        c.control = camera
+        camera?.coordinator = c
+        v.onLayout = { [weak c, weak v] in c?.updateRotation(v?.window?.windowScene?.interfaceOrientation ?? OrientationLock.current) }
+        c.start(front: frontCamera)
         return v
     }
 
@@ -534,10 +609,14 @@ struct CameraPreview: UIViewRepresentable {
     final class Coordinator: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         let session = AVCaptureSession()
         let onFrame: (CMSampleBuffer) -> Void
+        weak var view: PreviewView?
+        weak var control: CameraControl?
         private(set) var front: Bool?
         private let output = AVCaptureVideoDataOutput()
         private let queue = DispatchQueue(label: "spinecare.camera")
         private var input: AVCaptureDeviceInput?
+        private var devices: [String: AVCaptureDevice] = [:]
+        private var orientation: UIInterfaceOrientation = .portrait
 
         init(onFrame: @escaping (CMSampleBuffer) -> Void) { self.onFrame = onFrame }
 
@@ -545,7 +624,7 @@ struct CameraPreview: UIViewRepresentable {
             self.front = front
             requestAccess { [weak self] ok in
                 guard ok, let self else { return }
-                self.queue.async { self.configure(front: front) }
+                self.queue.async { self.configure(front: front, lensID: nil) }
             }
         }
 
@@ -557,31 +636,93 @@ struct CameraPreview: UIViewRepresentable {
             }
         }
 
-        private func configure(front: Bool) {
+        /// Lenses on one side, widest first, with their field of view relative to the wide camera.
+        private func discover(_ position: AVCaptureDevice.Position) -> [CameraOptions.Lens] {
+            let found = AVCaptureDevice.DiscoverySession(
+                deviceTypes: [.builtInUltraWideCamera, .builtInWideAngleCamera, .builtInTelephotoCamera],
+                mediaType: .video, position: position).devices
+            let wideFov = Double(found.first { $0.deviceType == .builtInWideAngleCamera }?.activeFormat.videoFieldOfView ?? 0)
+            var out: [CameraOptions.Lens] = []
+            for d in found {
+                devices[d.uniqueID] = d
+                let kind = CameraOptions.kind(for: d.deviceType)
+                let rel = kind == .wide ? 1 : CameraOptions.relZoom(fov: Double(d.activeFormat.videoFieldOfView), wideFov: wideFov)
+                out.append(CameraOptions.Lens(uniqueID: d.uniqueID, kind: kind, relZoom: rel))
+            }
+            return out.sorted { $0.relZoom < $1.relZoom }
+        }
+
+        func selectLens(_ id: String) {
+            guard let front else { return }
+            queue.async { self.configure(front: front, lensID: id) }
+        }
+
+        func setZoom(_ z: CGFloat) {
+            queue.async {
+                guard let d = self.input?.device, (try? d.lockForConfiguration()) != nil else { return }
+                d.videoZoomFactor = Swift.min(Swift.max(z, d.minAvailableVideoZoomFactor), d.maxAvailableVideoZoomFactor)
+                d.unlockForConfiguration()
+            }
+        }
+
+        private func configure(front: Bool, lensID: String?) {
             let position: AVCaptureDevice.Position = front ? .front : .back
-            guard let cam = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: position)
+            let lenses = discover(position)
+            let pick = lensID.flatMap { id in lenses.first { $0.uniqueID == id } } ?? lenses.first { $0.kind == .wide } ?? lenses.first
+            guard let cam = pick.flatMap({ devices[$0.uniqueID] })
+                    ?? AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: position)
                     ?? AVCaptureDevice.default(for: .video),
                   let newInput = try? AVCaptureDeviceInput(device: cam) else { return }
             session.beginConfiguration()
-            session.sessionPreset = .hd1280x720
+            session.sessionPreset = session.canSetSessionPreset(.hd1280x720) ? .hd1280x720 : .high
             if let old = input { session.removeInput(old) }
             if session.canAddInput(newInput) { session.addInput(newInput); input = newInput }
+            else if let old = input, session.canAddInput(old) { session.addInput(old) }
             if session.outputs.isEmpty {
                 output.alwaysDiscardsLateVideoFrames = true
                 output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA]
                 output.setSampleBufferDelegate(self, queue: queue)
                 if session.canAddOutput(output) { session.addOutput(output) }
             }
-            if let c = output.connection(with: .video) {
-                if #available(iOS 17.0, *) {
-                    if c.isVideoRotationAngleSupported(90) { c.videoRotationAngle = 90 }
-                } else if c.isVideoOrientationSupported {
-                    c.videoOrientation = .portrait
-                }
-                if c.isVideoMirroringSupported { c.automaticallyAdjustsVideoMirroring = false; c.isVideoMirrored = front }
-            }
+            applyRotation()
             session.commitConfiguration()
             if !session.isRunning { session.startRunning() }
+
+            let dev = input?.device ?? cam
+            let lo = dev.minAvailableVideoZoomFactor, hi = Swift.min(dev.maxAvailableVideoZoomFactor, 10)
+            if (try? dev.lockForConfiguration()) != nil { dev.videoZoomFactor = Swift.max(lo, 1); dev.unlockForConfiguration() }
+            let index = lenses.firstIndex { $0.uniqueID == dev.uniqueID } ?? 0
+            DispatchQueue.main.async { [weak self] in
+                guard let c = self?.control else { return }
+                c.lenses = lenses; c.lensIndex = index
+                c.minZoom = lo; c.maxZoom = hi; c.zoom = Swift.max(lo, 1)
+            }
+        }
+
+        /// Called on layout (rotation): turns captured frames and the preview upright.
+        func updateRotation(_ o: UIInterfaceOrientation) {
+            guard o != .unknown else { return }
+            if let pc = view?.previewLayer.connection { Self.rotate(pc, o) }
+            queue.async {
+                guard o != self.orientation else { return }
+                self.orientation = o
+                self.session.beginConfiguration(); self.applyRotation(); self.session.commitConfiguration()
+            }
+        }
+
+        private func applyRotation() {
+            guard let c = output.connection(with: .video) else { return }
+            Self.rotate(c, orientation)
+            if c.isVideoMirroringSupported { c.automaticallyAdjustsVideoMirroring = false; c.isVideoMirrored = front ?? false }
+        }
+
+        private static func rotate(_ c: AVCaptureConnection, _ o: UIInterfaceOrientation) {
+            if #available(iOS 17.0, *) {
+                let a = CameraOptions.videoRotationAngle(o)
+                if c.isVideoRotationAngleSupported(a) { c.videoRotationAngle = a }
+            } else if c.isVideoOrientationSupported {
+                c.videoOrientation = CameraOptions.videoOrientation(o)
+            }
         }
 
         func stop() { queue.async { if self.session.isRunning { self.session.stopRunning() } } }

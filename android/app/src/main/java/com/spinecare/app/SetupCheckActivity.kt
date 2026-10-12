@@ -26,11 +26,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
-import androidx.camera.core.Preview
-import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.spinecare.app.I18n.t
@@ -39,7 +35,9 @@ import java.util.concurrent.Executors
 
 /** Live camera-placement check before a session: on-device pose + the phone's
  *  gravity sensor feed PlacementCoach, which shows (and optionally speaks) one
- *  fix at a time until every line is green. Nothing is recorded or saved. */
+ *  fix at a time until every line is green. Nothing is recorded or saved.
+ *  Works in portrait and landscape (the panel moves to the side), with the
+ *  same lens, zoom and rotate controls as the session screen. */
 class SetupCheckActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var exercise: Exercise
     private lateinit var preview: PreviewView
@@ -48,8 +46,10 @@ class SetupCheckActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var status: TextView
     private lateinit var startBtn: Button
     private var poseEngine: PoseEngine? = null
-    private var provider: ProcessCameraProvider? = null
-    private var frontCamera = true
+    private lateinit var rig: CameraRig
+    private lateinit var lensBtn: Button
+    private lateinit var zoomBtn: Button
+    private lateinit var rotateBtn: Button
     private val executor = Executors.newSingleThreadExecutor()
     private var tts: TextToSpeech? = null
     private var sensors: SensorManager? = null
@@ -81,6 +81,7 @@ class SetupCheckActivity : AppCompatActivity(), SensorEventListener {
         overlay = SetupOverlayView(this)
         root.addView(preview, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
         root.addView(overlay, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+        val landscape = resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
         val panel = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL; setBackgroundColor(0xE00B1220.toInt()); setPadding(24, 16, 24, 16)
         }
@@ -93,21 +94,46 @@ class SetupCheckActivity : AppCompatActivity(), SensorEventListener {
         status = TextView(this).apply { setTextColor(Ui.OK); textSize = 15f; setPadding(0, 8, 0, 8) }
         panel.addView(status)
         val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        val flip = Button(this).apply { text = t("flip"); isAllCaps = false; setOnClickListener { flipCamera() } }
+        val flip = Button(this).apply { text = t("flip"); isAllCaps = false; setOnClickListener { rig.flip() } }
         val approved = ex.custom || LocalStore(this).isApproved(ex.id)
         startBtn = Button(this).apply {
             text = if (approved) t("sc_start") else t("approved_required"); isAllCaps = false; isEnabled = approved
             setOnClickListener {
-                startActivity(Intent(this@SetupCheckActivity, ExerciseActivity::class.java).putExtra("exercise_id", ex.id))
+                // keep the camera, lens and zoom the placement was checked with
+                startActivity(Intent(this@SetupCheckActivity, ExerciseActivity::class.java).putExtra("exercise_id", ex.id)
+                    .putExtra("front", rig.front).putExtra("camera_id", rig.lens?.cameraId).putExtra("zoom", rig.zoom))
                 finish()
             }
         }
         row.addView(flip, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         row.addView(startBtn, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 2f))
         panel.addView(row)
-        root.addView(panel, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,
-            android.view.Gravity.BOTTOM))
+        val camRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        lensBtn = Button(this).apply { isAllCaps = false; textSize = 12f; setOnClickListener { rig.nextLens() } }
+        zoomBtn = Button(this).apply { isAllCaps = false; textSize = 12f; setOnClickListener { rig.cycleZoom() } }
+        rotateBtn = Button(this).apply {
+            isAllCaps = false; textSize = 12f
+            setOnClickListener {
+                ServerConfig.setCameraOrientation(this@SetupCheckActivity,
+                    CameraOptions.nextOrientation(ServerConfig.cameraOrientation(this@SetupCheckActivity)))
+                applyOrientation()
+            }
+        }
+        for (v in listOf(lensBtn, zoomBtn, rotateBtn)) camRow.addView(v, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+        panel.addView(camRow)
+        if (landscape) {
+            // side panel, scrollable, so the person stays in view
+            val scroll = android.widget.ScrollView(this).apply { addView(panel) }
+            root.addView(scroll, FrameLayout.LayoutParams((resources.displayMetrics.widthPixels * 0.42f).toInt(),
+                ViewGroup.LayoutParams.MATCH_PARENT, android.view.Gravity.END))
+        } else {
+            root.addView(panel, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,
+                android.view.Gravity.BOTTOM))
+        }
         setContentView(root)
+        rig = CameraRig(this, preview, executor, ::analyze) { onCameraChanged() }
+        rig.enablePinch()
+        applyOrientation()
         render(PlacementCoach.Result(listOf(PlacementCoach.Item("person", false, "pc_fix_person"))))
 
         poseEngine = runCatching { PoseEngine(this) }.getOrElse {
@@ -117,6 +143,7 @@ class SetupCheckActivity : AppCompatActivity(), SensorEventListener {
             if (st == TextToSpeech.SUCCESS) tts?.language = if (I18n.lang == "ro") Locale("ro", "RO") else Locale.US
         }
         sensors = getSystemService(Context.SENSOR_SERVICE) as? SensorManager
+        restored = savedInstanceState
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) startCamera()
         else permLauncher.launch(Manifest.permission.CAMERA)
     }
@@ -131,40 +158,43 @@ class SetupCheckActivity : AppCompatActivity(), SensorEventListener {
     override fun onPause() { super.onPause(); sensors?.unregisterListener(this) }
 
     override fun onSensorChanged(e: SensorEvent) {
-        val (p, r) = PlacementCoach.tiltFromGravity(e.values[0].toDouble(), e.values[1].toDouble(), e.values[2].toDouble())
+        // device axes -> screen axes, so "level" and "upright" also hold in landscape
+        val (sx, sy) = PlacementCoach.screenGravity(e.values[0].toDouble(), e.values[1].toDouble(), displayRotationDeg)
+        val (p, r) = PlacementCoach.tiltFromGravity(sx, sy, e.values[2].toDouble())
         pitch = p; roll = r
     }
 
+    @Suppress("DEPRECATION")
+    private val displayRotationDeg: Int get() = windowManager.defaultDisplay.rotation * 90
+
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
+    private var restored: Bundle? = null
+
     private fun startCamera() {
-        val future = ProcessCameraProvider.getInstance(this)
-        future.addListener({
-            provider = future.get()
-            if (provider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) != true) frontCamera = false
-            bindCamera()
-        }, ContextCompat.getMainExecutor(this))
+        val s = restored
+        rig.start(s?.getBoolean("front", true) ?: true, s?.getString("camera_id"), s?.getFloat("zoom", Float.NaN) ?: Float.NaN)
     }
 
-    private fun bindCamera() {
-        val p = provider ?: return
-        val selector = if (frontCamera) CameraSelector.DEFAULT_FRONT_CAMERA else CameraSelector.DEFAULT_BACK_CAMERA
-        val prev = Preview.Builder().build().also { it.setSurfaceProvider(preview.surfaceProvider) }
-        val analysis = ImageAnalysis.Builder().setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST).build()
-            .also { it.setAnalyzer(executor, ::analyze) }
-        try {
-            p.unbindAll(); p.bindToLifecycle(this, selector, prev, analysis)
-            overlay.mirror = frontCamera
-        } catch (e: Exception) {
-            Toast.makeText(this, t("no_camera"), Toast.LENGTH_LONG).show()
-        }
+    private fun applyOrientation() {
+        requestedOrientation = CameraRig.requestedOrientation(ServerConfig.cameraOrientation(this))
+        rotateBtn.text = "⟳ " + t(CameraOptions.orientationKey(ServerConfig.cameraOrientation(this)))
     }
 
-    private fun flipCamera() {
-        val p = provider ?: return
-        val target = if (frontCamera) CameraSelector.DEFAULT_BACK_CAMERA else CameraSelector.DEFAULT_FRONT_CAMERA
-        if (!p.hasCamera(target)) { Toast.makeText(this, t("no_other_camera"), Toast.LENGTH_SHORT).show(); return }
-        frontCamera = !frontCamera; bindCamera()
+    private fun onCameraChanged() {
+        overlay.mirror = rig.front
+        lensBtn.text = rig.lensLabel()
+        lensBtn.visibility = if (rig.lenses.size > 1) View.VISIBLE else View.GONE
+        zoomBtn.text = rig.zoomLabel()
+        zoomBtn.isEnabled = rig.maxZoom > rig.minZoom + 0.01f
+    }
+
+    override fun onSaveInstanceState(out: Bundle) {
+        super.onSaveInstanceState(out)
+        if (!::rig.isInitialized) return
+        out.putBoolean("front", rig.front)
+        rig.lens?.let { out.putString("camera_id", it.cameraId) }
+        out.putFloat("zoom", rig.zoom)
     }
 
     private fun analyze(proxy: ImageProxy) {

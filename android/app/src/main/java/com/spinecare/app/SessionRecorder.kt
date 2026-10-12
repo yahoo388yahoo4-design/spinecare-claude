@@ -52,11 +52,17 @@ class SessionRecorder(file: File, width: Int, height: Int) {
             val c: Canvas = surface.lockHardwareCanvas()
             try {
                 c.drawColor(Color.BLACK)
+                // Fit without stretching: if the frame shape changes mid-session (camera
+                // switched), the picture is letterboxed instead of distorted, and the
+                // overlay is drawn in the same rectangle so it still lines up.
+                val (l, t, fw, fh) = CameraOptions.fit(camera.width, camera.height, c.width.toFloat(), c.height.toFloat()).toList()
                 c.save()
                 if (mirror) c.scale(-1f, 1f, c.width / 2f, c.height / 2f)
-                c.drawBitmap(camera, null, RectF(0f, 0f, c.width.toFloat(), c.height.toFloat()), null)
+                c.drawBitmap(camera, null, RectF(l, t, l + fw, t + fh), null)
                 c.restore()
-                OverlayRenderer.draw(c, lms, frameW, frameH, missing, ready, metricsLine, cue, repsText, mirror)
+                c.save(); c.translate(l, t); c.clipRect(0f, 0f, fw, fh)
+                OverlayRenderer.draw(c, lms, frameW, frameH, missing, ready, metricsLine, cue, repsText, mirror, fw, fh)
+                c.restore()
             } finally {
                 surface.unlockCanvasAndPost(c)
             }

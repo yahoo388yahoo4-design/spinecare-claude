@@ -63,7 +63,12 @@ final class SessionStore: ObservableObject {
         return df.string(from: Date())
     }
 
+    /// Sessions are saved from the camera/recorder queues and check-ins from the
+    /// main thread; one lock keeps two appends from interleaving in a file.
+    private let fileLock = NSLock()
+
     private func append<T: Encodable>(_ value: T, to url: URL) {
+        fileLock.lock(); defer { fileLock.unlock() }
         guard let line = try? enc.encode(value) else { return }
         let data = line + Data("\n".utf8)
         if let fh = try? FileHandle(forWritingTo: url) {
@@ -91,12 +96,17 @@ final class SessionStore: ObservableObject {
                      cues: [String: Int], frames: Int, source: String, videoURL: URL?, recordedFrames: Int,
                      timelineURL: URL? = nil, timelineSamples: Int = 0) {
         var rec = SessionRecord(ts: Int(Date().timeIntervalSince1970 * 1000), date: Self.today(), exercise: exerciseId,
-                                reps: reps, sets: sets, durationS: durationS, avg: metrics.mapValues { ($0 * 1000).rounded() / 1000 },
+                                reps: reps, sets: sets, durationS: durationS, avg: Self.finiteAverages(metrics),
                                 cues: cues, frames: frames, source: source)
         if let v = videoURL { rec.video = v.lastPathComponent; rec.recordedFrames = recordedFrames }
         if let t = timelineURL { rec.timeline = t.lastPathComponent; rec.timelineSamples = timelineSamples }
         append(rec, to: sessionsURL)
         DispatchQueue.main.async { self.load() }
+    }
+
+    /// JSONEncoder refuses NaN/Infinity, which used to drop the whole session row silently.
+    static func finiteAverages(_ m: [String: Double]) -> [String: Double] {
+        m.filter { $0.value.isFinite }.mapValues { ($0 * 1000).rounded() / 1000 }
     }
 
     func saveCheckin(phase: String, neckPain: Int, armSymptoms: Int, sleepQuality: Int?, note: String) {

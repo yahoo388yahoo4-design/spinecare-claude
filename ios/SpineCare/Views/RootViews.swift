@@ -3,6 +3,7 @@ import AVKit
 
 @main
 struct SpineCareApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate   // orientation per screen
     var body: some Scene { WindowGroup { RootView() } }
 }
 

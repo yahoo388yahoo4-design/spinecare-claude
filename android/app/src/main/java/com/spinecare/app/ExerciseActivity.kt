@@ -1,6 +1,7 @@
 package com.spinecare.app
 
 import android.Manifest
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Matrix
@@ -14,11 +15,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
-import androidx.camera.core.Preview
-import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import com.spinecare.app.I18n.t
 import com.spinecare.app.databinding.ActivityExerciseBinding
@@ -35,7 +32,12 @@ import java.util.concurrent.Executors
  *
  *  Every session also saves a sensor timeline for in-app replay. Optional
  *  voice guidance speaks setup, calibration, cues and rep counts; optional
- *  voice control takes hands-free commands (start, pause, stop, ...). */
+ *  voice control takes hands-free commands (start, pause, stop, ...).
+ *
+ *  The screen works in portrait and landscape (Rotate button: auto, portrait,
+ *  landscape). The orientation is held while a session or check-in is open so
+ *  calibration and the recording keep one frame shape; lens and zoom (pinch or
+ *  the zoom button) come from CameraRig. */
 class ExerciseActivity : AppCompatActivity() {
     private lateinit var b: ActivityExerciseBinding
     private lateinit var exercise: Exercise
@@ -71,9 +73,10 @@ class ExerciseActivity : AppCompatActivity() {
     private var minConf = 0.5
 
     // camera + recording
-    private var frontCamera = true
-    private var provider: ProcessCameraProvider? = null
+    private lateinit var rig: CameraRig
+    @Volatile private var frontCamera = true
     private var recorder: SessionRecorder? = null
+    private var recorderFailed = false
     private var recordEnabled = false
     private var recordFile: File? = null
     private var sessionBase = ""
@@ -103,6 +106,10 @@ class ExerciseActivity : AppCompatActivity() {
             Toast.makeText(this, t("pose_unavailable"), Toast.LENGTH_LONG).show(); null
         }
 
+        rig = CameraRig(this, b.preview, analysisExecutor, ::analyze) { onCameraChanged() }
+        rig.enablePinch()
+        applyOrientation()
+
         val guide = FramingGuide.forView(exercise.view, exercise.program)
         b.tvExercise.text = "${exercise.name(I18n.lang)}\n${guide.headline}\n• " + guide.steps.joinToString("\n• ")
         b.tvReps.text = "0/${exercise.targetReps}"
@@ -115,6 +122,16 @@ class ExerciseActivity : AppCompatActivity() {
             ServerConfig.setMode(this, (ServerConfig.mode(this) + 1) % 3); labelButtons()
         }
         b.btnFlip.setOnClickListener { flipCamera() }
+        b.btnLens.setOnClickListener {
+            if (running) { Toast.makeText(this, t("lens_locked"), Toast.LENGTH_SHORT).show(); return@setOnClickListener }
+            rig.nextLens()
+        }
+        b.btnZoom.setOnClickListener { rig.cycleZoom() }
+        b.btnRotate.setOnClickListener {
+            if (running) return@setOnClickListener
+            ServerConfig.setCameraOrientation(this, CameraOptions.nextOrientation(ServerConfig.cameraOrientation(this)))
+            labelButtons(); applyOrientation()
+        }
         b.btnRec.setOnClickListener {
             if (running) return@setOnClickListener
             recordEnabled = !recordEnabled; ServerConfig.setRecordSessions(this, recordEnabled); labelButtons()
@@ -127,11 +144,17 @@ class ExerciseActivity : AppCompatActivity() {
         labelButtons()
         voiceOn = ServerConfig.voiceControl(this)
         if (ServerConfig.audioCues(this) || voiceOn) ensureCoach()
-        coach?.guide("${exercise.name(I18n.lang)}. ${guide.headline}. ${t("vg_setup")}")
+        // spoken once per screen, not again after a rotation
+        if (savedInstanceState == null) coach?.guide("${exercise.name(I18n.lang)}. ${guide.headline}. ${t("vg_setup")}")
         postCue(t("position_camera").format(t("view_" + exercise.view)))
         b.tvVoice.setOnClickListener { toggleVoice() }
         labelVoice()
 
+        // after a rotation, or the camera the setup check used
+        val src = savedInstanceState ?: intent.extras
+        frontCamera = src?.getBoolean(KEY_FRONT, true) ?: true
+        restoreCameraId = src?.getString(KEY_CAMERA)
+        restoreZoom = src?.getFloat(KEY_ZOOM, Float.NaN) ?: Float.NaN
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             startCamera(); requestMicIfNeeded()
         } else permLauncher.launch(Manifest.permission.CAMERA)
@@ -229,42 +252,43 @@ class ExerciseActivity : AppCompatActivity() {
         b.btnStart.text = if (!running) t("start") else if (paused) t("resume") else t("pause")
         b.btnStop.isEnabled = running
         b.btnMode.isEnabled = !running; b.btnRec.isEnabled = !running
+        b.btnRotate.text = "⟳ " + t(CameraOptions.orientationKey(ServerConfig.cameraOrientation(this)))
+        b.btnRotate.isEnabled = !running
+        b.btnLens.isEnabled = !running
+    }
+
+    /** Applies the user's orientation choice, or holds the current one while a
+     *  session or symptom check-in is open (a rotation must not restart them). */
+    private fun applyOrientation() {
+        requestedOrientation = if (running || pendingDialog != null) ActivityInfo.SCREEN_ORIENTATION_LOCKED
+            else CameraRig.requestedOrientation(ServerConfig.cameraOrientation(this))
+    }
+
+    private fun onCameraChanged() {
+        frontCamera = rig.front
+        b.overlay.mirror = rig.front
+        b.btnLens.text = rig.lensLabel()
+        b.btnLens.visibility = if (rig.lenses.size > 1) android.view.View.VISIBLE else android.view.View.GONE
+        b.btnZoom.text = rig.zoomLabel()
+        b.btnZoom.isEnabled = rig.maxZoom > rig.minZoom + 0.01f
+    }
+
+    override fun onSaveInstanceState(out: Bundle) {
+        super.onSaveInstanceState(out)
+        if (!::rig.isInitialized) return
+        out.putBoolean(KEY_FRONT, rig.front)
+        rig.lens?.let { out.putString(KEY_CAMERA, it.cameraId) }
+        out.putFloat(KEY_ZOOM, rig.zoom)
     }
 
     // ------------------------------------------------------------------ camera
 
-    private fun startCamera() {
-        val future = ProcessCameraProvider.getInstance(this)
-        future.addListener({
-            provider = future.get()
-            if (provider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) != true) frontCamera = false
-            bindCamera()
-        }, ContextCompat.getMainExecutor(this))
-    }
+    private var restoreCameraId: String? = null
+    private var restoreZoom = Float.NaN
 
-    private fun bindCamera() {
-        val p = provider ?: return
-        val selector = if (frontCamera) CameraSelector.DEFAULT_FRONT_CAMERA else CameraSelector.DEFAULT_BACK_CAMERA
-        val preview = Preview.Builder().build().also { it.setSurfaceProvider(b.preview.surfaceProvider) }
-        val analysis = ImageAnalysis.Builder()
-            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-            .build().also { it.setAnalyzer(analysisExecutor, ::analyze) }
-        try {
-            p.unbindAll()
-            p.bindToLifecycle(this, selector, preview, analysis)
-            b.overlay.mirror = frontCamera
-        } catch (e: Exception) {
-            Toast.makeText(this, t("no_camera"), Toast.LENGTH_LONG).show()
-        }
-    }
+    private fun startCamera() = rig.start(frontCamera, restoreCameraId, restoreZoom)
 
-    private fun flipCamera() {
-        val p = provider ?: return
-        val target = if (frontCamera) CameraSelector.DEFAULT_BACK_CAMERA else CameraSelector.DEFAULT_FRONT_CAMERA
-        if (!p.hasCamera(target)) { Toast.makeText(this, t("no_other_camera"), Toast.LENGTH_SHORT).show(); return }
-        frontCamera = !frontCamera
-        bindCamera()
-    }
+    private fun flipCamera() { rig.flip() }
 
     // ------------------------------------------------------------------ analysis (camera thread)
 
@@ -296,7 +320,7 @@ class ExerciseActivity : AppCompatActivity() {
             }
             val imu = BlePostureClient.snapshot()
             framesProcessed++
-            for ((k, v) in metrics) metricSums.getOrPut(k) { DoubleArray(2) }.let { it[0] += v; it[1] += 1.0 }
+            for ((k, v) in metrics) if (!v.isNaN() && !v.isInfinite()) metricSums.getOrPut(k) { DoubleArray(2) }.let { it[0] += v; it[1] += 1.0 }
             val local = tracker?.update(metrics, framing.ready, now)
 
             // server enhancement (never blocks on-device coaching)
@@ -356,8 +380,11 @@ class ExerciseActivity : AppCompatActivity() {
             runOnUiThread { b.tvReps.text = repsText; b.tvMetrics.text = metricsLine }
 
             var wroteVideo = false
-            if (recordEnabled) {
-                val r = recorder ?: runCatching { newRecorder(w, h) }.getOrNull()
+            if (recordEnabled && !recorderFailed) {
+                val r = recorder ?: runCatching { newRecorder(w, h) }.getOrElse {
+                    // don't retry (and leak an encoder) on every frame
+                    recorderFailed = true; recordFile?.delete(); recordFile = null; null
+                }
                 val before = r?.framesWritten ?: 0
                 r?.drawFrame(bmp, named, w, h, missing, ready, metricsLine, lastCue, repsText, frontCamera)
                 wroteVideo = (r?.framesWritten ?: 0) > before
@@ -379,7 +406,8 @@ class ExerciseActivity : AppCompatActivity() {
     private fun newRecorder(w: Int, h: Int): SessionRecorder {
         val dir = File(filesDir, "recordings").apply { mkdirs() }
         val f = File(dir, "$sessionBase.mp4")
-        return SessionRecorder(f, w, h).also { recorder = it; recordFile = f }
+        recordFile = f
+        return SessionRecorder(f, w, h).also { recorder = it }
     }
 
     // ------------------------------------------------------------------ session
@@ -398,10 +426,10 @@ class ExerciseActivity : AppCompatActivity() {
             SessionTimeline.Writer(store.newTimelineFile(sessionBase),
                 SessionTimeline.header(exercise.id, exercise.signal.removePrefix("abs:"), exercise.targetReps, startedAt))
         }.getOrNull()
-        paused = false; wasCalibrating = true; lastRepsAnnounced = 0
+        paused = false; wasCalibrating = true; lastRepsAnnounced = 0; recorderFailed = false
         connectServerIfConfigured()
         running = true
-        labelButtons()
+        labelButtons(); applyOrientation()
         postCue(t("calibrate_hint").format(exercise.stops(I18n.lang).joinToString()))
     }
 
@@ -460,7 +488,8 @@ class ExerciseActivity : AppCompatActivity() {
         val avg = metricSums.mapValues { it.value[0] / it.value[1].coerceAtLeast(1.0) }
         store.saveSession(exercise.id, reps, 1, (t0 - startedAt) / 1000, avg, cueCounts, framesProcessed,
             if (serverUsed) "server+on-device" else "on-device", videoPath, recordedFrames, timelinePath, timelineSamples)
-        labelButtons()
+        if (isDestroyed || isFinishing) return
+        labelButtons(); applyOrientation()
         coach?.guide(t("vg_saved").format(reps), flush = true)
         Toast.makeText(this, t("session_saved").format(reps) + if (videoPath != null) " · " + t("video_saved") else "",
             Toast.LENGTH_SHORT).show()
@@ -480,7 +509,8 @@ class ExerciseActivity : AppCompatActivity() {
             .setOnCancelListener { then() }
             .show()
         pendingDialog = dlg
-        dlg.setOnDismissListener { if (pendingDialog === dlg) pendingDialog = null }
+        applyOrientation()
+        dlg.setOnDismissListener { if (pendingDialog === dlg) { pendingDialog = null; applyOrientation() } }
         if (voiceOn) coach?.speak(t("vg_checkin"))
     }
 
@@ -505,7 +535,10 @@ class ExerciseActivity : AppCompatActivity() {
     override fun onPause() { voice?.stop(); voiceListening = false; super.onPause() }
 
     override fun onDestroy() {
-        if (running && isFinishing) stopAndSave(askAfter = false)   // back pressed mid-session: keep the data
+        // Leaving mid-session (back, or the system recreating the screen) keeps the data.
+        // Before, only isFinishing saved, so a recreation dropped the session.
+        if (running) stopAndSave(askAfter = false)
+        pendingDialog?.setOnDismissListener(null); pendingDialog?.dismiss(); pendingDialog = null
         running = false
         analysisExecutor.shutdown()
         poseEngine?.close()
@@ -515,5 +548,11 @@ class ExerciseActivity : AppCompatActivity() {
         voice?.stop()
         coach?.shutdown()
         super.onDestroy()
+    }
+
+    private companion object {
+        const val KEY_FRONT = "front"
+        const val KEY_CAMERA = "camera_id"
+        const val KEY_ZOOM = "zoom"
     }
 }

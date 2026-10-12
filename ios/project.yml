@@ -35,7 +35,8 @@ targets:
         NSMotionUsageDescription: "Used for posture context during exercises."
         UIBackgroundModes: []
         UILaunchScreen: {}
-        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        # Camera screens can turn to landscape; OrientationLock keeps the rest portrait.
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.spinecare.app

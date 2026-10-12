@@ -43,14 +43,23 @@ final class SessionRecorder {
         if lastTime.isValid && timestamp <= lastTime { return }
         if !started { started = true; writer.startSession(atSourceTime: timestamp) }
 
+        // Fit without stretching: if the frame shape changes mid-session (camera
+        // switched) the picture is letterboxed, and the overlay is drawn in the
+        // same rectangle so it still lines up.
         var ci = CIImage(cvPixelBuffer: pixelBuffer)
-        let sx = CGFloat(width) / ci.extent.width, sy = CGFloat(height) / ci.extent.height
-        if sx != 1 || sy != 1 { ci = ci.transformed(by: CGAffineTransform(scaleX: sx, y: sy)) }
+        let fw = ci.extent.width, fh = ci.extent.height
+        let s = min(CGFloat(width) / fw, CGFloat(height) / fh)
+        let pic = CGSize(width: fw * s, height: fh * s)
+        let ox = (CGFloat(width) - pic.width) / 2, oy = (CGFloat(height) - pic.height) / 2
+        ci = ci.transformed(by: CGAffineTransform(scaleX: s, y: s).concatenating(CGAffineTransform(translationX: ox, y: oy)))
+        let black = CIImage(color: .black).cropped(to: CGRect(x: 0, y: 0, width: width, height: height))
+        ci = ci.composited(over: black)
 
         let size = CGSize(width: width, height: height)
         let format = UIGraphicsImageRendererFormat(); format.scale = 1; format.opaque = false
         let overlay = UIGraphicsImageRenderer(size: size, format: format).image { r in
-            OverlayRenderer.draw(cg: r.cgContext, size: size, lms: landmarks, ready: ready,
+            r.cgContext.translateBy(x: ox, y: oy)
+            OverlayRenderer.draw(cg: r.cgContext, size: pic, lms: landmarks, ready: ready,
                                  cue: cue, metrics: metrics, reps: reps)
         }
         guard let overlayCG = overlay.cgImage else { return }
