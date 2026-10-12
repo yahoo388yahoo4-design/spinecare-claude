@@ -13,7 +13,8 @@ object CameraOptions {
     const val ORIENT_PORTRAIT = 1
     const val ORIENT_LANDSCAPE = 2   // either landscape side
 
-    fun nextOrientation(mode: Int) = (mode.coerceIn(0, 2) + 1) % 3
+    /** Next choice; an unknown stored value counts as auto. */
+    fun nextOrientation(mode: Int) = ((if (mode in 0..2) mode else ORIENT_AUTO) + 1) % 3
 
     /** I18n key for the orientation button. */
     fun orientationKey(mode: Int) = when (mode) {
