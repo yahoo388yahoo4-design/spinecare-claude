@@ -104,4 +104,4 @@ on-device pose; the app now packages only arm64-v8a, armeabi-v7a and x86.
 
 Worth a look next: the paths disagree on framing for the same clip (e.g. neck side bend is
 ready 76% on Android but 1-10% on iOS/server), and the neck-coordination study clip is barely
-detected anywhere (the subject wears head gear and is filmed close up).
+detected by any path; its overlays have not been reviewed yet to see why.
