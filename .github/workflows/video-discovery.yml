@@ -1,0 +1,33 @@
+name: Video discovery
+
+# Lists openly licensed Wikimedia Commons videos for the demo set
+# (scripts/discover_demo_videos.py). Run it from the Actions tab, optionally with
+# your own search terms; the candidates appear in the run summary and as an artifact.
+
+on:
+  workflow_dispatch:
+    inputs:
+      queries:
+        description: "Search terms, one per line (empty = discovery_queries in testdata/videos/catalog.json)"
+        required: false
+        default: ""
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Search Commons
+        env:
+          QUERIES: ${{ inputs.queries }}
+        run: |
+          mapfile -t Q < <(printf '%s\n' "$QUERIES" | sed '/^\s*$/d')
+          python scripts/discover_demo_videos.py --markdown "${Q[@]}" > candidates.md
+          cat candidates.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: video-candidates
+          path: candidates.md
