@@ -16,7 +16,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(b.root)
         labelTabs()
         b.bottomNav.setOnItemSelectedListener { item -> show(fragmentFor(item.itemId)); true }
-        if (savedInstanceState == null) show(HomeFragment())
+        if (savedInstanceState == null) { show(HomeFragment()); offerOldAppRemoval() }
+    }
+
+    /** The app id changed (com.spinecare.app -> com.spinecare.claude): once, offer to
+     *  remove the old install through the system dialog. Settings keeps the button. */
+    private fun offerOldAppRemoval() {
+        val prefs = getSharedPreferences("spinecare", MODE_PRIVATE)
+        if (prefs.getBoolean("old_app_offered", false) || !AppPackages.oldInstalled(this)) return
+        prefs.edit().putBoolean("old_app_offered", true).apply()
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(t("old_app_title"))
+            .setMessage(t("uninstall_old_body"))
+            .setPositiveButton(t("uninstall_old")) { _, _ -> AppPackages.uninstall(this, AppPackages.OLD_PACKAGE) }
+            .setNegativeButton(t("skip"), null)
+            .show()
     }
 
     private fun fragmentFor(id: Int): Fragment = when (id) {

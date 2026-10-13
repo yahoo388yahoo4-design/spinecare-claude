@@ -75,8 +75,30 @@ object ServerConfig {
     fun haptics(c: Context) = p(c).getBoolean("haptics", true)
     fun setHaptics(c: Context, v: Boolean) = p(c).edit().putBoolean("haptics", v).apply()
 
-    fun audioCues(c: Context) = p(c).getBoolean("audio_cues", false)
+    /** Spoken guidance (setup, cues, rep counts). On by default. */
+    fun audioCues(c: Context) = p(c).getBoolean("audio_cues", true)
     fun setAudioCues(c: Context, v: Boolean) = p(c).edit().putBoolean("audio_cues", v).apply()
+
+    /** Realtime spoken tempo prompts during a rep ("hold", "and back slowly"). */
+    fun tempoPrompts(c: Context) = p(c).getBoolean("tempo_prompts", true)
+    fun setTempoPrompts(c: Context, v: Boolean) = p(c).edit().putBoolean("tempo_prompts", v).apply()
+
+    /** Animated figure showing the head/body/arm movement while the coach explains the next move. */
+    fun moveDemo(c: Context) = p(c).getBoolean("move_demo", true)
+    fun setMoveDemo(c: Context, v: Boolean) = p(c).edit().putBoolean("move_demo", v).apply()
+
+    /** Short precision/speed feedback after each completed rep (shown and, with voice guidance, spoken). */
+    fun repFeedback(c: Context) = p(c).getBoolean("rep_feedback", true)
+    fun setRepFeedback(c: Context, v: Boolean) = p(c).edit().putBoolean("rep_feedback", v).apply()
+
+    /** Tapping the camera picture or the replay hides the text overlays (skeleton stays). */
+    fun tapHidesText(c: Context) = p(c).getBoolean("tap_hides_text", true)
+    fun setTapHidesText(c: Context, v: Boolean) = p(c).edit().putBoolean("tap_hides_text", v).apply()
+
+    /** Recordings keep only the skeleton in the picture; the text is a layer the replay can hide.
+     *  Off = the text is burned into the MP4 as before. */
+    fun cleanRecordings(c: Context) = p(c).getBoolean("clean_recordings", true)
+    fun setCleanRecordings(c: Context, v: Boolean) = p(c).edit().putBoolean("clean_recordings", v).apply()
 
     /** Hands-free voice commands on the exercise screen (needs the microphone). */
     fun voiceControl(c: Context) = p(c).getBoolean("voice_control", false)

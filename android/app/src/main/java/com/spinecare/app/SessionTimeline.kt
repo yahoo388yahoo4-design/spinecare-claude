@@ -36,7 +36,10 @@ object SessionTimeline {
             landmarks.mapValues { Metrics.P(it.value.x * frameW, it.value.y * frameH, it.value.c) }
     }
 
-    data class Timeline(val exercise: String, val metric: String, val target: Int, val started: Long, val samples: List<Sample>) {
+    /** [videoText] = the recording has the text HUD burned in (all recordings before
+     *  clean recordings); when false the replay draws the text as a layer it can hide. */
+    data class Timeline(val exercise: String, val metric: String, val target: Int, val started: Long, val samples: List<Sample>,
+                        val videoText: Boolean = true) {
         val durationMs: Long get() = samples.lastOrNull()?.t ?: 0L
 
         /** Session time of the first recorded video frame (video position 0). */
@@ -73,9 +76,9 @@ object SessionTimeline {
 
     // ---------------------------------------------------------------- encode
 
-    fun header(exercise: String, metric: String, target: Int, started: Long): String =
+    fun header(exercise: String, metric: String, target: Int, started: Long, videoText: Boolean = true): String =
         JSONObject().put("type", "header").put("v", 1).put("exercise", exercise).put("metric", metric)
-            .put("target", target).put("started", started).toString()
+            .put("target", target).put("started", started).put("video_text", videoText).toString()
 
     private fun r(v: Double, scale: Double) = Math.round(v * scale) / scale
 
@@ -105,7 +108,7 @@ object SessionTimeline {
     // ---------------------------------------------------------------- decode
 
     fun parse(lines: Sequence<String>): Timeline? {
-        var exercise = ""; var metric = ""; var target = 0; var started = 0L
+        var exercise = ""; var metric = ""; var target = 0; var started = 0L; var videoText = true
         val samples = ArrayList<Sample>()
         for (line in lines) {
             if (line.isBlank()) continue
@@ -113,12 +116,13 @@ object SessionTimeline {
             if (o.optString("type") == "header") {
                 exercise = o.optString("exercise"); metric = o.optString("metric")
                 target = o.optInt("target"); started = o.optLong("started")
+                videoText = o.optBoolean("video_text", true)
                 continue
             }
             runCatching { samples.add(parseSample(o)) }
         }
         if (samples.isEmpty()) return null
-        return Timeline(exercise, metric, target, started, samples)
+        return Timeline(exercise, metric, target, started, samples, videoText)
     }
 
     fun read(f: File): Timeline? = runCatching { f.bufferedReader().useLines { parse(it) } }.getOrNull()

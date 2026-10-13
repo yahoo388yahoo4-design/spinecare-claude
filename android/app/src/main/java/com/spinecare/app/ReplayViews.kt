@@ -17,6 +17,9 @@ class ReplayStageView(context: Context) : View(context) {
     var sample: SessionTimeline.Sample? = null
         set(v) { field = v; invalidate() }
     var target = 0
+    /** false = skeleton only (the text is hidden by a tap on the picture). */
+    var showText = true
+        set(v) { field = v; invalidate() }
     private val frameBg = Paint().apply { color = 0xFF111827.toInt() }
 
     override fun onDraw(canvas: Canvas) {
@@ -32,10 +35,31 @@ class ReplayStageView(context: Context) : View(context) {
         canvas.translate(ox, oy)
         canvas.clipRect(0f, 0f, aw, ah)
         canvas.drawRect(0f, 0f, aw, ah, frameBg)
-        val metricsLine = s.metrics.entries.sortedBy { it.key }.joinToString("  ") { "${it.key}=${"%.2f".format(it.value)}" }
-        OverlayRenderer.draw(canvas, s.pixels(), fw, fh, emptyList(), s.ready, metricsLine, s.cue,
-            "${s.reps}/$target", s.mirror, aw, ah)
+        if (showText) {
+            OverlayRenderer.draw(canvas, s.pixels(), fw, fh, emptyList(), s.ready, metricsLine(s), s.cue,
+                "${s.reps}/$target", s.mirror, aw, ah)
+        } else OverlayRenderer.draw(canvas, s.pixels(), fw, fh, emptyList(), s.ready, "", "", "", s.mirror, aw, ah)
         canvas.restore()
+    }
+
+    companion object {
+        fun metricsLine(s: SessionTimeline.Sample) =
+            s.metrics.entries.sortedBy { it.key }.joinToString("  ") { "${it.key}=${"%.2f".format(it.value)}" }
+    }
+}
+
+/** Text layer over a clean recording (skeleton only in the video): the cue,
+ *  metrics and rep count at the playhead, sized to the video. Hidden by a tap. */
+class ReplayHudView(context: Context) : View(context) {
+    var sample: SessionTimeline.Sample? = null
+        set(v) { field = v; invalidate() }
+    var target = 0
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        val s = sample ?: return
+        OverlayRenderer.draw(canvas, null, 0, 0, emptyList(), s.ready, ReplayStageView.metricsLine(s), s.cue,
+            "${s.reps}/$target", false)
     }
 }
 

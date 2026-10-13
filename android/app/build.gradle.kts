@@ -8,11 +8,14 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.spinecare.app"
+        // Installed package. The Kotlin code stays in com.spinecare.app (namespace below);
+        // this id is what Android uses to identify the app, so it installs alongside
+        // the old com.spinecare.app build (remove that once, from Settings in the app).
+        applicationId = "com.spinecare.claude"
         minSdk = 26
         targetSdk = 34
-        versionCode = 2
-        versionName = "0.2.0"
+        versionCode = 3
+        versionName = "0.3.0"
         // Instrumented video-replay test (src/androidTest), run on an emulator by .github/workflows/video-evidence.yml
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // MediaPipe Tasks ships no x86_64 library. Without this filter an x86_64 device
@@ -23,8 +26,20 @@ android {
     }
     // The exercise plan is shared with the server and iOS app (repo-root shared/).
     sourceSets["main"].assets.srcDirs("src/main/assets", "../../shared")
+    // One committed debug key, so every CI and local debug APK is signed the same way
+    // and installs over the previous one. Before, each CI runner generated its own
+    // debug key and Android refused updates (INSTALL_FAILED_UPDATE_INCOMPATIBLE).
+    // It is a debug key and public on purpose; real releases use the SPINECARE_KEYSTORE secret.
+    signingConfigs {
+        getByName("debug") {
+            storeFile = rootProject.file("keystore/spinecare-debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+    }
     buildTypes {
-        debug { isMinifyEnabled = false }
+        debug { isMinifyEnabled = false; signingConfig = signingConfigs.getByName("debug") }
         release {
             // Prototype release: R8 kept off so MediaPipe/OkHttp reflection stays safe.
             isMinifyEnabled = false

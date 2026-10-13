@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -33,6 +34,13 @@ import java.util.concurrent.Executors
  *  Every session also saves a sensor timeline for in-app replay. Optional
  *  voice guidance speaks setup, calibration, cues and rep counts; optional
  *  voice control takes hands-free commands (start, pause, stop, ...).
+ *
+ *  Movement coaching (each part switchable in Settings): when the coach explains
+ *  the next move, a small animated figure shows how the head/body/arms travel;
+ *  while moving, realtime "hold" / "and back" prompts follow the plan's tempo;
+ *  after each rep a short precision and speed verdict is shown and spoken.
+ *  Tapping the camera picture hides the text and controls so the whole body and
+ *  its tracking points are visible; tap again to bring them back.
  *
  *  The screen works in portrait and landscape (Rotate button: auto, portrait,
  *  landscape). The orientation is held while a session or check-in is open so
@@ -72,6 +80,18 @@ class ExerciseActivity : AppCompatActivity() {
     private var serverIntervalMs = 150L
     private var minConf = 0.5
 
+    // movement coaching
+    @Volatile private var moveCoach: MoveCoach? = null
+    private var demo: GuideDemo? = null
+    private var tempoPromptsOn = true
+    private var moveDemoOn = true
+    private var repFeedbackOn = true
+    private var cleanRecording = true
+    @Volatile private var pendingFeedback: Pair<Long, String>? = null
+    @Volatile private var lastExplainAt = 0L
+    private var chromeHidden = false
+    private val hideGuide = Runnable { b.moveGuide.visibility = View.GONE }
+
     // camera + recording
     private lateinit var rig: CameraRig
     @Volatile private var frontCamera = true
@@ -107,8 +127,16 @@ class ExerciseActivity : AppCompatActivity() {
         }
 
         rig = CameraRig(this, b.preview, analysisExecutor, ::analyze) { onCameraChanged() }
-        rig.enablePinch()
+        rig.enablePinch(if (ServerConfig.tapHidesText(this)) ::toggleChrome else null)
         applyOrientation()
+
+        tempoPromptsOn = ServerConfig.tempoPrompts(this)
+        moveDemoOn = ServerConfig.moveDemo(this)
+        repFeedbackOn = ServerConfig.repFeedback(this)
+        cleanRecording = ServerConfig.cleanRecordings(this)
+        if (moveDemoOn) demo = runCatching { GuideDemo(exercise) }.getOrNull()?.takeIf { it.countable }
+        b.moveGuide.demo = demo
+        b.moveGuide.setOnClickListener { b.moveGuide.visibility = View.GONE }
 
         val guide = FramingGuide.forView(exercise.view, exercise.program)
         b.tvExercise.text = "${exercise.name(I18n.lang)}\n${guide.headline}\n• " + guide.steps.joinToString("\n• ")
@@ -144,6 +172,7 @@ class ExerciseActivity : AppCompatActivity() {
         labelButtons()
         voiceOn = ServerConfig.voiceControl(this)
         if (ServerConfig.audioCues(this) || voiceOn) ensureCoach()
+        if (savedInstanceState?.getBoolean(KEY_CHROME_HIDDEN) == true) toggleChrome()
         // spoken once per screen, not again after a rotation
         if (savedInstanceState == null) coach?.guide("${exercise.name(I18n.lang)}. ${guide.headline}. ${t("vg_setup")}")
         postCue(t("position_camera").format(t("view_" + exercise.view)))
@@ -163,7 +192,9 @@ class ExerciseActivity : AppCompatActivity() {
     // ------------------------------------------------------------------ voice
 
     private fun ensureCoach(): VoiceCoach =
-        coach ?: VoiceCoach(this, ServerConfig.audioCues(this)) { speaking -> voice?.hold(speaking) }.also { coach = it }
+        coach ?: VoiceCoach(this, ServerConfig.audioCues(this),
+            onProblem = { key -> if (!isFinishing) Toast.makeText(this, t(key), Toast.LENGTH_LONG).show() },
+            onSpeaking = { speaking -> voice?.hold(speaking) }).also { coach = it }
 
     private fun micGranted() =
         ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
@@ -237,6 +268,8 @@ class ExerciseActivity : AppCompatActivity() {
         if (!running || paused == p) return
         paused = p
         labelButtons()
+        if (p) { b.moveGuide.removeCallbacks(hideGuide); b.moveGuide.visibility = View.GONE }
+        moveCoach?.reset(System.currentTimeMillis())
         val msg = if (p) t("vg_paused") else t("vg_resumed")
         lastCue = msg; b.tvCue.text = msg
         coach?.speak(msg, flush = true)
@@ -279,7 +312,73 @@ class ExerciseActivity : AppCompatActivity() {
         out.putBoolean(KEY_FRONT, rig.front)
         rig.lens?.let { out.putString(KEY_CAMERA, it.cameraId) }
         out.putFloat(KEY_ZOOM, rig.zoom)
+        out.putBoolean(KEY_CHROME_HIDDEN, chromeHidden)
     }
+
+    // ------------------------------------------------------------------ clean view
+
+    /** Tap on the camera picture: hide (or bring back) every text overlay and the
+     *  controls, so the whole body and its tracking points are visible. */
+    private fun toggleChrome() {
+        chromeHidden = !chromeHidden
+        val vis = if (chromeHidden) View.INVISIBLE else View.VISIBLE
+        for (v in listOf(b.tvExercise, b.tvCue, b.tvMetrics, b.tvVoice, b.tvReps, b.btnRow, b.btnRow2, b.btnRow3)) v.visibility = vis
+        b.panel?.visibility = vis
+        b.tvFeedback.visibility = if (chromeHidden || b.tvFeedback.text.isNullOrEmpty()) View.GONE else View.VISIBLE
+        if (chromeHidden) Toast.makeText(this, t("tap_to_show"), Toast.LENGTH_SHORT).show()
+    }
+
+    // ------------------------------------------------------------------ movement coaching (main thread)
+
+    /** The coach explains the next move: spoken (with voice guidance on) and, with
+     *  the movement demo on, shown by the animated figure for [cycles] demo loops. */
+    private fun explainMove(first: Boolean, cycles: Int = 1) {
+        if (!running || paused) return
+        lastExplainAt = System.currentTimeMillis()
+        val desc = exercise.description(I18n.lang)
+        val what = if (first) t("mv_now").format(desc) else t("mv_again").format(firstSentence(desc))
+        val tempo = t("mv_tempo").format(secs(exercise.tempoIn), secs(exercise.tempoHold), secs(exercise.tempoOut))
+        coach?.guide("$what $tempo")
+        showMoveGuide(cycles)
+    }
+
+    private fun showMoveGuide(cycles: Int) {
+        val d = demo ?: return
+        if (!moveDemoOn) return
+        b.moveGuide.removeCallbacks(hideGuide)
+        if (b.moveGuide.visibility != View.VISIBLE) { b.moveGuide.visibility = View.VISIBLE; b.moveGuide.restart() }
+        b.moveGuide.postDelayed(hideGuide, d.repMs * minOf(2, d.reps) * cycles.coerceAtLeast(1))
+    }
+
+    /** A movement ended: show the verdict now; a counted rep's verdict is spoken
+     *  with the rep count, a movement that did not count is spoken right away. */
+    private fun onMoveFeedback(fb: MoveCoach.Feedback) {
+        if (!repFeedbackOn) return
+        val phrase = fb.keys.take(2).joinToString(" ") { t(it) }
+        val detail = t("fb_detail").format(fb.score, fb.rangePct, secs(fb.inMs / 1000.0), secs(fb.holdMs / 1000.0), secs(fb.outMs / 1000.0))
+        if (fb.counted) pendingFeedback = System.currentTimeMillis() to phrase
+        runOnUiThread {
+            b.tvFeedback.text = "$phrase\n$detail"
+            b.tvFeedback.setTextColor(if (fb.score >= 80) Ui.OK else Ui.WARN)
+            if (!chromeHidden) b.tvFeedback.visibility = View.VISIBLE
+            if (!fb.counted) coach?.cue(phrase)
+            // a movement that needs correcting: show how it should look again
+            if (fb.score < 80) showMoveGuide(1)
+        }
+    }
+
+    private fun takeFeedback(): String {
+        val p = pendingFeedback ?: return ""
+        pendingFeedback = null
+        return if (System.currentTimeMillis() - p.first < 2500) p.second else ""
+    }
+
+    private fun firstSentence(s: String): String {
+        val i = s.indexOfFirst { it == '.' || it == '!' || it == '?' }
+        return if (i in 1 until s.length - 1) s.substring(0, i + 1) else s
+    }
+
+    private fun secs(v: Double) = if (v == Math.floor(v)) v.toInt().toString() else "%.1f".format(v)
 
     // ------------------------------------------------------------------ camera
 
@@ -363,13 +462,32 @@ class ExerciseActivity : AppCompatActivity() {
                 if (local?.repJustDone == true) vibrate()
                 local?.cues?.forEach { c -> cueCounts[c.metric] = (cueCounts[c.metric] ?: 0) + 1 }
             }
-            // voice guidance: calibration finished, then every new rep
+            // movement coaching on the on-device signal: tempo prompts, verdict per movement,
+            // and a reminder of the move when nothing has happened for a while
+            val mc = moveCoach
+            if (mc != null && local != null && !local.calibrating) {
+                val upd = mc.update(local.signal, now, local.cues.isNotEmpty(), local.repJustDone)
+                upd.prompt?.let { pr ->
+                    if (tempoPromptsOn) runOnUiThread { coach?.prompt(t(if (pr == MoveCoach.Prompt.HOLD) "pr_hold" else "pr_release")) }
+                }
+                upd.feedback?.let { onMoveFeedback(it) }
+                if (ready && !mc.isMoving && repsNow < exercise.targetReps &&
+                    now - mc.lastActivityMs > REMIND_MS && now - lastExplainAt > REMIND_MS) {
+                    lastExplainAt = now
+                    runOnUiThread { explainMove(first = false) }
+                }
+            }
+            // voice guidance: calibration finished (then the first move is explained), then every new rep
             val calibratingNow = if (sp != null) sp.optBoolean("calibrating") else (local == null || local.calibrating)
-            if (wasCalibrating && !calibratingNow && ready) runOnUiThread { coach?.guide(t("vg_calibrated"), flush = true) }
+            if (wasCalibrating && !calibratingNow && ready) {
+                moveCoach?.reset(now)
+                runOnUiThread { coach?.guide(t("vg_calibrated"), flush = true); explainMove(first = true, cycles = 2) }
+            }
             wasCalibrating = calibratingNow
             if (repsNow > lastRepsAnnounced) {
                 lastRepsAnnounced = repsNow
-                runOnUiThread { coach?.rep(repsNow, exercise.targetReps) }
+                val fb = takeFeedback()
+                runOnUiThread { coach?.rep(repsNow, exercise.targetReps, fb) }
             }
             if (cue.isNotEmpty()) postCue(cue)
             val source = if (sp != null) "server ${sp.optInt("latency_ms")}ms" else "on-device ${res.latencyMs}ms"
@@ -386,7 +504,9 @@ class ExerciseActivity : AppCompatActivity() {
                     recorderFailed = true; recordFile?.delete(); recordFile = null; null
                 }
                 val before = r?.framesWritten ?: 0
-                r?.drawFrame(bmp, named, w, h, missing, ready, metricsLine, lastCue, repsText, frontCamera)
+                // clean recordings keep only the skeleton; the replay draws the text as a layer it can hide
+                if (cleanRecording) r?.drawFrame(bmp, named, w, h, missing, ready, "", "", "", frontCamera)
+                else r?.drawFrame(bmp, named, w, h, missing, ready, metricsLine, lastCue, repsText, frontCamera)
                 wroteVideo = (r?.framesWritten ?: 0) > before
             }
             timeline?.add(SessionTimeline.Sample(
@@ -424,9 +544,12 @@ class ExerciseActivity : AppCompatActivity() {
         sessionBase = "session_${exercise.id}_$startedAt"
         timeline = runCatching {
             SessionTimeline.Writer(store.newTimelineFile(sessionBase),
-                SessionTimeline.header(exercise.id, exercise.signal.removePrefix("abs:"), exercise.targetReps, startedAt))
+                SessionTimeline.header(exercise.id, exercise.signal.removePrefix("abs:"), exercise.targetReps, startedAt,
+                    videoText = !cleanRecording))
         }.getOrNull()
         paused = false; wasCalibrating = true; lastRepsAnnounced = 0; recorderFailed = false
+        moveCoach = MoveCoach(exercise); pendingFeedback = null; lastExplainAt = startedAt
+        b.tvFeedback.text = ""; b.tvFeedback.visibility = View.GONE
         connectServerIfConfigured()
         running = true
         labelButtons(); applyOrientation()
@@ -475,6 +598,8 @@ class ExerciseActivity : AppCompatActivity() {
         val timelinePath = tlWriter?.file?.takeIf { timelineSamples > 0 && it.exists() }?.absolutePath
         if (timelineSamples == 0) tlWriter?.file?.delete()
         paused = false
+        moveCoach = null
+        b.moveGuide.removeCallbacks(hideGuide); b.moveGuide.visibility = View.GONE
         val videoPath = recordFile?.takeIf { recordedFrames > 0 && it.exists() }?.absolutePath
         if (recordedFrames == 0) recordFile?.delete()
         recordFile = null
@@ -546,6 +671,7 @@ class ExerciseActivity : AppCompatActivity() {
         recorder?.let { runCatching { it.stop() } }
         timeline?.close()
         voice?.stop()
+        if (::b.isInitialized) b.moveGuide.removeCallbacks(hideGuide)
         coach?.shutdown()
         super.onDestroy()
     }
@@ -554,5 +680,8 @@ class ExerciseActivity : AppCompatActivity() {
         const val KEY_FRONT = "front"
         const val KEY_CAMERA = "camera_id"
         const val KEY_ZOOM = "zoom"
+        const val KEY_CHROME_HIDDEN = "chrome_hidden"
+        /** Re-explain the move after this long without any movement. */
+        const val REMIND_MS = 15_000L
     }
 }

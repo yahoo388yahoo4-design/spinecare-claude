@@ -140,4 +140,28 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/panel"/>
+
+    <TextView
+        android:id="@+id/tvFeedback"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:maxLines="3"
+        android:textColor="@color/sc_ok"
+        android:textSize="13sp"
+        android:background="#CC0B1220"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/tvCue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/panel"/>
+
+    <!-- Next-movement demo, shown while the coach explains it (Settings: movement demo) -->
+    <com.spinecare.app.MoveGuideView
+        android:id="@+id/moveGuide"
+        android:layout_width="108dp"
+        android:layout_height="144dp"
+        android:layout_margin="6dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tvVoice"
+        app:layout_constraintStart_toStartOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

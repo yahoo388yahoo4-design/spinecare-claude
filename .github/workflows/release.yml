@@ -13,7 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       # Set the SPINECARE_KEYSTORE_B64 / _PASSWORD / _ALIAS / _KEY_PASSWORD secrets to sign
-      # with a stable key; otherwise a throwaway prototype key is generated.
+      # with a private release key; otherwise the release APK uses the committed debug key
+      # (android/keystore), so it installs over CI debug builds instead of conflicting.
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -21,23 +22,19 @@ jobs:
       - uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: "8.7"
-      - name: Prepare keystore
-        env:
-          KS_B64: ${{ secrets.SPINECARE_KEYSTORE_B64 }}
-        run: |
-          if [ -n "$KS_B64" ]; then echo "$KS_B64" | base64 -d > spinecare-test.keystore; exit 0; fi
-          keytool -genkeypair -v -keystore spinecare-test.keystore \
-            -alias spinecare -keyalg RSA -keysize 2048 -validity 3650 \
-            -storepass spinecare-test -keypass spinecare-test \
-            -dname "CN=SpineCare Prototype, OU=CI, O=SpineCare, C=US"
-      - name: Assemble release APK (signed with test key)
+      - name: Assemble release APK
         working-directory: android
         env:
-          SPINECARE_KEYSTORE: ${{ github.workspace }}/spinecare-test.keystore
-          SPINECARE_KEYSTORE_PASSWORD: ${{ secrets.SPINECARE_KEYSTORE_PASSWORD || 'spinecare-test' }}
-          SPINECARE_KEY_ALIAS: ${{ secrets.SPINECARE_KEY_ALIAS || 'spinecare' }}
-          SPINECARE_KEY_PASSWORD: ${{ secrets.SPINECARE_KEY_PASSWORD || 'spinecare-test' }}
-        run: gradle --no-daemon assembleRelease
+          KS_B64: ${{ secrets.SPINECARE_KEYSTORE_B64 }}
+          SPINECARE_KEYSTORE_PASSWORD: ${{ secrets.SPINECARE_KEYSTORE_PASSWORD }}
+          SPINECARE_KEY_ALIAS: ${{ secrets.SPINECARE_KEY_ALIAS }}
+          SPINECARE_KEY_PASSWORD: ${{ secrets.SPINECARE_KEY_PASSWORD }}
+        run: |
+          if [ -n "$KS_B64" ]; then
+            echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/spinecare-release.keystore"
+            export SPINECARE_KEYSTORE="$RUNNER_TEMP/spinecare-release.keystore"
+          fi
+          gradle --no-daemon assembleRelease
       - name: Assemble debug APK
         working-directory: android
         run: gradle --no-daemon assembleDebug

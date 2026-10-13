@@ -20,7 +20,9 @@ This repo merges and completes two earlier projects:
 | Android APK (any CI run) | The **Actions** run, under the `spinecare-debug-apk` artifact. |
 | Tagged release | Push a tag like `v0.2.0`. `release.yml` attaches a signed release APK, a debug APK and an unsigned iOS IPA. |
 
-To sign releases with a stable key, add these repository secrets: `SPINECARE_KEYSTORE_B64` (a base64 keystore), `SPINECARE_KEYSTORE_PASSWORD`, `SPINECARE_KEY_ALIAS` and `SPINECARE_KEY_PASSWORD`. Without them, CI generates a throwaway prototype key.
+The Android package is `com.spinecare.claude`. Every debug APK (CI or local) is signed with the committed debug key in `android/keystore/`, so a new build installs over the previous one. Builds before 0.3.0 were `com.spinecare.app`, each signed with a different CI key: that old app installs separately, and the new app offers to remove it (Settings → Uninstall). Uninstalling never needs `adb`; Settings → Uninstall opens the system dialog.
+
+To sign releases with a private key, add these repository secrets: `SPINECARE_KEYSTORE_B64` (a base64 keystore), `SPINECARE_KEYSTORE_PASSWORD`, `SPINECARE_KEY_ALIAS` and `SPINECARE_KEY_PASSWORD`. Without them, the release APK uses the committed debug key.
 
 ## Layout
 

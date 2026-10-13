@@ -28,10 +28,16 @@ import java.io.File
  *  burned in) or, with no video, re-draws the skeleton and HUD from the saved
  *  sensor timeline; underneath, a metric chart with rep and cue marks, IMU
  *  lines from the BLE posture nodes, and a readout at the playhead.
+ *  Tapping the picture hides the text (cue, metrics, rep count) so the whole
+ *  body and its tracking points are visible; tap again to bring it back. For
+ *  clean recordings the text is a layer over the video; older recordings have
+ *  it burned in, so there only the sensor view can hide it.
  *  Everything stays on the device. Works in portrait and landscape (side-by-side
  *  layout); the playhead, speed and view survive a rotation. */
 class SessionReplayActivity : AppCompatActivity() {
     private lateinit var stage: ReplayStageView
+    private lateinit var hud: ReplayHudView
+    private var textHidden = false
     private lateinit var video: VideoView
     private lateinit var chart: TimelineChartView
     private lateinit var seek: SeekBar
@@ -76,6 +82,7 @@ class SessionReplayActivity : AppCompatActivity() {
             speedIdx = it.getInt(KEY_SPEED, 1).coerceIn(0, speeds.size - 1)
             speedBtn.text = speedLabel()
             preferVideo = it.getBoolean(KEY_VIDEO, true)
+            textHidden = it.getBoolean(KEY_TEXT_HIDDEN, false)
         }
 
         val tlFile = store.timelineFile(row)?.takeIf { it.exists() }
@@ -106,6 +113,17 @@ class SessionReplayActivity : AppCompatActivity() {
         box.addView(video, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER))
         stage = ReplayStageView(this).also { it.target = target }
         box.addView(stage, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+        hud = ReplayHudView(this).also { it.target = target; it.visibility = View.GONE }
+        box.addView(hud, FrameLayout.LayoutParams(0, 0, Gravity.CENTER))
+        // the text layer covers exactly the video picture
+        video.addOnLayoutChangeListener { v, _, _, _, _, _, _, _, _ ->
+            val lp = hud.layoutParams as FrameLayout.LayoutParams
+            if (lp.width != v.width || lp.height != v.height) {
+                lp.width = v.width; lp.height = v.height
+                hud.post { hud.layoutParams = lp }
+            }
+        }
+        if (ServerConfig.tapHidesText(this)) box.setOnClickListener { toggleText() }
         if (!landscape) col.addView(box, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
 
         modeRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
@@ -183,7 +201,7 @@ class SessionReplayActivity : AppCompatActivity() {
         }
         if (parsed != null) {
             if (target == 0) target = parsed.target
-            stage.target = target
+            stage.target = target; hud.target = target
             val metric = parsed.metric
             val series = ArrayList<TimelineChartView.Series>()
             if (metric.isNotEmpty()) series.add(TimelineChartView.Series(metric, Ui.PRIMARY,
@@ -226,9 +244,25 @@ class SessionReplayActivity : AppCompatActivity() {
         video.visibility = if (useVideo) View.VISIBLE else View.INVISIBLE
         stage.visibility = if (useVideo) View.GONE else View.VISIBLE
         videoBtn.isEnabled = !useVideo; sensorBtn.isEnabled = useVideo
+        updateHud()
         if (useVideo && player != null) seekTo(clock)
         if (wasPlaying) play()
         render()
+    }
+
+    /** The text layer is drawn over the video only when the recording is clean
+     *  (skeleton only); recordings with burned-in text don't get a second copy. */
+    private fun updateHud() {
+        val clean = tl?.videoText == false
+        hud.visibility = if (useVideo && clean && !textHidden) View.VISIBLE else View.GONE
+        stage.showText = !textHidden
+    }
+
+    private fun toggleText() {
+        textHidden = !textHidden
+        updateHud()
+        if (textHidden && useVideo && tl?.videoText != false)
+            android.widget.Toast.makeText(this, t("replay_text_burned"), android.widget.Toast.LENGTH_LONG).show()
     }
 
     // ------------------------------------------------------------------ transport
@@ -278,6 +312,7 @@ class SessionReplayActivity : AppCompatActivity() {
     override fun onSaveInstanceState(out: Bundle) {
         super.onSaveInstanceState(out)
         out.putLong(KEY_CLOCK, clock); out.putInt(KEY_SPEED, speedIdx); out.putBoolean(KEY_VIDEO, useVideo || tl == null)
+        out.putBoolean(KEY_TEXT_HIDDEN, textHidden)
     }
 
     private fun seekTo(t: Long) {
@@ -315,6 +350,7 @@ class SessionReplayActivity : AppCompatActivity() {
         timeText.text = " ${fmt(clock)} / ${fmt(d)}"
         val s = tl?.at(clock)
         stage.sample = s
+        hud.sample = s
         chart.playhead = clock
         if (s == null) { readout.text = ""; return }
         val sb = StringBuilder()
@@ -349,5 +385,6 @@ class SessionReplayActivity : AppCompatActivity() {
         const val KEY_CLOCK = "clock"
         const val KEY_SPEED = "speed"
         const val KEY_VIDEO = "video"
+        const val KEY_TEXT_HIDDEN = "text_hidden"
     }
 }
