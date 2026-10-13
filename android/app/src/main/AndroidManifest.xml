@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <!-- Settings > "Uninstall": opens the system uninstall dialog for this app or the
+         old com.spinecare.app build (the user confirms; nothing is removed silently) -->
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES"/>
     <!-- Optional hands-free voice commands during exercise sessions; nothing is recorded or stored -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-feature android:name="android.hardware.microphone" android:required="false"/>
@@ -77,6 +80,8 @@
 
     <queries>
         <package android:name="com.google.android.apps.healthdata"/>
+        <!-- the previous package id, so Settings can offer to remove the old install -->
+        <package android:name="com.spinecare.app"/>
         <intent>
             <action android:name="android.intent.action.VIEW"/>
             <data android:scheme="https"/>

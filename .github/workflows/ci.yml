@@ -84,7 +84,7 @@ jobs:
           gh release create android-latest spinecare-debug.apk \
             --prerelease --target "$GITHUB_SHA" \
             --title "Latest Android build" \
-            --notes "Debug APK built from ${GITHUB_SHA::7}. Prototype: not for unsupervised rehabilitation. Uninstall older builds first if Android refuses to update (each CI runner signs with its own debug key)."
+            --notes "Debug APK built from ${GITHUB_SHA::7}. Prototype: not for unsupervised rehabilitation. Package com.spinecare.claude, signed with the committed debug key, so each build installs over the previous one."
 
   ios:
     runs-on: macos-15

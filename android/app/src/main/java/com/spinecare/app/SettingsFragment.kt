@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit
  *  encrypted storage), what is streamed, HTTP-on-LAN opt-in, tuning, feedback. */
 class SettingsFragment : Fragment() {
     private var serverStatus: TextView? = null
+    private var oldShown = false
 
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
         val ctx = requireContext()
@@ -76,10 +77,22 @@ class SettingsFragment : Fragment() {
         val haptics = switch(t("haptics"), ServerConfig.haptics(ctx))
         val audio = switch(t("voice_guidance"), ServerConfig.audioCues(ctx))
         ui.muted(t("voice_guidance_body"))
+        ui.button(t("test_voice")) { testVoice() }
+        voiceStatus = ui.p("", Ui.MUTED, 12f)
+        val tempo = switch(t("set_tempo_prompts"), ServerConfig.tempoPrompts(ctx))
+        ui.muted(t("set_tempo_prompts_body"))
+        val moveDemo = switch(t("set_move_demo"), ServerConfig.moveDemo(ctx))
+        ui.muted(t("set_move_demo_body"))
+        val repFb = switch(t("set_rep_feedback"), ServerConfig.repFeedback(ctx))
+        ui.muted(t("set_rep_feedback_body"))
+        val tapHide = switch(t("set_tap_hide"), ServerConfig.tapHidesText(ctx))
+        ui.muted(t("set_tap_hide_body"))
         val voice = switch(t("voice_control"), ServerConfig.voiceControl(ctx))
         ui.muted(t("voice_control_body"))
         val record = switch(t("record"), ServerConfig.recordSessions(ctx))
         ui.muted(t("record_privacy"))
+        val cleanRec = switch(t("set_clean_rec"), ServerConfig.cleanRecordings(ctx))
+        ui.muted(t("set_clean_rec_body"))
 
         ui.button(t("save_settings")) {
             save(ctx, mode, url.text.toString(), user.text.toString(), pass.text.toString(), stream, insecure.isChecked)
@@ -90,10 +103,50 @@ class SettingsFragment : Fragment() {
             ServerConfig.setAudioCues(ctx, audio.isChecked)
             ServerConfig.setVoiceControl(ctx, voice.isChecked)
             ServerConfig.setRecordSessions(ctx, record.isChecked)
+            ServerConfig.setTempoPrompts(ctx, tempo.isChecked)
+            ServerConfig.setMoveDemo(ctx, moveDemo.isChecked)
+            ServerConfig.setRepFeedback(ctx, repFb.isChecked)
+            ServerConfig.setTapHidesText(ctx, tapHide.isChecked)
+            ServerConfig.setCleanRecordings(ctx, cleanRec.isChecked)
             Toast.makeText(ctx, t("settings_saved"), Toast.LENGTH_SHORT).show()
         }
+
+        ui.h(t("uninstall_title"))
+        oldShown = AppPackages.oldInstalled(ctx)
+        if (oldShown) {
+            ui.warn(t("uninstall_old_body"))
+            ui.button(t("uninstall_old")) { AppPackages.uninstall(ctx, AppPackages.OLD_PACKAGE) }
+        }
+        ui.muted(t("uninstall_body"))
+        ui.button(t("uninstall_self")) { AppPackages.uninstall(ctx, ctx.packageName) }
+
         ui.muted(t("disclaimer"))
         return ui.root
+    }
+
+    private var voiceStatus: TextView? = null
+    private var testCoach: VoiceCoach? = null
+
+    /** Speaks a sample sentence in the app language and says what is wrong if it cannot. */
+    private fun testVoice() {
+        val ctx = requireContext()
+        voiceStatus?.text = t("test_voice_running")
+        testCoach?.shutdown()
+        testCoach = VoiceCoach(ctx, true, onProblem = { key ->
+            voiceStatus?.text = t(key)
+            if (key == "tts_no_engine" || key == "tts_lang_missing") AppPackages.openTtsSettings(ctx)
+        }, onSpeaking = { speaking -> if (speaking) voiceStatus?.text = t("test_voice_ok") }).also {
+            it.speak(t("test_voice_phrase"), flush = true)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // back from the system uninstall dialog: drop the old-app row once it is gone
+        if (oldShown && !AppPackages.oldInstalled(requireContext())) {
+            oldShown = false
+            parentFragmentManager.beginTransaction().replace(id, SettingsFragment()).commit()
+        }
     }
 
     private fun save(ctx: android.content.Context, mode: RadioGroup, url: String, user: String, pass: String,
@@ -134,5 +187,8 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() { super.onDestroyView(); serverStatus = null }
+    override fun onDestroyView() {
+        super.onDestroyView(); serverStatus = null; voiceStatus = null
+        testCoach?.shutdown(); testCoach = null
+    }
 }

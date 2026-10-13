@@ -101,11 +101,20 @@ class CameraRig(
 
     /** Pinch-to-zoom on the preview. */
     @SuppressLint("ClickableViewAccessibility")
-    fun enablePinch() {
+    /** Pinch to zoom; a single tap (not part of a pinch) calls [onTap]. */
+    fun enablePinch(onTap: (() -> Unit)? = null) {
         val detector = ScaleGestureDetector(activity, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
             override fun onScale(d: ScaleGestureDetector): Boolean { applyZoom(zoom * d.scaleFactor); return true }
         })
-        previewView.setOnTouchListener { _, e -> detector.onTouchEvent(e); true }
+        val taps = android.view.GestureDetector(activity, object : android.view.GestureDetector.SimpleOnGestureListener() {
+            override fun onDown(e: android.view.MotionEvent) = true
+            override fun onSingleTapConfirmed(e: android.view.MotionEvent): Boolean { onTap?.invoke(); return onTap != null }
+        })
+        previewView.setOnTouchListener { _, e ->
+            detector.onTouchEvent(e)
+            if (!detector.isInProgress && e.pointerCount == 1) taps.onTouchEvent(e)
+            true
+        }
     }
 
     /** Lens button text, e.g. "Lens: wide 1×". */
