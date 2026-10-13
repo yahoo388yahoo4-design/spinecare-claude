@@ -3,9 +3,19 @@ name: Release builds
 on:
   push:
     tags: ["v*"]
+  # Run from the Actions tab (or the API) with a version like v0.3.0: builds the
+  # commit it runs on, creates that tag and release, and attaches the APKs and IPA.
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release tag to create, e.g. v0.3.0"
+        required: true
 
 permissions:
   contents: write
+
+env:
+  TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
 
 jobs:
   android-release:
@@ -40,13 +50,12 @@ jobs:
         run: gradle --no-daemon assembleDebug
       - name: Name the APKs
         run: |
-          cp android/app/build/outputs/apk/release/app-release.apk "spinecare-${GITHUB_REF_NAME}.apk"
-          cp android/app/build/outputs/apk/debug/app-debug.apk "spinecare-${GITHUB_REF_NAME}-debug.apk"
-      - name: Upload to release
-        uses: softprops/action-gh-release@v2
+          cp android/app/build/outputs/apk/release/app-release.apk "spinecare-${TAG}.apk"
+          cp android/app/build/outputs/apk/debug/app-debug.apk "spinecare-${TAG}-debug.apk"
+      - uses: actions/upload-artifact@v4
         with:
-          files: |
-            spinecare-*.apk
+          name: release-apks
+          path: spinecare-*.apk
 
   ios-release:
     runs-on: macos-15
@@ -69,7 +78,28 @@ jobs:
           mkdir -p Payload
           cp -r build/Build/Products/Release-iphoneos/SpineCare.app Payload/
           zip -qr SpineCare-unsigned.ipa Payload
-      - name: Upload to release
-        uses: softprops/action-gh-release@v2
+      - uses: actions/upload-artifact@v4
         with:
-          files: ios/SpineCare-unsigned.ipa
+          name: release-ipa
+          path: ios/SpineCare-unsigned.ipa
+
+  publish:
+    needs: [android-release, ios-release]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Create or update the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          ls -la dist
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release upload "$TAG" dist/* --clobber
+          else
+            gh release create "$TAG" dist/* --target "$GITHUB_SHA" --title "SpineCare $TAG" \
+              --notes "Android: spinecare-$TAG.apk (package com.spinecare.claude, installs over CI debug builds). iOS: SpineCare-unsigned.ipa (unsigned; sideload with your own signing). Prototype: not for unsupervised rehabilitation."
+          fi
