@@ -472,7 +472,7 @@ enum FrameCoach {
         case "view": return hint(fix.fixKey, .view)
         case "distance": return fix.fixKey == "pc_fix_step_back" ? hint("fc_step_back", .back) : hint("fc_come_closer", .closer)
         case "center":
-            let right = Double(c?.x ?? w / 2) < w / 2
+            let right = Double(c?.x ?? CGFloat(w / 2)) < w / 2
             return hint(sideways(ex.view, right: right, p, mirrored: mirrored), right ? .right : .left)
         case "height": return fix.fixKey == "pc_fix_raise" ? hint("fc_raise", .up) : hint("fc_lower", .down)
         case "visible":
