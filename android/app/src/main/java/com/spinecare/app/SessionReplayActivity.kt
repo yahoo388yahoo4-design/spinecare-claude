@@ -13,7 +13,6 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
-import android.widget.VideoView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
@@ -32,13 +31,16 @@ import java.io.File
  *  body and its tracking points are visible; tap again to bring it back. For
  *  clean recordings the text is a layer over the video; older recordings have
  *  it burned in, so there only the sensor view can hide it.
+ *  The picture fills its whole area (centre crop) by default; the Fill / Fit
+ *  button shows the whole frame instead, and the choice is remembered.
  *  Everything stays on the device. Works in portrait and landscape (side-by-side
  *  layout); the playhead, speed and view survive a rotation. */
 class SessionReplayActivity : AppCompatActivity() {
     private lateinit var stage: ReplayStageView
     private lateinit var hud: ReplayHudView
     private var textHidden = false
-    private lateinit var video: VideoView
+    private lateinit var video: FillVideoView
+    private lateinit var fillBtn: Button
     private lateinit var chart: TimelineChartView
     private lateinit var seek: SeekBar
     private lateinit var timeText: TextView
@@ -109,20 +111,15 @@ class SessionReplayActivity : AppCompatActivity() {
         col.addView(status)
 
         val box = FrameLayout(this)
-        video = VideoView(this)
-        box.addView(video, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER))
-        stage = ReplayStageView(this).also { it.target = target }
+        box.setBackgroundColor(0xFF000000.toInt())
+        val fill = ServerConfig.replayFill(this)
+        video = FillVideoView(this).also { it.fill = fill }
+        box.addView(video, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+        stage = ReplayStageView(this).also { it.target = target; it.fill = fill }
         box.addView(stage, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+        // the text layer covers the whole picture area
         hud = ReplayHudView(this).also { it.target = target; it.visibility = View.GONE }
-        box.addView(hud, FrameLayout.LayoutParams(0, 0, Gravity.CENTER))
-        // the text layer covers exactly the video picture
-        video.addOnLayoutChangeListener { v, _, _, _, _, _, _, _, _ ->
-            val lp = hud.layoutParams as FrameLayout.LayoutParams
-            if (lp.width != v.width || lp.height != v.height) {
-                lp.width = v.width; lp.height = v.height
-                hud.post { hud.layoutParams = lp }
-            }
-        }
+        box.addView(hud, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
         if (ServerConfig.tapHidesText(this)) box.setOnClickListener { toggleText() }
         if (!landscape) col.addView(box, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
 
@@ -154,6 +151,8 @@ class SessionReplayActivity : AppCompatActivity() {
         controls.addView(playBtn)
         speedBtn = btn("1×") { cycleSpeed() }
         controls.addView(speedBtn)
+        fillBtn = btn(fillLabel(fill)) { toggleFill() }
+        controls.addView(fillBtn)
         controls.addView(btn(t("replay_next_rep")) { jumpRep(1) })
         col.addView(controls)
 
@@ -239,8 +238,6 @@ class SessionReplayActivity : AppCompatActivity() {
         if (wasPlaying) pause()
         useVideo = videoMode && videoFile != null
         if (!useVideo && tl == null) useVideo = videoFile != null
-        // A hidden VideoView releases its player; onPrepared hands over a new one.
-        if (!useVideo) player = null
         video.visibility = if (useVideo) View.VISIBLE else View.INVISIBLE
         stage.visibility = if (useVideo) View.GONE else View.VISIBLE
         videoBtn.isEnabled = !useVideo; sensorBtn.isEnabled = useVideo
@@ -257,6 +254,16 @@ class SessionReplayActivity : AppCompatActivity() {
         hud.visibility = if (useVideo && clean && !textHidden) View.VISIBLE else View.GONE
         stage.showText = !textHidden
     }
+
+    /** Fill the area (centre crop) or show the whole frame; remembered for next time. */
+    private fun toggleFill() {
+        val fill = !video.fill
+        video.fill = fill; stage.fill = fill
+        fillBtn.text = fillLabel(fill)
+        ServerConfig.setReplayFill(this, fill)
+    }
+
+    private fun fillLabel(fill: Boolean) = if (fill) t("replay_fill") else t("replay_fit")
 
     private fun toggleText() {
         textHidden = !textHidden

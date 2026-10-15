@@ -3,9 +3,11 @@ package com.spinecare.app
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.DashPathEffect
+import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RectF
+import android.graphics.Shader
 import com.spinecare.app.I18n.t
 import kotlin.math.PI
 import kotlin.math.cos
@@ -24,9 +26,6 @@ object GuideRenderer {
         style = Paint.Style.STROKE; color = Ui.PRIMARY; pathEffect = DashPathEffect(floatArrayOf(14f, 10f), 0f)
     }
 
-    private const val BODY = 0xFF64748B.toInt()
-    private const val BODY_FAR = 0xFF475569.toInt()
-    private const val HAIR = 0xFF1F2937.toInt()
     private const val FLOOR = 0xFF111827.toInt()
     private const val FURNITURE = 0xFF334155.toInt()
 
@@ -40,82 +39,27 @@ object GuideRenderer {
         val fw = GuideDemo.W.toFloat(); val fh = GuideDemo.H.toFloat()
         val s = max(w / fw, h / fh)
         val ox = (w - fw * s) / 2f; val oy = (h - fh * s) / 2f
-        fun x(v: Double) = ox + v.toFloat() * s
-        fun y(v: Double) = oy + v.toFloat() * s
         val p = f.landmarks
-        fun pt(k: String) = p[k]
 
+        // the scene is drawn in the whole-body frame; the programme's zoom (head and
+        // shoulders, waist up) and the crop that fills this view are one transform
+        val z = GuideDemo.zoomFor(demo.exercise.program).toFloat()
+        val cy = GuideDemo.ZOOM_CY.toFloat()
         c.drawColor(Ui.BG)
-        fill.color = FLOOR; c.drawRect(0f, y(860.0), w, h, fill)
-
-        // seat
-        val side = demo.exercise.view == "side"
-        val hip = if (side) pt("lhip") else null
-        fill.color = FURNITURE
-        if (side && hip != null) {
-            c.drawRoundRect(RectF(x(hip.x - 80), y(hip.y + 22), x(hip.x + 120), y(hip.y + 44)), 8f, 8f, fill)
-            stroke.color = FURNITURE; stroke.strokeWidth = 14f * s
-            c.drawLine(x(hip.x - 60), y(hip.y + 44), x(hip.x - 60), y(860.0), stroke)
-            c.drawLine(x(hip.x + 100), y(hip.y + 44), x(hip.x + 100), y(860.0), stroke)
-        } else {
-            c.drawRoundRect(RectF(x(230.0), y(668.0), x(490.0), y(700.0)), 8f, 8f, fill)
-            stroke.color = FURNITURE; stroke.strokeWidth = 14f * s
-            c.drawLine(x(250.0), y(700.0), x(250.0), y(860.0), stroke)
-            c.drawLine(x(470.0), y(700.0), x(470.0), y(860.0), stroke)
-        }
-
-        fun limb(color: Int, width: Float, vararg keys: String) {
-            val pts = keys.mapNotNull { pt(it) }
-            if (pts.size < 2) return
-            stroke.color = color; stroke.strokeWidth = width * s
-            val path = Path().apply { moveTo(x(pts[0].x), y(pts[0].y)); for (q in pts.drop(1)) lineTo(x(q.x), y(q.y)) }
-            c.drawPath(path, stroke)
-        }
-
-        if (side) {
-            limb(BODY_FAR, 44f, "rhip", "rknee", "rank")
-            limb(BODY_FAR, 28f, "rsho", "relb", "rwri")
-            limb(BODY, 46f, "lhip", "lknee", "lank")
-            limb(BODY, 92f, "lsho", "lhip")
-        } else {
-            limb(BODY, 46f, "lhip", "lknee", "lank"); limb(BODY, 46f, "rhip", "rknee", "rank")
-            val q = listOf("lsho", "rsho", "rhip", "lhip").mapNotNull { pt(it) }
-            if (q.size == 4) {
-                val torso = Path().apply { moveTo(x(q[0].x), y(q[0].y)); for (k in 1..3) lineTo(x(q[k].x), y(q[k].y)); close() }
-                fill.color = BODY; c.drawPath(torso, fill)
-                stroke.color = BODY; stroke.strokeWidth = 36f * s; c.drawPath(torso, stroke)
-            }
-        }
-
-        // neck + head
-        val lear = pt("lear"); val rear = pt("rear"); val nose = pt("nose")
-        val shoMid = midOf(pt("lsho"), pt("rsho"), side)
-        val (hx, hy) = when {
-            side && lear != null && nose != null -> Pair(lear.x + (nose.x - lear.x) * 0.3, lear.y - 8)
-            lear != null && rear != null -> Pair((lear.x + rear.x) / 2, (lear.y + rear.y) / 2 - 6)
-            else -> Pair(360.0, 300.0)
-        }
-        if (shoMid != null) {
-            stroke.color = BODY; stroke.strokeWidth = 40f * s
-            c.drawLine(x(shoMid.first), y(shoMid.second - 10), x(hx), y(hy + 30), stroke)
-        }
-        val back = demo.exercise.view == "back"
-        fill.color = if (back) HAIR else BODY
-        c.drawCircle(x(hx), y(hy), 54f * s, fill)
-        if (!back && nose != null) {
-            fill.color = 0xFFCBD5E1.toInt()
-            if (side) c.drawCircle(x(nose.x), y(nose.y), 9f * s, fill)
-            else {   // eyes follow the nose, so head turns read clearly
-                val ex = nose.x - hx
-                c.drawCircle(x(hx + ex - 18), y(hy - 4), 6f * s, fill); c.drawCircle(x(hx + ex + 18), y(hy - 4), 6f * s, fill)
-                c.drawCircle(x(nose.x), y(nose.y + 6), 5f * s, fill)
-            }
-        }
-        if (side) {
-            limb(BODY, 30f, "lsho", "lelb", "lwri")
-        } else {
-            limb(BODY, 30f, "lsho", "lelb", "lwri"); limb(BODY, 30f, "rsho", "relb", "rwri")
-        }
+        c.save()
+        c.translate(ox + s * fw / 2f * (1 - z), oy + s * cy * (1 - z))
+        c.scale(s * z, s * z)
+        // wall and floor, with a soft shadow under the chair
+        fill.shader = LinearGradient(0f, 0f, 0f, 860f, 0xFF16213A.toInt(), Ui.BG, Shader.TileMode.CLAMP)
+        c.drawRect(-2000f, -2000f, fw + 2000f, 860f, fill)
+        fill.shader = null
+        fill.color = FLOOR; c.drawRect(-2000f, 860f, fw + 2000f, fh + 2000f, fill)
+        val body = GuideDemo.unzoom(p, demo.exercise.program)
+        val hipX = body["lhip"]?.x?.toFloat() ?: (fw / 2f)
+        fill.color = 0x66000000
+        c.drawOval(RectF(hipX - 170f, 846f, hipX + 170f, 880f), fill)
+        FigurePainter.draw(c, body, demo.exercise.view)
+        c.restore()
 
         // tracking overlay: exactly what a live session draws
         val phaseText = phaseText(demo, f)
@@ -197,9 +141,9 @@ object GuideRenderer {
         val start = when (view) { "side" -> 0.0; "back" -> 0.0; else -> 90.0 }
         val ang = Math.toRadians(start + (want - start) * e)
         val fx = sin(ang).toFloat(); val fy = cos(ang).toFloat()              // facing vector (toward the phone = +y)
-        stroke.color = BODY; stroke.strokeWidth = unit * 0.7f
+        stroke.color = FigurePainter.SHIRT; stroke.strokeWidth = unit * 0.7f
         c.drawLine(pcx - fy * unit * 1.1f, personY + fx * unit * 1.1f, pcx + fy * unit * 1.1f, personY - fx * unit * 1.1f, stroke)
-        fill.color = if (view == "back" && e > 0.5f) HAIR else 0xFF94A3B8.toInt()
+        fill.color = FigurePainter.HAIR      // seen from above: the top of the head
         c.drawCircle(pcx, personY, unit * 0.62f, fill)
         fill.color = Ui.WARN
         val nose = Path().apply {
@@ -243,19 +187,18 @@ object GuideRenderer {
         c.drawRoundRect(RectF(phx - unit * 0.28f, tableTop - unit * 1.9f, phx + unit * 0.28f, tableTop), 8f, 8f, fill)
         fill.color = Ui.BG; c.drawCircle(phx + unit * 0.12f, tableTop - unit * 1.65f, unit * 0.09f, fill)
         c.restore()
-        // seated person in profile, facing the phone
-        val px = w * 0.9f
+        // seated person in profile (the guide's figure, mirrored to face the phone)
+        val px = w * 0.88f
         val chestY = tableTop - unit * 1.65f
-        stroke.color = BODY; stroke.strokeWidth = unit * 0.55f
-        c.drawLine(px, chestY - unit * 0.6f, px, chestY + unit * 2.4f, stroke)                                   // torso
-        c.drawLine(px, chestY + unit * 2.4f, px - unit * 1.2f, chestY + unit * 2.5f, stroke)                       // thigh
-        c.drawLine(px - unit * 1.2f, chestY + unit * 2.5f, px - unit * 1.2f, baseY, stroke)                        // shin
-        fill.color = BODY; c.drawCircle(px - unit * 0.05f, chestY - unit * 1.35f, unit * 0.55f, fill)
-        fill.color = FURNITURE; c.drawRect(px - unit * 0.4f, chestY + unit * 2.65f, px + unit * 0.6f, chestY + unit * 2.9f, fill)
+        val k = (baseY - chestY) / (860f - 450f)
+        c.save()
+        c.translate(px, chestY); c.scale(-k, k); c.translate(-340f, -450f)
+        FigurePainter.draw(c, GuideDemo.basePose("side"), "side")
+        c.restore()
         // lens-to-chest line
         dashed.strokeWidth = 4f
         val lensY = tableTop - unit * 1.65f
-        c.drawLine(phx + unit * 0.3f, lensY, px - unit * 0.4f, chestY, dashed)
+        c.drawLine(phx + unit * 0.3f, lensY, px - 46f * k, chestY, dashed)
         label.color = if (e >= 1f) Ui.OK else Ui.MUTED
         val l1 = (if (e >= 1f) "✓ " else "") + t("gd_label_upright")
         val l2 = (if (e >= 1f) "✓ " else "") + t(if (program == "neck" || view == "front") "gd_label_face" else "gd_label_chest")
@@ -267,12 +210,6 @@ object GuideRenderer {
     }
 
     const val LOOP_MS = 6000L
-
-    private fun midOf(a: Metrics.P?, b: Metrics.P?, side: Boolean): Pair<Double, Double>? = when {
-        side && a != null -> Pair(a.x, a.y)
-        a != null && b != null -> Pair((a.x + b.x) / 2, (a.y + b.y) / 2)
-        else -> null
-    }
 
     private fun fmt(v: Double) = if (v < 1) "%.3f".format(v) else "%.0f".format(v)
 

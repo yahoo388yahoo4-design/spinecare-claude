@@ -12,13 +12,16 @@ import kotlin.math.min
 
 /** Replays a session's sensor timeline: the skeleton, framing state, metrics,
  *  cue and rep count at the playhead, drawn with the same OverlayRenderer as
- *  the live session and letterboxed to the camera frame's aspect ratio. */
+ *  the live session. [fill] covers the whole view with the camera frame
+ *  (centre crop, like the live preview); off, the frame is letterboxed. */
 class ReplayStageView(context: Context) : View(context) {
     var sample: SessionTimeline.Sample? = null
         set(v) { field = v; invalidate() }
     var target = 0
     /** false = skeleton only (the text is hidden by a tap on the picture). */
     var showText = true
+        set(v) { field = v; invalidate() }
+    var fill = true
         set(v) { field = v; invalidate() }
     private val frameBg = Paint().apply { color = 0xFF111827.toInt() }
 
@@ -28,8 +31,9 @@ class ReplayStageView(context: Context) : View(context) {
         val s = sample ?: return
         val fw = s.frameW.takeIf { it > 0 } ?: 480
         val fh = s.frameH.takeIf { it > 0 } ?: 640
+        // fill: the drawing area is the whole view and OverlayRenderer centre-crops into it
         val scale = min(width.toFloat() / fw, height.toFloat() / fh)
-        val aw = fw * scale; val ah = fh * scale
+        val aw = if (fill) width.toFloat() else fw * scale; val ah = if (fill) height.toFloat() else fh * scale
         val ox = (width - aw) / 2f; val oy = (height - ah) / 2f
         canvas.save()
         canvas.translate(ox, oy)

@@ -169,6 +169,17 @@ class GuideDemo(val exercise: Exercise, val calibrationMs: Long = 1500, val mist
 
         fun zoomFor(program: String) = when (program) { "neck" -> 2.2; "upper_body" -> 1.25; else -> 1.0 }
 
+        /** Vertical centre of the programme zoom (about the shoulders), in frame pixels. */
+        const val ZOOM_CY = 330.0
+
+        /** Landmarks mapped back from a programme's zoomed framing to the whole-body
+         *  frame they were zoomed from (the inverse of basePose's zoom), for drawing. */
+        fun unzoom(p: Map<String, Metrics.P>, program: String): Map<String, Metrics.P> {
+            val z = zoomFor(program)
+            if (z == 1.0) return p
+            return p.mapValues { (_, v) -> Metrics.P(W / 2.0 + (v.x - W / 2.0) / z, ZOOM_CY + (v.y - ZOOM_CY) / z, v.c) }
+        }
+
         private val HEAD = setOf("nose", "lear", "rear")
         private val UPPER = setOf("nose", "lear", "rear", "lsho", "rsho", "lelb", "relb", "lwri", "rwri")
 
@@ -184,7 +195,7 @@ class GuideDemo(val exercise: Exercise, val calibrationMs: Long = 1500, val mist
             if (zoom == 1.0) return body
             val out = LinkedHashMap<String, Metrics.P>()
             for ((k, v) in body) {
-                val x = W / 2.0 + (v.x - W / 2.0) * zoom; val y = 330.0 + (v.y - 330.0) * zoom
+                val x = W / 2.0 + (v.x - W / 2.0) * zoom; val y = ZOOM_CY + (v.y - ZOOM_CY) * zoom
                 val inside = x > 0 && x < W && y > 0 && y < H
                 out[k] = Metrics.P(x, y, if (inside) v.c else 0.0)
             }

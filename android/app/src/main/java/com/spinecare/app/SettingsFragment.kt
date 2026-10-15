@@ -83,6 +83,14 @@ class SettingsFragment : Fragment() {
         ui.muted(t("set_tempo_prompts_body"))
         val moveDemo = switch(t("set_move_demo"), ServerConfig.moveDemo(ctx))
         ui.muted(t("set_move_demo_body"))
+        val guideBox = switch(t("set_guide_box"), ServerConfig.guideBoxAdjustable(ctx))
+        ui.muted(t("set_guide_box_body"))
+        ui.button(t("gb_reset_btn")) {
+            ServerConfig.setGuideBox(ctx, GuideBox.DEFAULT)
+            Toast.makeText(ctx, t("gb_reset"), Toast.LENGTH_SHORT).show()
+        }
+        val frameCoach = switch(t("set_frame_coach"), ServerConfig.frameCoach(ctx))
+        ui.muted(t("set_frame_coach_body"))
         val repFb = switch(t("set_rep_feedback"), ServerConfig.repFeedback(ctx))
         ui.muted(t("set_rep_feedback_body"))
         val tapHide = switch(t("set_tap_hide"), ServerConfig.tapHidesText(ctx))
@@ -105,6 +113,8 @@ class SettingsFragment : Fragment() {
             ServerConfig.setRecordSessions(ctx, record.isChecked)
             ServerConfig.setTempoPrompts(ctx, tempo.isChecked)
             ServerConfig.setMoveDemo(ctx, moveDemo.isChecked)
+            ServerConfig.setGuideBoxAdjustable(ctx, guideBox.isChecked)
+            ServerConfig.setFrameCoach(ctx, frameCoach.isChecked)
             ServerConfig.setRepFeedback(ctx, repFb.isChecked)
             ServerConfig.setTapHidesText(ctx, tapHide.isChecked)
             ServerConfig.setCleanRecordings(ctx, cleanRec.isChecked)

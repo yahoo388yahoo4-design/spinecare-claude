@@ -42,6 +42,16 @@ import java.util.concurrent.Executors
  *  Tapping the camera picture hides the text and controls so the whole body and
  *  its tracking points are visible; tap again to bring them back.
  *
+ *  The guide box (Settings: adjustable guide box) can be dragged anywhere,
+ *  resized and closed; the Guide button shows or hides it (shown stays on
+ *  screen, hidden never pops up) and a long press resets it. Its place, size and
+ *  visibility are kept between sessions.
+ *
+ *  Framing coach (Settings): before and during a session, while the person is
+ *  not framed well, a ghost outline shows where to sit, an arrow which way to
+ *  move, and the coach says it ("shift a little to your left", "bring the phone
+ *  closer"), until the position is good.
+ *
  *  The screen works in portrait and landscape (Rotate button: auto, portrait,
  *  landscape). The orientation is held while a session or check-in is open so
  *  calibration and the recording keep one frame shape; lens and zoom (pinch or
@@ -90,7 +100,12 @@ class ExerciseActivity : AppCompatActivity() {
     @Volatile private var pendingFeedback: Pair<Long, String>? = null
     @Volatile private var lastExplainAt = 0L
     private var chromeHidden = false
-    private val hideGuide = Runnable { b.moveGuide.visibility = View.GONE }
+    private val hideGuide = Runnable { b.moveGuide.visibility = View.GONE; labelGuide() }
+    private var guideAdjustable = true
+    private var guideState = GuideBox.DEFAULT
+    private var frameCoachOn = true
+    private val frameStab = FrameCoach.Stabilizer()
+    private val dp by lazy { resources.displayMetrics.density }
 
     // camera + recording
     private lateinit var rig: CameraRig
@@ -136,7 +151,8 @@ class ExerciseActivity : AppCompatActivity() {
         cleanRecording = ServerConfig.cleanRecordings(this)
         if (moveDemoOn) demo = runCatching { GuideDemo(exercise) }.getOrNull()?.takeIf { it.countable }
         b.moveGuide.demo = demo
-        b.moveGuide.setOnClickListener { b.moveGuide.visibility = View.GONE }
+        frameCoachOn = ServerConfig.frameCoach(this)
+        setupGuideBox()
 
         val guide = FramingGuide.forView(exercise.view, exercise.program)
         b.tvExercise.text = "${exercise.name(I18n.lang)}\n${guide.headline}\n• " + guide.steps.joinToString("\n• ")
@@ -268,7 +284,7 @@ class ExerciseActivity : AppCompatActivity() {
         if (!running || paused == p) return
         paused = p
         labelButtons()
-        if (p) { b.moveGuide.removeCallbacks(hideGuide); b.moveGuide.visibility = View.GONE }
+        if (p && GuideBox.autoShows(guideState)) hideGuideNow()
         moveCoach?.reset(System.currentTimeMillis())
         val msg = if (p) t("vg_paused") else t("vg_resumed")
         lastCue = msg; b.tvCue.text = msg
@@ -324,6 +340,7 @@ class ExerciseActivity : AppCompatActivity() {
         val vis = if (chromeHidden) View.INVISIBLE else View.VISIBLE
         for (v in listOf(b.tvExercise, b.tvCue, b.tvMetrics, b.tvVoice, b.tvReps, b.btnRow, b.btnRow2, b.btnRow3)) v.visibility = vis
         b.panel?.visibility = vis
+        labelGuide()
         b.tvFeedback.visibility = if (chromeHidden || b.tvFeedback.text.isNullOrEmpty()) View.GONE else View.VISIBLE
         if (chromeHidden) Toast.makeText(this, t("tap_to_show"), Toast.LENGTH_SHORT).show()
     }
@@ -345,10 +362,81 @@ class ExerciseActivity : AppCompatActivity() {
     private fun showMoveGuide(cycles: Int) {
         val d = demo ?: return
         if (!moveDemoOn) return
-        b.moveGuide.removeCallbacks(hideGuide)
-        if (b.moveGuide.visibility != View.VISIBLE) { b.moveGuide.visibility = View.VISIBLE; b.moveGuide.restart() }
-        b.moveGuide.postDelayed(hideGuide, d.repMs * minOf(2, d.reps) * cycles.coerceAtLeast(1))
+        val mg = b.moveGuide
+        when (guideState.mode) {
+            GuideBox.MODE_HIDDEN -> return
+            GuideBox.MODE_SHOWN -> { mg.removeCallbacks(hideGuide); mg.visibility = View.VISIBLE; mg.restart() }
+            else -> {
+                mg.removeCallbacks(hideGuide)
+                if (mg.visibility != View.VISIBLE) { mg.visibility = View.VISIBLE; mg.restart() }
+                mg.postDelayed(hideGuide, d.repMs * minOf(2, d.reps) * cycles.coerceAtLeast(1))
+            }
+        }
+        labelGuide()
     }
+
+    // ------------------------------------------------------------------ guide box (main thread)
+
+    private fun setupGuideBox() {
+        guideAdjustable = ServerConfig.guideBoxAdjustable(this)
+        guideState = if (guideAdjustable) ServerConfig.guideBox(this) else GuideBox.DEFAULT
+        val mg = b.moveGuide
+        mg.adjustable = guideAdjustable
+        mg.areaWidth = { guideAreaW() }
+        if (!guideAdjustable) mg.setOnClickListener { hideGuideNow(); labelGuide() }
+        mg.onClose = {
+            guideState = guideState.copy(mode = GuideBox.MODE_HIDDEN); saveGuide()
+            hideGuideNow(); labelGuide()
+        }
+        mg.onAdjusted = {
+            guideState = GuideBox.adjusted(guideState, mg.x, mg.y, mg.width.toFloat(), guideAreaW(), b.root.height, dp)
+            saveGuide()
+        }
+        b.tvGuide.setOnClickListener {
+            val visible = mg.visibility == View.VISIBLE
+            guideState = GuideBox.toggled(guideState, visible); saveGuide()
+            if (visible) hideGuideNow() else { mg.removeCallbacks(hideGuide); mg.visibility = View.VISIBLE; mg.restart() }
+            labelGuide()
+        }
+        b.tvGuide.setOnLongClickListener {
+            guideState = GuideBox.DEFAULT; saveGuide()
+            placeGuide(); hideGuideNow(); labelGuide()
+            Toast.makeText(this, t("gb_reset"), Toast.LENGTH_SHORT).show()
+            true
+        }
+        // same place after a rotation or a size change: fractions of the free area
+        b.root.addOnLayoutChangeListener { _, l, top, r, bottom, oleft, otop, oright, obottom ->
+            if (r - l != oright - oleft || bottom - top != obottom - otop) b.root.post { placeGuide() }
+        }
+        b.root.post { placeGuide() }
+        if (demo != null && guideState.mode == GuideBox.MODE_SHOWN) mg.visibility = View.VISIBLE
+        labelGuide()
+    }
+
+    /** Width the box may use: the screen, minus the control panel in landscape. */
+    private fun guideAreaW(): Int = b.panel?.takeIf { it.width > 0 }?.left ?: b.root.width
+
+    private fun placeGuide() {
+        val aw = guideAreaW(); val ah = b.root.height
+        if (aw <= 0 || ah <= 0) return
+        val (left, top, bw, bh) = GuideBox.layout(guideState, aw, ah, dp)
+        val mg = b.moveGuide
+        val lp = mg.layoutParams
+        if (lp.width != bw || lp.height != bh) { lp.width = bw; lp.height = bh; mg.layoutParams = lp }
+        mg.x = left.toFloat(); mg.y = top.toFloat()
+    }
+
+    private fun saveGuide() { if (guideAdjustable) ServerConfig.setGuideBox(this, guideState) }
+
+    private fun hideGuideNow() { b.moveGuide.removeCallbacks(hideGuide); b.moveGuide.visibility = View.GONE }
+
+    private fun labelGuide() {
+        b.tvGuide.visibility = if (guideAdjustable && demo != null && !chromeHidden) View.VISIBLE else View.GONE
+        b.tvGuide.text = t(if (b.moveGuide.visibility == View.VISIBLE) "gb_hide" else "gb_show")
+    }
+
+    /** Framing-coach speech: a new hint goes through the cue line, a repeat is spoken again. */
+    private fun coachSay(text: String) { if (text != lastCue) postCue(text) else runOnUiThread { coach?.cue(text) } }
 
     /** A movement ended: show the verdict now; a counted rep's verdict is spoken
      *  with the rep count, a movement that did not count is spoken right away. */
@@ -410,8 +498,11 @@ class ExerciseActivity : AppCompatActivity() {
             val framing = Framing.check(named, exercise.requiredLandmarks, minConf, w.toDouble(), h.toDouble())
             val metrics = named?.let { Metrics.compute(it) } ?: emptyMap()
             if (!running || paused) {
-                b.overlay.show(OverlayView.Frame(named, w, h, framing.missing, framing.ready))
-                if (!running && framing.ready && now - lastReadyAnnounce > 15_000) {
+                val hint = if (frameCoachOn) FrameCoach.assess(named, w.toDouble(), h.toDouble(), exercise, minConf) else null
+                b.overlay.show(OverlayView.Frame(named, w, h, framing.missing, framing.ready, coach = hint))
+                if (hint != null) {
+                    frameStab.update(hint.key, now)?.let { coachSay(FrameCoach.text(it, beforeStart = !running)) }
+                } else if (!running && framing.ready && now - lastReadyAnnounce > 15_000) {
                     lastReadyAnnounce = now
                     runOnUiThread { coach?.guide(t("vg_framing_ok")) }
                 }
@@ -421,6 +512,11 @@ class ExerciseActivity : AppCompatActivity() {
             framesProcessed++
             for ((k, v) in metrics) if (!v.isNaN() && !v.isInfinite()) metricSums.getOrPut(k) { DoubleArray(2) }.let { it[0] += v; it[1] += 1.0 }
             val local = tracker?.update(metrics, framing.ready, now)
+            // framing coach while the person is not framed well enough to track
+            val hint = if (frameCoachOn && !framing.ready) FrameCoach.assess(named, w.toDouble(), h.toDouble(), exercise, minConf) else null
+            val coachRepeat = hint?.let { frameStab.update(it.key, now) }
+            if (hint == null) frameStab.reset()
+            val coachText = hint?.let { FrameCoach.text(frameStab.stable ?: it.key, beforeStart = false) }
 
             // server enhancement (never blocks on-device coaching)
             val srv = server
@@ -442,7 +538,7 @@ class ExerciseActivity : AppCompatActivity() {
                 missing = f?.optJSONArray("missing")?.let { a -> (0 until a.length()).map { a.getString(it) } } ?: emptyList()
                 repsNow = sp.optInt("reps")
                 cue = when {
-                    !ready -> f?.optJSONArray("issues")?.let { a -> (0 until a.length()).joinToString(" ") { FramingGuide.fixFor(a.getString(it)) } } ?: ""
+                    !ready -> coachText ?: f?.optJSONArray("issues")?.let { a -> (0 until a.length()).joinToString(" ") { FramingGuide.fixFor(a.getString(it)) } } ?: ""
                     sp.optBoolean("calibrating") -> t("calibrating")
                     (sp.optJSONArray("cues")?.length() ?: 0) > 0 -> sp.getJSONArray("cues").getJSONObject(0).optString("cue")
                     sp.optBoolean("rep_just_done") -> t("rep_done").format(repsNow, exercise.targetReps)
@@ -453,7 +549,7 @@ class ExerciseActivity : AppCompatActivity() {
                 ready = framing.ready; missing = framing.missing
                 repsNow = local?.reps ?: 0
                 cue = when {
-                    !framing.ready -> framing.issues.distinct().joinToString(" ") { FramingGuide.fixFor(it) }
+                    !framing.ready -> coachText ?: framing.issues.distinct().joinToString(" ") { FramingGuide.fixFor(it) }
                     local == null || local.calibrating -> t("calibrating")
                     local.cues.isNotEmpty() -> local.cues.first().text
                     local.repJustDone -> t("rep_done").format(repsNow, exercise.targetReps)
@@ -489,12 +585,12 @@ class ExerciseActivity : AppCompatActivity() {
                 val fb = takeFeedback()
                 runOnUiThread { coach?.rep(repsNow, exercise.targetReps, fb) }
             }
-            if (cue.isNotEmpty()) postCue(cue)
+            if (cue.isNotEmpty()) { if (coachRepeat != null && cue == coachText) coachSay(cue) else postCue(cue) }
             val source = if (sp != null) "server ${sp.optInt("latency_ms")}ms" else "on-device ${res.latencyMs}ms"
             val metricsLine = metrics.entries.sortedBy { it.key }.joinToString("  ") { "${it.key}=${"%.2f".format(it.value)}" } +
                 "\nsignal=${fmt(local?.signal)} $source frames=$framesProcessed"
             val repsText = "$repsNow/${exercise.targetReps}"
-            b.overlay.show(OverlayView.Frame(named, w, h, missing, ready))
+            b.overlay.show(OverlayView.Frame(named, w, h, missing, ready, coach = hint))
             runOnUiThread { b.tvReps.text = repsText; b.tvMetrics.text = metricsLine }
 
             var wroteVideo = false
@@ -549,6 +645,7 @@ class ExerciseActivity : AppCompatActivity() {
         }.getOrNull()
         paused = false; wasCalibrating = true; lastRepsAnnounced = 0; recorderFailed = false
         moveCoach = MoveCoach(exercise); pendingFeedback = null; lastExplainAt = startedAt
+        frameStab.reset()
         b.tvFeedback.text = ""; b.tvFeedback.visibility = View.GONE
         connectServerIfConfigured()
         running = true
@@ -599,7 +696,8 @@ class ExerciseActivity : AppCompatActivity() {
         if (timelineSamples == 0) tlWriter?.file?.delete()
         paused = false
         moveCoach = null
-        b.moveGuide.removeCallbacks(hideGuide); b.moveGuide.visibility = View.GONE
+        if (GuideBox.autoShows(guideState)) hideGuideNow()
+        labelGuide()
         val videoPath = recordFile?.takeIf { recordedFrames > 0 && it.exists() }?.absolutePath
         if (recordedFrames == 0) recordFile?.delete()
         recordFile = null
