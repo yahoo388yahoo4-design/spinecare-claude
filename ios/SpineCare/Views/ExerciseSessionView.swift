@@ -11,6 +11,8 @@ import UIKit
 /// Every session also saves a sensor timeline for replay; optional voice
 /// guidance speaks setup, cues and rep counts, and optional voice control
 /// takes hands-free commands (published on `commands` for the view).
+/// Framing coach (Settings): while the person is not framed well, a ghost
+/// outline, an arrow and a spoken hint say how to get into position.
 final class SessionController: ObservableObject {
     struct UIState {
         var landmarks: [String: Metrics.LM] = [:]
@@ -20,6 +22,7 @@ final class SessionController: ObservableObject {
         var reps = 0
         var cue = ""
         var metrics = ""
+        var coach: FrameCoach.Hint?
     }
 
     @Published var ui = UIState()
@@ -56,6 +59,9 @@ final class SessionController: ObservableObject {
     private var wasCalibrating = true
     private var lastRepsAnnounced = 0
     private var cfg = ServerConfig.shared
+    private let frameStab = FrameCoach.Stabilizer()
+    /// The camera frames are mirrored (front camera), which swaps left and right in spoken hints.
+    var mirrored = true
 
     init(exercise: Exercise) {
         self.exercise = exercise
@@ -106,6 +112,7 @@ final class SessionController: ObservableObject {
             tracker = ExerciseTracker(exercise, calibration: Plan.calibrationSeconds, lang: lang)
             frames = 0; sums = [:]; cueCounts = [:]; serverPose = nil; serverUsed = false; startedAt = Date()
             paused = false; wasCalibrating = true; lastRepsAnnounced = 0
+            frameStab.reset()
             let startedMs = Int(startedAt.timeIntervalSince1970 * 1000)
             let base = "session_\(exercise.id)_\(startedMs)"
             let metric = exercise.signal.hasPrefix("abs:") ? String(exercise.signal.dropFirst(4)) : exercise.signal
@@ -191,7 +198,12 @@ final class SessionController: ObservableObject {
                             ready: framing.ready, missing: Set(framing.missing.map { Framing.resolve(px, $0) }),
                             reps: tracker?.reps.reps ?? 0)
         guard running, !paused, let tracker else {
-            if !running, framing.ready, now - lastReadyAnnounce > 15 {
+            if cfg.frameCoach {
+                let hint = FrameCoach.assess(px, w: w, h: h, ex: exercise, minConf: cfg.minConfidence, mirrored: mirrored)
+                state.coach = hint
+                if let say = frameStab.update(hint.key, now: now) { coachSay(FrameCoach.text(say, beforeStart: !running)) }
+                state.cue = lastCue
+            } else if !running, framing.ready, now - lastReadyAnnounce > 15 {
                 lastReadyAnnounce = now
                 coach.guide(L.t("vg_framing_ok"))
             }
@@ -202,6 +214,15 @@ final class SessionController: ObservableObject {
         let metrics = Metrics.compute(px)
         for (k, v) in metrics where v.isFinite { let s = sums[k] ?? (0, 0); sums[k] = (s.0 + v, s.1 + 1) }
         let local = tracker.update(metrics, ready: framing.ready, t: now)
+        // framing coach while the person is not framed well enough to track
+        var coachText: String?
+        var coachRepeat = false
+        if cfg.frameCoach && !framing.ready {
+            let hint = FrameCoach.assess(px, w: w, h: h, ex: exercise, minConf: cfg.minConfidence, mirrored: mirrored)
+            state.coach = hint
+            coachRepeat = frameStab.update(hint.key, now: now) != nil
+            coachText = FrameCoach.text(frameStab.stable ?? hint.key, beforeStart: false)
+        } else { frameStab.reset() }
 
         let imu = BlePostureClient.shared.snapshot()
         // optional server enhancement; never blocks on-device coaching
@@ -220,7 +241,7 @@ final class SessionController: ObservableObject {
             state.missing = Set(((f?["missing"] as? [String]) ?? []).map { Framing.resolve(px, $0) })
             state.reps = sp["reps"] as? Int ?? 0
             let cues = sp["cues"] as? [[String: Any]] ?? []
-            if !state.ready { cue = ((f?["issues"] as? [String]) ?? []).map(Framing.fixFor).joined(separator: " ") }
+            if !state.ready { cue = coachText ?? ((f?["issues"] as? [String]) ?? []).map(Framing.fixFor).joined(separator: " ") }
             else if sp["calibrating"] as? Bool == true { cue = L.t("calibrating") }
             else if let c = cues.first?["cue"] as? String { cue = c }
             if sp["rep_just_done"] as? Bool == true {
@@ -230,7 +251,7 @@ final class SessionController: ObservableObject {
             }
         } else {
             state.reps = local.reps
-            if !framing.ready { cue = Array(Set(framing.issues)).sorted().map(Framing.fixFor).joined(separator: " ") }
+            if !framing.ready { cue = coachText ?? Array(Set(framing.issues)).sorted().map(Framing.fixFor).joined(separator: " ") }
             else if local.calibrating { cue = L.t("calibrating") }
             else if let c = local.cues.first { cue = c.text }
             else if local.repJustDone { cue = L.f("rep_done", local.reps, exercise.targetReps) }
@@ -245,7 +266,7 @@ final class SessionController: ObservableObject {
             lastRepsAnnounced = state.reps
             coach.rep(state.reps, target: exercise.targetReps)
         }
-        if !cue.isEmpty { setCue(cue) }
+        if !cue.isEmpty { if coachRepeat && cue == coachText { coachSay(cue) } else { setCue(cue) } }
         let sig = local.signal.map { String(format: "%.2f", $0) } ?? "-"
         state.metrics = metrics.sorted { $0.key < $1.key }.map { "\($0.key)=\(String(format: "%.2f", $0.value))" }
             .joined(separator: "  ") + "\nsignal=\(sig) " + (sp != nil ? "server" : "on-device \(Int(r.ms))ms") + " frames=\(frames)"
@@ -283,6 +304,11 @@ final class SessionController: ObservableObject {
         DispatchQueue.main.async { self.ui.cue = text }
     }
 
+    /// Framing-coach speech: a new hint goes through the cue line, a repeat is spoken again.
+    private func coachSay(_ text: String) {
+        if text != lastCue { setCue(text) } else { coach.cue(text) }
+    }
+
     private func repFeedback() {
         guard cfg.haptics else { return }
         DispatchQueue.main.async { self.haptic.notificationOccurred(.success) }
@@ -290,10 +316,16 @@ final class SessionController: ObservableObject {
 }
 
 /// Real-time coaching screen with front/back switching, recording toggle,
-/// recalibration and optional before/after symptom check-ins.
+/// recalibration and optional before/after symptom check-ins. The guide box
+/// (Settings: movement demo) loops the movement; it can be dragged, resized and
+/// closed, the Guide button shows or hides it (long press resets it), and its
+/// place, size and visibility are kept between sessions.
 struct ExerciseSessionView: View {
     let exercise: Exercise
     @StateObject private var session: SessionController
+    @State private var guideDemo: GuideDemo?
+    @State private var guideShown = GuideBoxState.shown
+    @State private var guideLayout = 0
     @ObservedObject private var cfg = ServerConfig.shared
     @State private var frontCamera = true
     @StateObject private var camera = CameraControl()
@@ -310,6 +342,8 @@ struct ExerciseSessionView: View {
         _session = StateObject(wrappedValue: SessionController(exercise: exercise))
     }
 
+    private var guideAdjustable: Bool { cfg.guideBoxAdjustable }
+
     var body: some View {
         let lang = L.lang
         let guide = FramingText.forView(exercise.view, program: exercise.programId)
@@ -317,9 +351,15 @@ struct ExerciseSessionView: View {
             CameraPreview(frontCamera: frontCamera, camera: camera) { session.process($0) }
                 .ignoresSafeArea()
                 .gesture(MagnificationGesture().onChanged { camera.pinch($0) }.onEnded { _ in camera.pinchEnded() })
-            Canvas { ctx, size in
-                OverlayRenderer.draw(ctx: &ctx, size: size, frame: session.ui.frame, lms: session.ui.landmarks,
-                                     ready: session.ui.ready, missing: session.ui.missing)
+            TimelineView(.animation(minimumInterval: 1 / 30, paused: session.ui.coach?.ok ?? true)) { tl in
+                Canvas { ctx, size in
+                    if let hint = session.ui.coach {
+                        FrameCoachDrawing.draw(&ctx, size: size, frame: session.ui.frame, hint: hint,
+                                               t: tl.date.timeIntervalSinceReferenceDate)
+                    }
+                    OverlayRenderer.draw(ctx: &ctx, size: size, frame: session.ui.frame, lms: session.ui.landmarks,
+                                         ready: session.ui.ready, missing: session.ui.missing)
+                }
             }
             .ignoresSafeArea()
             .allowsHitTesting(false)
@@ -329,9 +369,21 @@ struct ExerciseSessionView: View {
                     .font(.callout).lineLimit(vSize == .compact ? 1 : nil)
                     .padding(8).frame(maxWidth: .infinity, alignment: .leading)
                     .background(.black.opacity(0.6)).foregroundStyle(.white)
-                Button(action: toggleVoice) {
-                    Text(voiceLabel).font(.caption).multilineTextAlignment(.leading).padding(8)
-                        .background(.black.opacity(0.7)).foregroundStyle(cfg.voiceControl ? .green : .gray)
+                HStack(spacing: 8) {
+                    Button(action: toggleVoice) {
+                        Text(voiceLabel).font(.caption).multilineTextAlignment(.leading).padding(8)
+                            .background(.black.opacity(0.7)).foregroundStyle(cfg.voiceControl ? .green : .gray)
+                    }
+                    if guideDemo != nil && guideAdjustable {
+                        Text(L.t(guideShown ? "gb_hide" : "gb_show")).font(.caption).padding(8)
+                            .background(.black.opacity(0.7)).foregroundStyle(.white)
+                            .onTapGesture { guideShown.toggle(); GuideBoxState.shown = guideShown }
+                            .onLongPressGesture {
+                                GuideBoxState.reset(); guideShown = GuideBoxState.shown
+                                guideLayout += 1      // rebuild the box at its reset place
+                                savedText = L.t("gb_reset")
+                            }
+                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 8)
                 Spacer()
@@ -382,6 +434,10 @@ struct ExerciseSessionView: View {
                 .font(.system(size: 44, weight: .bold)).foregroundStyle(.green).shadow(radius: 4)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
                 .padding(.top, 90).padding(.trailing)
+            if let demo = guideDemo, guideShown || !guideAdjustable {
+                GuideBoxOverlay(demo: demo, adjustable: guideAdjustable, shown: $guideShown)
+                    .id(guideLayout)
+            }
         }
         .navigationTitle(exercise.title(lang))
         .navigationBarTitleDisplayMode(.inline)
@@ -389,6 +445,11 @@ struct ExerciseSessionView: View {
             UIApplication.shared.isIdleTimerDisabled = true
             OrientationLock.enterCameraScreen()
             session.coach.guidance = cfg.audioCues
+            session.mirrored = frontCamera
+            if cfg.moveDemo, guideDemo == nil {
+                let d = GuideDemo(exercise, calibration: Plan.calibrationSeconds)
+                guideDemo = d.countable ? d : nil
+            }
             session.coach.guide("\(exercise.title(lang)). \(guide.replacingOccurrences(of: "\n", with: ". ")). \(L.t("vg_setup"))")
             if cfg.voiceControl { startVoice(announce: true) }
         }
@@ -401,6 +462,7 @@ struct ExerciseSessionView: View {
             cfg.save()
         }
         .onChange(of: session.running) { running in OrientationLock.hold(running) }
+        .onChange(of: frontCamera) { session.mirrored = $0 }
         .onChange(of: scenePhase) { phase in
             // never listen in the background
             if phase == .active { if cfg.voiceControl { startVoice(announce: false) } } else { session.stopVoice() }

@@ -1,4 +1,5 @@
 import Foundation
+import CoreGraphics
 
 /// Synthetic demonstration for one exercise, generated from its plan entry
 /// (mirrors Android GuideDemo.kt): a seated figure in the needed camera view
@@ -142,6 +143,16 @@ final class GuideDemo {
 
     static func zoom(_ program: String) -> Double { program == "neck" ? 2.2 : program == "upper_body" ? 1.25 : 1 }
 
+    /// Vertical centre of the programme zoom (about the shoulders), in frame pixels.
+    static let zoomCenterY = 330.0
+
+    /// Landmarks mapped back from a programme's zoomed framing to the whole-body frame, for drawing.
+    static func unzoom(_ p: [String: Metrics.LM], program: String) -> [String: Metrics.LM] {
+        let z = zoom(program)
+        if z == 1 { return p }
+        return p.mapValues { Metrics.LM(x: w / 2 + ($0.x - w / 2) / z, y: zoomCenterY + ($0.y - zoomCenterY) / z, conf: $0.conf) }
+    }
+
     private static func p(_ x: Double, _ y: Double, _ c: Double = 0.95) -> Metrics.LM { Metrics.LM(x: x, y: y, conf: c) }
 
     /// Seated figure framed for the programme: whole body, waist up, or head and shoulders.
@@ -149,7 +160,7 @@ final class GuideDemo {
         let body = seated(view), z = zoom(program)
         if z == 1 { return body }
         return body.mapValues { v in
-            let x = w / 2 + (v.x - w / 2) * z, y = 330 + (v.y - 330) * z
+            let x = w / 2 + (v.x - w / 2) * z, y = zoomCenterY + (v.y - zoomCenterY) * z
             return Metrics.LM(x: x, y: y, conf: (x > 0 && x < w && y > 0 && y < h) ? v.conf : 0)
         }
     }
@@ -423,5 +434,144 @@ final class VideoReport {
         }
         if out.isEmpty { out.append(L.t("va_tip_good")) }
         return out
+    }
+}
+
+/// Live help getting into position on the session screen (mirrors Android
+/// FrameCoach.kt): the most important thing to fix, said in the person's own
+/// terms, which way to move (drawn as an arrow) and a ghost outline of where
+/// the body should be. `Stabilizer` keeps the spoken hint from flickering.
+enum FrameCoach {
+    /// left / right / up / down: the way the body has to move in the camera picture.
+    enum Kind { case none, person, view, closer, back, left, right, up, down, light, visible }
+
+    struct Hint {
+        let ok: Bool
+        /// L key, or "fix:<framing issue>" (see PlacementCoach.fixText).
+        let key: String
+        let kind: Kind
+        /// Middle of the body in frame pixels.
+        let center: CGPoint?
+        /// Where the body should be, in frame pixels.
+        let ghost: [String: Metrics.LM]
+    }
+
+    static let keyOK = "fc_good"
+
+    /// `mirrored`: the frames are mirrored like a selfie (front camera), which swaps left and right.
+    static func assess(_ p: [String: Metrics.LM]?, w: Double, h: Double, ex: Exercise, minConf: Double = 0.5,
+                       mirrored: Bool = false) -> Hint {
+        let g = ghost(ex.view, program: ex.programId, w: w, h: h)
+        let c = p.flatMap { bodyCenter($0, minConf: minConf) }
+        guard let fix = PlacementCoach.assess(p, w: w, h: h, ex: ex, minConf: minConf).firstFix else {
+            return Hint(ok: true, key: keyOK, kind: .none, center: c, ghost: g)
+        }
+        func hint(_ key: String, _ kind: Kind) -> Hint { Hint(ok: false, key: key, kind: kind, center: c, ghost: g) }
+        switch fix.key {
+        case "person": return hint("pc_fix_person", .person)
+        case "view": return hint(fix.fixKey, .view)
+        case "distance": return fix.fixKey == "pc_fix_step_back" ? hint("fc_step_back", .back) : hint("fc_come_closer", .closer)
+        case "center":
+            let right = Double(c?.x ?? CGFloat(w / 2)) < w / 2
+            return hint(sideways(ex.view, right: right, p, mirrored: mirrored), right ? .right : .left)
+        case "height": return fix.fixKey == "pc_fix_raise" ? hint("fc_raise", .up) : hint("fc_lower", .down)
+        case "visible":
+            let issue = fix.fixKey.hasPrefix("fix:") ? String(fix.fixKey.dropFirst(4)) : fix.fixKey
+            guard let p, issue.hasSuffix(":out_of_frame"),
+                  let lm = p[Framing.resolve(p, String(issue.split(separator: ":").first ?? ""))] else { return hint(fix.fixKey, .visible) }
+            let m = 0.03
+            if lm.y < m * h { return hint("fc_edge_top", .up) }
+            if lm.y > (1 - m) * h { return hint("fc_edge_bottom", .down) }
+            if lm.x < m * w { return hint(sideways(ex.view, right: true, p, mirrored: mirrored), .right) }
+            if lm.x > (1 - m) * w { return hint(sideways(ex.view, right: false, p, mirrored: mirrored), .left) }
+            return hint(fix.fixKey, .visible)
+        case "light": return hint("pc_fix_light", .light)
+        default: return hint(fix.fixKey.isEmpty ? "fix_generic" : fix.fixKey, .none)
+        }
+    }
+
+    /// The way to move sideways in the person's terms, for a body that must move toward
+    /// the picture's right. Facing an unmirrored camera the picture's right is their left;
+    /// a selfie (mirrored) picture or a view from behind swaps it; in profile it is
+    /// forward or back depending on which way they face.
+    static func sideways(_ view: String, right: Bool, _ p: [String: Metrics.LM]?, mirrored: Bool = false) -> String {
+        switch view {
+        case "front": return (right != mirrored) ? "fc_step_left" : "fc_step_right"
+        case "back": return (right != mirrored) ? "fc_step_right" : "fc_step_left"
+        case "side":
+            let side = p.flatMap { Metrics.bestSideUpper($0) } ?? "l"
+            guard let nose = p?["nose"], let ear = p?[side + "ear"] else { return "pc_fix_center" }
+            return (nose.x > ear.x) == right ? "fc_move_forward" : "fc_move_backward"
+        default: return "pc_fix_center"
+        }
+    }
+
+    static func bodyCenter(_ p: [String: Metrics.LM], minConf: Double) -> CGPoint? {
+        var pts = ["lsho", "rsho", "lhip", "rhip"].compactMap { p[$0] }.filter { $0.conf >= minConf }
+        if pts.isEmpty, let n = p["nose"], n.conf >= minConf { pts = [n] }
+        guard !pts.isEmpty else { return nil }
+        return CGPoint(x: pts.map(\.x).reduce(0, +) / Double(pts.count), y: pts.map(\.y).reduce(0, +) / Double(pts.count))
+    }
+
+    /// The guide's seated figure scaled to a w x h camera frame (fitted by height, centred).
+    static func ghost(_ view: String, program: String, w: Double, h: Double) -> [String: Metrics.LM] {
+        let k = h / GuideDemo.h, ox = (w - GuideDemo.w * k) / 2
+        return GuideDemo.basePose(view, program: program).mapValues { Metrics.LM(x: ox + $0.x * k, y: $0.y * k, conf: $0.conf) }
+    }
+
+    static func headRadius(_ g: [String: Metrics.LM]) -> Double {
+        var r = 8.0
+        if let l = g["lear"], let rr = g["rear"] { r = max(r, hypot(l.x - rr.x, l.y - rr.y) * 0.75) }
+        if let l = g["lear"], let n = g["nose"] { r = max(r, hypot(l.x - n.x, l.y - n.y) * 0.95) }
+        return r
+    }
+
+    static func text(_ key: String, beforeStart: Bool) -> String {
+        key == keyOK ? L.t(beforeStart ? "vg_framing_ok" : keyOK) : PlacementCoach.fixText(key)
+    }
+
+    /// Speaks a hint once it has held for `hold` seconds, again every `repeatEvery`
+    /// while still a problem, and "good position" once.
+    final class Stabilizer {
+        private var candidate: String?
+        private var since: TimeInterval = 0
+        private var spokenAt: TimeInterval = 0
+        private(set) var stable: String?
+        private let hold: TimeInterval, repeatEvery: TimeInterval
+        init(hold: TimeInterval = 0.9, repeatEvery: TimeInterval = 7) { self.hold = hold; self.repeatEvery = repeatEvery }
+
+        func update(_ key: String, now: TimeInterval) -> String? {
+            if key != candidate { candidate = key; since = now }
+            if now - since < hold { return nil }
+            if key != stable { stable = key; spokenAt = now; return key }
+            if key != FrameCoach.keyOK && now - spokenAt >= repeatEvery { spokenAt = now; return key }
+            return nil
+        }
+
+        func reset() { candidate = nil; stable = nil; since = 0; spokenAt = 0 }
+    }
+}
+
+/// Saved place of the session's guide box (mirrors Android GuideBox.kt):
+/// position as fractions of the free space, width in points (height = 4/3 of
+/// it), and whether it is shown or hidden.
+enum GuideBoxState {
+    static let aspect: CGFloat = 4 / 3
+    static let minWidth: CGFloat = 96
+    static let defaultX: CGFloat = 0.03, defaultY: CGFloat = 0.25, defaultWidth: CGFloat = 132
+    private static let d = UserDefaults.standard
+
+    static var x: CGFloat { get { d.object(forKey: "guide_box_x") as? CGFloat ?? defaultX } set { d.set(Double(newValue), forKey: "guide_box_x") } }
+    static var y: CGFloat { get { d.object(forKey: "guide_box_y") as? CGFloat ?? defaultY } set { d.set(Double(newValue), forKey: "guide_box_y") } }
+    static var width: CGFloat { get { d.object(forKey: "guide_box_w") as? CGFloat ?? defaultWidth } set { d.set(Double(newValue), forKey: "guide_box_w") } }
+    static var shown: Bool { get { d.object(forKey: "guide_box_shown") as? Bool ?? true } set { d.set(newValue, forKey: "guide_box_shown") } }
+
+    static func reset() {
+        for k in ["guide_box_x", "guide_box_y", "guide_box_w", "guide_box_shown"] { d.removeObject(forKey: k) }
+    }
+
+    static func clampWidth(_ w: CGFloat, in area: CGSize) -> CGFloat {
+        let maxW = max(1, min(area.width * 0.9, area.height * 0.9 / aspect))
+        return min(max(w, min(minWidth, maxW)), maxW)
     }
 }

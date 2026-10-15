@@ -84,6 +84,25 @@ object ServerConfig {
     fun setTempoPrompts(c: Context, v: Boolean) = p(c).edit().putBoolean("tempo_prompts", v).apply()
 
     /** Animated figure showing the head/body/arm movement while the coach explains the next move. */
+    /** Session replay: fill the picture area (centre crop) instead of letterboxing. */
+    fun replayFill(c: Context) = p(c).getBoolean("replay_fill", true)
+    fun setReplayFill(c: Context, v: Boolean) = p(c).edit().putBoolean("replay_fill", v).apply()
+
+    /** The live guide box can be moved, resized, hidden and shown (else it is fixed and shows only while the coach explains). */
+    fun guideBoxAdjustable(c: Context) = p(c).getBoolean("guide_box_adjustable", true)
+    fun setGuideBoxAdjustable(c: Context, v: Boolean) = p(c).edit().putBoolean("guide_box_adjustable", v).apply()
+
+    /** Saved guide box: position as fractions of the free space, width in dp, mode (GuideBox.MODE_*). */
+    fun guideBox(c: Context): GuideBox.State = GuideBox.State(
+        p(c).getFloat("guide_box_x", GuideBox.DEFAULT.x), p(c).getFloat("guide_box_y", GuideBox.DEFAULT.y),
+        p(c).getFloat("guide_box_w", GuideBox.DEFAULT.widthDp), p(c).getString("guide_box_mode", GuideBox.DEFAULT.mode)!!)
+    fun setGuideBox(c: Context, s: GuideBox.State) = p(c).edit().putFloat("guide_box_x", s.x).putFloat("guide_box_y", s.y)
+        .putFloat("guide_box_w", s.widthDp).putString("guide_box_mode", s.mode).apply()
+
+    /** Live help getting into position before and during a session (spoken and drawn). */
+    fun frameCoach(c: Context) = p(c).getBoolean("frame_coach", true)
+    fun setFrameCoach(c: Context, v: Boolean) = p(c).edit().putBoolean("frame_coach", v).apply()
+
     fun moveDemo(c: Context) = p(c).getBoolean("move_demo", true)
     fun setMoveDemo(c: Context, v: Boolean) = p(c).edit().putBoolean("move_demo", v).apply()
 

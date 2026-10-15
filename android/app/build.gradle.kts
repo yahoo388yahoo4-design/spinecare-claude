@@ -14,8 +14,8 @@ android {
         applicationId = "com.spinecare.claude"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "0.3.0"
+        versionCode = 4
+        versionName = "0.4.0"
         // Instrumented video-replay test (src/androidTest), run on an emulator by .github/workflows/video-evidence.yml
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // MediaPipe Tasks ships no x86_64 library. Without this filter an x86_64 device

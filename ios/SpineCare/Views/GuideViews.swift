@@ -147,79 +147,34 @@ struct DemoCanvas: View {
 
 /// SwiftUI Canvas drawing for the guide (mirrors Android GuideRenderer).
 enum GuideDrawing {
-    private static let body = Color(red: 0.39, green: 0.45, blue: 0.55)
-    private static let bodyFar = Color(red: 0.28, green: 0.33, blue: 0.41)
     private static let furniture = Color(red: 0.2, green: 0.25, blue: 0.33)
 
     static func demo(_ ctx: inout GraphicsContext, size: CGSize, demo: GuideDemo, frame f: GuideDemo.Frame,
                      hud: DemoPlayer.Hud, overlay: Bool) {
         let frame = CGSize(width: GuideDemo.w, height: GuideDemo.h)
-        let map = OverlayRenderer.mapper(size: size, frame: frame)
         let s = max(size.width / frame.width, size.height / frame.height)
-        func pt(_ x: Double, _ y: Double) -> CGPoint { map(Metrics.LM(x: x / GuideDemo.w, y: y / GuideDemo.h, conf: 1)) }
         let p = f.landmarks
-        ctx.fill(Path(CGRect(origin: .zero, size: size)), with: .color(Color(red: 0.04, green: 0.07, blue: 0.13)))
-        let floorY = pt(0, 860).y
-        ctx.fill(Path(CGRect(x: 0, y: floorY, width: size.width, height: size.height - floorY)), with: .color(Color(red: 0.07, green: 0.09, blue: 0.15)))
-
-        let side = demo.exercise.view == "side"
         func line(_ a: CGPoint, _ b: CGPoint, _ c: Color, _ w: CGFloat) {
             var path = Path(); path.move(to: a); path.addLine(to: b)
             ctx.stroke(path, with: .color(c), style: StrokeStyle(lineWidth: w * s, lineCap: .round, lineJoin: .round))
         }
-        func limb(_ c: Color, _ w: CGFloat, _ keys: [String]) {
-            let pts = keys.compactMap { p[$0] }.map { pt($0.x, $0.y) }
-            guard pts.count >= 2 else { return }
-            var path = Path(); path.move(to: pts[0]); for q in pts.dropFirst() { path.addLine(to: q) }
-            ctx.stroke(path, with: .color(c), style: StrokeStyle(lineWidth: w * s, lineCap: .round, lineJoin: .round))
-        }
-        // seat
-        if side, let hip = p["lhip"] {
-            let a = pt(hip.x - 80, hip.y + 22), b = pt(hip.x + 120, hip.y + 44)
-            ctx.fill(Path(roundedRect: CGRect(x: a.x, y: a.y, width: b.x - a.x, height: b.y - a.y), cornerRadius: 6), with: .color(furniture))
-            line(pt(hip.x - 60, hip.y + 44), pt(hip.x - 60, 860), furniture, 14)
-            line(pt(hip.x + 100, hip.y + 44), pt(hip.x + 100, 860), furniture, 14)
-        } else {
-            let a = pt(230, 668), b = pt(490, 700)
-            ctx.fill(Path(roundedRect: CGRect(x: a.x, y: a.y, width: b.x - a.x, height: b.y - a.y), cornerRadius: 6), with: .color(furniture))
-            line(pt(250, 700), pt(250, 860), furniture, 14); line(pt(470, 700), pt(470, 860), furniture, 14)
-        }
-        if side {
-            limb(bodyFar, 44, ["rhip", "rknee", "rank"]); limb(bodyFar, 28, ["rsho", "relb", "rwri"])
-            limb(body, 46, ["lhip", "lknee", "lank"]); limb(body, 92, ["lsho", "lhip"])
-        } else {
-            limb(body, 46, ["lhip", "lknee", "lank"]); limb(body, 46, ["rhip", "rknee", "rank"])
-            let q = ["lsho", "rsho", "rhip", "lhip"].compactMap { p[$0] }.map { pt($0.x, $0.y) }
-            if q.count == 4 {
-                var torso = Path(); torso.addLines(q); torso.closeSubpath()
-                ctx.fill(torso, with: .color(body))
-                ctx.stroke(torso, with: .color(body), style: StrokeStyle(lineWidth: 36 * s, lineJoin: .round))
-            }
-        }
-        // neck + head
-        let lear = p["lear"], rear = p["rear"], nose = p["nose"]
-        var head = (360.0, 300.0)
-        if side, let e = lear, let n = nose { head = (e.x + (n.x - e.x) * 0.3, e.y - 8) }
-        else if let l = lear, let r = rear { head = ((l.x + r.x) / 2, (l.y + r.y) / 2 - 6) }
-        var neckBase: (Double, Double)?
-        if side, let a = p["lsho"] { neckBase = (a.x, a.y) }
-        else if let a = p["lsho"], let b = p["rsho"] { neckBase = ((a.x + b.x) / 2, (a.y + b.y) / 2) }
-        if let nb = neckBase { line(pt(nb.0, nb.1 - 10), pt(head.0, head.1 + 30), body, 40) }
-        let back = demo.exercise.view == "back"
-        let hc = pt(head.0, head.1), hr = 54 * s
-        ctx.fill(Path(ellipseIn: CGRect(x: hc.x - hr, y: hc.y - hr, width: 2 * hr, height: 2 * hr)),
-                 with: .color(back ? Color(red: 0.12, green: 0.16, blue: 0.22) : body))
-        func dot(_ c: CGPoint, _ r: CGFloat) {
-            ctx.fill(Path(ellipseIn: CGRect(x: c.x - r * s, y: c.y - r * s, width: 2 * r * s, height: 2 * r * s)), with: .color(Color(white: 0.8)))
-        }
-        if !back, let n = nose {
-            if side { dot(pt(n.x, n.y), 9) } else {
-                let ex = n.x - head.0
-                dot(pt(head.0 + ex - 18, head.1 - 4), 6); dot(pt(head.0 + ex + 18, head.1 - 4), 6); dot(pt(n.x, n.y + 6), 5)
-            }
-        }
-        limb(body, 30, ["lsho", "lelb", "lwri"])
-        if !side { limb(body, 30, ["rsho", "relb", "rwri"]) }
+        ctx.fill(Path(CGRect(origin: .zero, size: size)), with: .color(Color(red: 0.04, green: 0.07, blue: 0.13)))
+        // the scene is drawn in the whole-body frame; the programme's zoom and the
+        // crop that fills this view are one transform
+        let z = CGFloat(GuideDemo.zoom(demo.exercise.programId)), cy = CGFloat(GuideDemo.zoomCenterY)
+        let ox = (size.width - frame.width * s) / 2, oy = (size.height - frame.height * s) / 2
+        var scene = ctx
+        scene.translateBy(x: ox + s * frame.width / 2 * (1 - z), y: oy + s * cy * (1 - z))
+        scene.scaleBy(x: s * z, y: s * z)
+        scene.fill(Path(CGRect(x: -2000, y: -2000, width: frame.width + 4000, height: 2860)),
+                   with: .linearGradient(Gradient(colors: [Color(red: 0.09, green: 0.13, blue: 0.23), Color(red: 0.04, green: 0.07, blue: 0.13)]),
+                                         startPoint: CGPoint(x: 0, y: 0), endPoint: CGPoint(x: 0, y: 860)))
+        scene.fill(Path(CGRect(x: -2000, y: 860, width: frame.width + 4000, height: frame.height + 2000)),
+                   with: .color(Color(red: 0.07, green: 0.09, blue: 0.15)))
+        let body = GuideDemo.unzoom(p, program: demo.exercise.programId)
+        let hipX = body["lhip"]?.x ?? GuideDemo.w / 2
+        scene.fill(Path(ellipseIn: CGRect(x: hipX - 170, y: 846, width: 340, height: 34)), with: .color(.black.opacity(0.4)))
+        FigurePainter.draw(&scene, body, view: demo.exercise.view)
 
         if overlay {
             let norm = p.mapValues { Metrics.LM(x: $0.x / GuideDemo.w, y: $0.y / GuideDemo.h, conf: $0.conf) }
@@ -286,9 +241,9 @@ enum GuideDrawing {
         let ang = (start + (want - start) * e) * .pi / 180
         let fx = CGFloat(sin(ang)), fy = CGFloat(cos(ang))
         stroke(CGPoint(x: pcx - fy * unit * 1.1, y: personY + fx * unit * 1.1), CGPoint(x: pcx + fy * unit * 1.1, y: personY - fx * unit * 1.1),
-               body, unit * 0.7)
+               FigurePainter.shirt, unit * 0.7)
         let r = unit * 0.62
-        ctx.fill(Path(ellipseIn: CGRect(x: pcx - r, y: personY - r, width: 2 * r, height: 2 * r)), with: .color(.gray))
+        ctx.fill(Path(ellipseIn: CGRect(x: pcx - r, y: personY - r, width: 2 * r, height: 2 * r)), with: .color(FigurePainter.hair))
         var nose = Path()
         nose.move(to: CGPoint(x: pcx + fx * unit * 1.05, y: personY + fy * unit * 1.05))
         nose.addLine(to: CGPoint(x: pcx + fx * unit * 0.5 - fy * unit * 0.3, y: personY + fy * unit * 0.5 + fx * unit * 0.3))
@@ -312,13 +267,13 @@ enum GuideDrawing {
         phoneCtx.translateBy(x: phx, y: tableTop)
         phoneCtx.rotate(by: .degrees(-28 * (1 - e)))
         phoneCtx.fill(Path(roundedRect: CGRect(x: -unit * 0.28, y: -unit * 1.9, width: unit * 0.56, height: unit * 1.9), cornerRadius: 5), with: .color(.white))
-        let px = w * 0.9, chestY = tableTop - unit * 1.65
-        stroke(CGPoint(x: px, y: chestY - unit * 0.6), CGPoint(x: px, y: chestY + unit * 2.4), body, unit * 0.55)
-        stroke(CGPoint(x: px, y: chestY + unit * 2.4), CGPoint(x: px - unit * 1.2, y: chestY + unit * 2.5), body, unit * 0.55)
-        stroke(CGPoint(x: px - unit * 1.2, y: chestY + unit * 2.5), CGPoint(x: px - unit * 1.2, y: baseY), body, unit * 0.55)
-        let hr = unit * 0.55
-        ctx.fill(Path(ellipseIn: CGRect(x: px - hr, y: chestY - unit * 1.35 - hr, width: 2 * hr, height: 2 * hr)), with: .color(body))
-        stroke(CGPoint(x: phx + unit * 0.3, y: tableTop - unit * 1.65), CGPoint(x: px - unit * 0.4, y: chestY), .cyan, 2, dash: [7, 5])
+        // seated person in profile: the guide's figure, mirrored to face the phone
+        let px = w * 0.88, chestY = tableTop - unit * 1.65
+        let pk = (baseY - chestY) / (860 - 450)
+        var person = ctx
+        person.translateBy(x: px, y: chestY); person.scaleBy(x: -pk, y: pk); person.translateBy(x: -340, y: -450)
+        FigurePainter.draw(&person, GuideDemo.basePose("side"), view: "side")
+        stroke(CGPoint(x: phx + unit * 0.3, y: tableTop - unit * 1.65), CGPoint(x: px - 46 * pk, y: chestY), .cyan, 2, dash: [7, 5])
         let done = e >= 1
         let l1 = (done ? "✓ " : "") + L.t("gd_label_upright")
         let l2 = (done ? "✓ " : "") + L.t(program == "neck" || view == "front" ? "gd_label_face" : "gd_label_chest")

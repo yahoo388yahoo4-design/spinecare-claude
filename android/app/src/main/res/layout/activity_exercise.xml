@@ -161,13 +161,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Next-movement demo, shown while the coach explains it (Settings: movement demo) -->
+    <!-- Show / hide the guide box (Settings: adjustable guide box); long press resets it -->
+    <TextView
+        android:id="@+id/tvGuide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginStart="8dp"
+        android:textColor="@color/sc_text"
+        android:textSize="13sp"
+        android:background="#CC0B1220"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tvVoice"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Next-movement demo, shown while the coach explains it (Settings: movement demo).
+         Placed with x/y from the top-left corner; the user can move, resize and hide it. -->
     <com.spinecare.app.MoveGuideView
         android:id="@+id/moveGuide"
         android:layout_width="132dp"
         android:layout_height="176dp"
-        android:layout_margin="8dp"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/tvVoice"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
