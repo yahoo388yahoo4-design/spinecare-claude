@@ -115,22 +115,29 @@ final class ReplayModel: ObservableObject {
 /// AVPlayerLayer without system controls (the replay has its own transport).
 struct PlayerLayerView: UIViewRepresentable {
     let player: AVPlayer
+    /// Cover the whole view (centre crop) instead of fitting inside it.
+    var fill = true
     final class V: UIView {
         override class var layerClass: AnyClass { AVPlayerLayer.self }
         var playerLayer: AVPlayerLayer { layer as! AVPlayerLayer }
     }
     func makeUIView(context: Context) -> V {
-        let v = V(); v.playerLayer.player = player; v.playerLayer.videoGravity = .resizeAspect; v.backgroundColor = .black
+        let v = V(); v.playerLayer.player = player; v.backgroundColor = .black
+        v.playerLayer.videoGravity = fill ? .resizeAspectFill : .resizeAspect
+        v.clipsToBounds = true
         return v
     }
-    func updateUIView(_ v: V, context: Context) {}
+    func updateUIView(_ v: V, context: Context) { v.playerLayer.videoGravity = fill ? .resizeAspectFill : .resizeAspect }
 }
 
 /// In-app preview of a saved session: video and/or skeleton redrawn from the
 /// sensor timeline, a metric chart with rep and cue marks and BLE sensor
-/// lines, and a readout at the playhead. Everything stays on the device.
+/// lines, and a readout at the playhead. The picture fills its area (centre
+/// crop) by default; Fill / Fit shows the whole frame instead and is remembered.
+/// Everything stays on the device.
 struct SessionReplayView: View {
     let rec: SessionRecord
+    @AppStorage("replayFill") private var fill = true
     @StateObject private var model: ReplayModel
     private let timelineURL: URL?
     private let target: Int
@@ -173,6 +180,7 @@ struct SessionReplayView: View {
                     Spacer()
                     Button(model.playing ? L.t("replay_pause") : L.t("replay_play")) { model.toggle() }.buttonStyle(.borderedProminent)
                     Button(model.speed == 1 ? "1×" : (model.speed == 2 ? "2×" : "0.5×")) { model.cycleSpeed() }.buttonStyle(.bordered)
+                    Button(L.t(fill ? "replay_fill" : "replay_fit")) { fill.toggle() }.buttonStyle(.bordered)
                     Spacer()
                     Button(L.t("replay_next_rep")) { model.jumpRep(1) }.disabled(model.timeline == nil)
                 }
@@ -193,14 +201,15 @@ struct SessionReplayView: View {
 
     @ViewBuilder private var stage: some View {
         if model.useVideo, let player = model.player {
-            PlayerLayerView(player: player)
+            PlayerLayerView(player: player, fill: fill).clipped()
         } else {
             Canvas { ctx, size in
                 ctx.fill(Path(CGRect(origin: .zero, size: size)), with: .color(.black))
                 guard let s = model.sample else { return }
                 let frame = CGSize(width: max(1, s.frameW), height: max(1, s.frameH))
                 let k = min(size.width / frame.width, size.height / frame.height)
-                let fit = CGSize(width: frame.width * k, height: frame.height * k)
+                // fill: the whole view, and OverlayRenderer centre-crops the frame into it
+                let fit = fill ? size : CGSize(width: frame.width * k, height: frame.height * k)
                 var c = ctx
                 c.translateBy(x: (size.width - fit.width) / 2, y: (size.height - fit.height) / 2)
                 c.fill(Path(CGRect(origin: .zero, size: fit)), with: .color(Color(white: 0.09)))
@@ -303,9 +312,9 @@ struct SessionThumb: View {
     var body: some View {
         ZStack {
             Color.black
-            if let image { Image(uiImage: image).resizable().scaledToFit() }
+            if let image { Image(uiImage: image).resizable().scaledToFill() }
         }
-        .frame(width: 96, height: 72).clipShape(RoundedRectangle(cornerRadius: 6))
+        .frame(width: 96, height: 72).clipped().clipShape(RoundedRectangle(cornerRadius: 6))
         .task(id: rec.ts) { image = await Self.render(rec) }
     }
 
@@ -332,15 +341,35 @@ struct SessionThumb: View {
         return img
     }
 
+    /// The skeleton zoomed onto the body so it fills the 4:3 tile.
     static func skeletonImage(_ tl: SessionTimeline) -> UIImage {
         let s = tl.peak
         let fw = CGFloat(max(1, s?.frameW ?? 3)), fh = CGFloat(max(1, s?.frameH ?? 4))
-        let size = CGSize(width: 240, height: 240 * fh / fw)
+        let size = CGSize(width: 320, height: 240)
         let format = UIGraphicsImageRendererFormat(); format.scale = 1
         return UIGraphicsImageRenderer(size: size, format: format).image { r in
             let cg = r.cgContext
             cg.setFillColor(UIColor(white: 0.09, alpha: 1).cgColor); cg.fill(CGRect(origin: .zero, size: size))
-            if let s { OverlayRenderer.draw(cg: cg, size: size, lms: s.landmarks, ready: true, cue: "", metrics: "", reps: "") }
+            if let s {
+                let frameSize = CGSize(width: fw, height: fh)
+                let vis = s.landmarks.values.filter { $0.conf > Metrics.vis }
+                cg.saveGState()
+                if vis.count >= 2, let x0 = vis.map(\.x).min(), let x1 = vis.map(\.x).max(),
+                   let y0r = vis.map(\.y).min(), let y1 = vis.map(\.y).max() {
+                    // normalized bounds -> frame pixels, at least a fifth of the frame, a little room above the head
+                    var bx0 = CGFloat(x0) * fw, bx1 = CGFloat(x1) * fw, by0 = CGFloat(y0r) * fh, by1 = CGFloat(y1) * fh
+                    if bx1 - bx0 < fw / 5 { let m = (bx0 + bx1) / 2; bx0 = m - fw / 10; bx1 = m + fw / 10 }
+                    if by1 - by0 < fh / 5 { let m = (by0 + by1) / 2; by0 = m - fh / 10; by1 = m + fh / 10 }
+                    by0 -= (by1 - by0) * 0.08
+                    let k = min(size.width / ((bx1 - bx0) * 1.3), size.height / ((by1 - by0) * 1.3))
+                    cg.translateBy(x: size.width / 2 - (bx0 + bx1) / 2 * k, y: size.height / 2 - (by0 + by1) / 2 * k)
+                    cg.scaleBy(x: k, y: k)
+                    OverlayRenderer.draw(cg: cg, size: frameSize, lms: s.landmarks, ready: true, cue: "", metrics: "", reps: "")
+                } else {
+                    OverlayRenderer.draw(cg: cg, size: size, lms: s.landmarks, ready: true, cue: "", metrics: "", reps: "")
+                }
+                cg.restoreGState()
+            }
             let vals = tl.samples.compactMap { smp in smp.metrics[tl.metric].map { (smp.t, $0) } }
             guard vals.count >= 2, let lo = vals.map({ $0.1 }).min(), let hi = vals.map({ $0.1 }).max() else { return }
             let span = hi - lo > 1e-9 ? hi - lo : 1

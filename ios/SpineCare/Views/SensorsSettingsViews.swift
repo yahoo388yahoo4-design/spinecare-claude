@@ -101,6 +101,13 @@ struct SettingsView: View {
                     Text(L.t("voice_control_body")).font(.caption)
                     Toggle(L.t("record"), isOn: $cfg.recordSessions)
                     Text(L.t("record_privacy")).font(.caption)
+                    Toggle(L.t("set_move_demo"), isOn: $cfg.moveDemo)
+                    Text(L.t("set_move_demo_body")).font(.caption)
+                    Toggle(L.t("set_guide_box"), isOn: $cfg.guideBoxAdjustable)
+                    Text(L.t("set_guide_box_body")).font(.caption)
+                    Button(L.t("gb_reset_btn")) { GuideBoxState.reset(); status = L.t("gb_reset") }
+                    Toggle(L.t("set_frame_coach"), isOn: $cfg.frameCoach)
+                    Text(L.t("set_frame_coach_body")).font(.caption)
                 }
                 Section {
                     Button(L.t("save_settings")) { cfg.save(); status = L.t("settings_saved") }

@@ -23,6 +23,12 @@ final class ServerConfig: ObservableObject {
     @Published var audioCues: Bool
     @Published var recordSessions: Bool
     @Published var voiceControl: Bool
+    /// Show the guide box with the moving figure on the session screen.
+    @Published var moveDemo: Bool
+    /// The guide box can be moved, resized, hidden and shown (else fixed in its corner).
+    @Published var guideBoxAdjustable: Bool
+    /// Live help getting into position (outline, arrow, spoken hint).
+    @Published var frameCoach: Bool
 
     private let d = UserDefaults.standard
     private init() {
@@ -41,6 +47,9 @@ final class ServerConfig: ObservableObject {
         audioCues = d.object(forKey: "audio_cues") as? Bool ?? false
         recordSessions = d.object(forKey: "record_sessions") as? Bool ?? true
         voiceControl = d.object(forKey: "voice_control") as? Bool ?? false
+        moveDemo = d.object(forKey: "move_demo") as? Bool ?? true
+        guideBoxAdjustable = d.object(forKey: "guide_box_adjustable") as? Bool ?? true
+        frameCoach = d.object(forKey: "frame_coach") as? Bool ?? true
     }
 
     var baseURL: String { url.trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "/")) }
@@ -55,6 +64,8 @@ final class ServerConfig: ObservableObject {
         d.set(minConfidence, forKey: "min_conf"); d.set(haptics, forKey: "haptics")
         d.set(audioCues, forKey: "audio_cues"); d.set(recordSessions, forKey: "record_sessions")
         d.set(voiceControl, forKey: "voice_control")
+        d.set(moveDemo, forKey: "move_demo"); d.set(guideBoxAdjustable, forKey: "guide_box_adjustable")
+        d.set(frameCoach, forKey: "frame_coach")
     }
 
     /// nil when the server may be used, otherwise a string key explaining why not.

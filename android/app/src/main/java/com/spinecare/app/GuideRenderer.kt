@@ -190,15 +190,15 @@ object GuideRenderer {
         // seated person in profile (the guide's figure, mirrored to face the phone)
         val px = w * 0.88f
         val chestY = tableTop - unit * 1.65f
-        val k = (baseY - chestY) / (860f - 450f)
+        val pk = (baseY - chestY) / (860f - 450f)
         c.save()
-        c.translate(px, chestY); c.scale(-k, k); c.translate(-340f, -450f)
+        c.translate(px, chestY); c.scale(-pk, pk); c.translate(-340f, -450f)
         FigurePainter.draw(c, GuideDemo.basePose("side"), "side")
         c.restore()
         // lens-to-chest line
         dashed.strokeWidth = 4f
         val lensY = tableTop - unit * 1.65f
-        c.drawLine(phx + unit * 0.3f, lensY, px - 46f * k, chestY, dashed)
+        c.drawLine(phx + unit * 0.3f, lensY, px - 46f * pk, chestY, dashed)
         label.color = if (e >= 1f) Ui.OK else Ui.MUTED
         val l1 = (if (e >= 1f) "✓ " else "") + t("gd_label_upright")
         val l2 = (if (e >= 1f) "✓ " else "") + t(if (program == "neck" || view == "front") "gd_label_face" else "gd_label_chest")
